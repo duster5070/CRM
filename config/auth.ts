@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
     GitHubProvider({
       profile(profile) {
         return {
-          id: profile.id.toString(),
+          id: profile.id?.toString() || String(profile.id || ""),
           name: profile.name || profile.login,
           firstName: profile.name?.split(" ")[0] || "",
           lastName: profile.name?.split(" ")[1] || "",
