@@ -10,18 +10,22 @@ import { getKitUsers } from "@/actions/users";
 export default async function HeroSection() {
   const data = await getKitUsers();
   const count = data ? data.fkUsers : 0;
+
   return (
     <section className="relative min-h-[100vh] w-full flex items-center justify-center bg-gradient-to-br from-background to-muted">
       <div className="container max-w-6xl mx-auto px-4 md:px-6 flex flex-col items-center text-center space-y-8">
-        <SmallTitle title=" Welcome to Next Starter kit (using next 15.0.4)" />
+
+        <SmallTitle title=" Built for teams that move fast" />
+
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl max-w-3xl mx-auto">
-          Your Complete Fullstack Starter Kit
+          The Smarter Way to Manage Projects & Teams
         </h1>
 
         <p className="mx-auto max-w-[700px] text-muted-foreground text-sm sm:text-lg">
-          A production-ready Next.js starter featuring NextAuth (credentials,
-          GitHub, Google), role-based access, Prisma, reusable forms, responsive
-          design, data tables, landing page sections, and a robust dashboard.
+          A streamlined project management platform designed for clarity,
+          collaboration, and real execution. Plan efficiently, assign work,
+          monitor progress, and scale your workflow — all without the clutter
+          of traditional tools.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">
@@ -30,35 +34,27 @@ export default async function HeroSection() {
             size="lg"
             className="rounded-full h-12 px-6 text-base"
           >
-            <Link href="https://coding-school-typescript.vercel.app/give-away">
+            <Link href="/register">
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <CustomLinkButton title="Explore Page sections" href="/pages" />
-          {/* <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="h-12 px-6 text-base"
-          >
-            <Link href="/pages">
-              {" "}
-              Explore Page sections
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button> */}
+
+          <CustomLinkButton title="Explore Features" href="/features" />
         </div>
-        <div className="pt-8 pb-4 flex items-center  justify-center gap-8">
-          <div className="">
+
+        <div className="pt-8 pb-4 flex items-center justify-center gap-8">
+          <div>
             <AnimatedAvatars />
           </div>
-          <div className="">
+          <div>
             <StarRating count={5} />
-            <p className="dark:text-slate-900">{count} developers use it.</p>
+            <p className="dark:text-slate-900">{count} teams trust our platform.</p>
           </div>
         </div>
+
       </div>
     </section>
   );
 }
+

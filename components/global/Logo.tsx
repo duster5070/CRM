@@ -19,7 +19,7 @@ export default function Logo({
           </span>
         </div>
         <span className={cn(" font-bold text-xl", size === "lg" && "text-4xl")}>
-          Next Starter <span className="text-blue-500">Pro</span>
+          project x <span className="text-blue-500">Pro</span>
         </span>
       </Link>
     );

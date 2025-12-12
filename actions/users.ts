@@ -51,6 +51,10 @@ export async function createUser(data: UserProps) {
 }
 export type KitResponseData = { fkUsers: number; hsaUsers: number };
 export async function getKitUsers() {
+  if (!process.env.KIT_API_ENDPOINT) {
+    console.error("KIT_API_ENDPOINT is not defined");
+    return null;
+  }
   const endpoint = process.env.KIT_API_ENDPOINT as string;
   try {
     const res = await fetch(endpoint, {
