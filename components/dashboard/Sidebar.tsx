@@ -50,7 +50,7 @@ const SIDEBAR: Group[] = [
     title: "Clients & Projects",
     icon: Users,
     items: [
-      { title: "Clients", items: [{ title: "Client List", href: "/clients" }, { title: "Add New Client", href: "/clients/new" }] },
+      { title: "Clients", items: [{ title: "Client List", href: "dashboard/clients" }, { title: "Add New Client", href: "/clients/new" }] },
       { title: "Projects", items: [{ title: "Project List", href: "/projects" }, { title: "Add New Project", href: "/projects/new" }] },
       { title: "Modules", items: [{ title: "Module List", href: "/modules" }, { title: "Add New Module", href: "/modules/new" }] },
       { title: "Tasks", items: [{ title: "Task List", href: "/tasks" }, { title: "Add New Task", href: "/tasks/new" }] },
