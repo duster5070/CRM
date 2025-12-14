@@ -8,34 +8,30 @@ import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
 import { User } from "@prisma/client";
 
-export async function getClients(): Promise<User[]>  {
-  try {
+export async function getUserClients(userId:string|undefined){
+   if(userId){
+    console.log("id should be here",userId)
+    try {
     const users = await db.user.findMany({
       orderBy: {
         createdAt: "desc",
       },
-      // where:{
-      //   role:"CLIENT"
-      // }
-    });
+      where:{
+        role:"CLIENT",
+        userId
+      }
+   }
+  );
+    console.log(users)
     return users;
   } catch (error) {
     console.log(error);
-    return [];
+    return null;
+  }
   }
 }
 
-export async function getCategoryById(id: string) {
-  try {
-    const category = await db.category.findUnique({
-      where: {
-        id,
-      },
-    });
-    return category;
-  } catch (error) {
-    console.log(error);
-  }
-}
+
+
 
 

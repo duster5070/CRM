@@ -3,10 +3,11 @@ import { columns } from "./columns";
 import {  User } from "@prisma/client";
 import DataTable from "@/components/DataTableComponents/DataTable";
 import TableHeader from "../../../../components/dashboard/Tables/TableHeader";
-import { getClients } from "@/actions/clients";
-
+import { getAuthUser } from "@/config/useAuth";
+import { getUserClients } from "@/actions/clients";
 export default async function page() {
-  const clients: User[] = (await getClients()) || [];
+  const user = await getAuthUser()
+  const clients: User[] = (await getUserClients(user?.id)) || [];
   return (
     <div className="p-8">
       <TableHeader

@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@prisma/client";
 export async function createUser(data: UserProps) {
-  const { email, password, firstName, lastName, name, phone, image,role,country,location } = data;
+  const { email, password, firstName, lastName, name, phone, image,role,country,location,userId } = data;
   try {
     // Hash the PAASWORD
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,6 +23,7 @@ export async function createUser(data: UserProps) {
         data: null,
       };
     }
+    
     const newUser = await db.user.create({
       data: {
         email,
@@ -35,11 +36,12 @@ export async function createUser(data: UserProps) {
         role:role ?? UserRole.CLIENT,
         country,
         location,
+        userId 
       },
     });
     revalidatePath("/dashboard/clients");
     revalidatePath("/dashboard/users");
-    console.log(newUser);
+    console.log("this is the new user",newUser);
     return {
       error: null,
       status: 200,

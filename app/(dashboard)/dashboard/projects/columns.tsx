@@ -10,8 +10,9 @@ import ImageColumn from "@/components/DataTableColumns/ImageColumn";
 import SortableColumn from "@/components/DataTableColumns/SortableColumn";
 import { ColumnDef } from "@tanstack/react-table";
 import ActionColumn from "@/components/DataTableColumns/ActionColumn";
-import { Category } from "@prisma/client";
-export const columns: ColumnDef<Category>[] = [
+import { Category, Project } from "@prisma/client";
+import Link from "next/link";
+export const columns: ColumnDef<Project>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -35,30 +36,46 @@ export const columns: ColumnDef<Category>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "title",
-    header: ({ column }) => <SortableColumn column={column} title="Title" />,
+    accessorKey: "thumbnail",
+    header: "Project Image",
+    cell: ({ row }) => <ImageColumn row={row} accessorKey="thumbnail" />,
   },
   {
-    accessorKey: "imageUrl",
-    header: "Category Image",
-    cell: ({ row }) => <ImageColumn row={row} accessorKey="imageUrl" />,
+    accessorKey: "name",
+    header: ({ column }) => <SortableColumn column={column} title="Name" />,
+  },
+  {
+    accessorKey: "startDate",
+    header: "Project Start Date",
+    cell: ({ row }) => <DateColumn row={row} accessorKey="startDate" />,
+  },
+    {
+    accessorKey: "startDate",
+    header: "view",
+    cell: ({ row }) => {
+      return(
+        <Button asChild>
+          <Link href={"/dashboard/projects/view/project-name"}>View </Link>
+        </Button>
+      )
+    },
   },
 
-  {
-    accessorKey: "createdAt",
-    header: "Date Created",
-    cell: ({ row }) => <DateColumn row={row} accessorKey="createdAt" />,
-  },
+  // {
+  //   accessorKey: "createdAt",
+  //   header: "Date Created",
+  //   cell: ({ row }) => <DateColumn row={row} accessorKey="createdAt" />,
+  // },
   {
     id: "actions",
     cell: ({ row }) => {
-      const category = row.original;
+      const project = row.original;
       return (
         <ActionColumn
           row={row}
           model="category"
-          editEndpoint={`categories/update/${category.id}`}
-          id={category.id}
+          editEndpoint={`projects/update/${project.id}`}
+          id={project.id}
         />
       );
     },

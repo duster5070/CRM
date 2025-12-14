@@ -61,6 +61,7 @@ model User {
   location String?
   role          UserRole  @default(USER)
   password      String?
+  userId String? @db.ObjectId
   status Boolean @default(true)
   accounts      Account[]
   sessions      Session[]
@@ -73,19 +74,29 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
- 
+
+ enum ProjectStatus{
+ COMPLETE
+ ONGOING
+ }
+
  model Project {
   id  String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  name String?
+  slug String @unique
+  notes String?
   description String?
-  startDate DateTime
+  bannerImage String?
+  thumbnail String?
+  startDate DateTime @default(now())
   endDate DateTime?
-  status String
+  status ProjectStatus @default(ONGOING)
   // client Client @relation(fields: [clientId],references: [id])
   clientId String @db.ObjectId
   user User @relation(fields: [userId],references: [id])
   userId String @db.ObjectId
   modules  Module[]
+  comments  ProjectComment[]
   members Member[]
   invoices Invoice[]
 
@@ -93,6 +104,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+ }
+
+ model ProjectComment{
+   id  String @id @default(auto()) @map("_id") @db.ObjectId
+   content String
+   project Project @relation(fields: [projectId],references: [id])
+   projectId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
  }
 
  model Module{
