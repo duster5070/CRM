@@ -10,7 +10,6 @@ import { User } from "@prisma/client";
 
 export async function getUserClients(userId:string|undefined){
    if(userId){
-    console.log("id should be here",userId)
     try {
     const users = await db.user.findMany({
       orderBy: {
