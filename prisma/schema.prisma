@@ -44,11 +44,12 @@ model Session {
 enum UserRole {
   USER
   ADMIN
-  SERVICE_PROVIDER
+  CLIENT
+  MEMBER
 }
  
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId 
   name          String
   firstName          String
   lastName          String
@@ -56,19 +57,145 @@ model User {
   email         String   @unique
   emailVerified DateTime?
   image         String?
+  country String?
+  location String?
   role          UserRole  @default(USER)
   password      String?
+  userId String? @db.ObjectId
   status Boolean @default(true)
   accounts      Account[]
   sessions      Session[]
+  projects Project[]
+  invoices Invoice[]
+  portfolioItems PortfolioItem[]
+  payments Payment[]
   isVerfied     Boolean   @default(false)
   token         Int?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
+
+ enum ProjectStatus{
+ COMPLETE
+ ONGOING
+ }
+
+ model Project {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  slug String @unique
+  notes String?
+  description String?
+  bannerImage String?
+  thumbnail String?
+  startDate DateTime @default(now())
+  endDate DateTime?
+  status ProjectStatus @default(ONGOING)
+  // client Client @relation(fields: [clientId],references: [id])
+  clientId String @db.ObjectId
+  user User @relation(fields: [userId],references: [id])
+  userId String @db.ObjectId
+  modules  Module[]
+  comments  ProjectComment[]
+  members Member[]
+  invoices Invoice[]
+
+  // quotations Quotation[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+ }
+
+ model ProjectComment{
+   id  String @id @default(auto()) @map("_id") @db.ObjectId
+   content String
+   project Project @relation(fields: [projectId],references: [id])
+   projectId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ }
+
+ model Module{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  project Project @relation(fields: [projectId],references: [id])
+  projectId String @db.ObjectId
+  tasks Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ }
+
+ model Task{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String?
+  status String
+  dueDate DateTime?
+  module Module @relation(fields: [moduleId],references: [id])
+  moduleId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ }
+
+ model Member{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  email String
+  role String
+  project Project @relation(fields: [projectId],references: [id])
+  projectId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ }
  
- 
- 
+model Invoice{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  invoiceNumber String @unique
+  amount Float
+  status String
+  duedate DateTime
+  project Project @relation(fields: [projectId],references: [id])
+  projectId String @db.ObjectId
+  user User @relation(fields: [userId],references: [id])
+  userId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// model Quotation{
+//   id String @id @default(auto()) @map("id") @db.ObjectId
+//   quotationNumber String @unique
+//   amount Float
+//   validUntil DateTime
+//   project Project @relation(fields: [projectId],references: [id])
+//   projectId String @db.ObjectId
+//   user User @relation(fields: [userId],references: [id])
+//   userId String @db.ObjectId
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+model Payment{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  amount Float
+  data DateTime
+  method String
+  user User @relation(fields: [userId],references: [id])
+  userId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PortfolioItem{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  imageUrl String?
+  projectUrl String?
+  user User @relation(fields: [userId],references: [id])
+  userId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 model Category {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   title       String
@@ -79,5 +206,3 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 }
-
- 

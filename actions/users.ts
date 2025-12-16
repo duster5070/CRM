@@ -5,8 +5,9 @@ import { db } from "@/prisma/db";
 import { UserProps } from "@/types/types";
 import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
+import { UserRole } from "@prisma/client";
 export async function createUser(data: UserProps) {
-  const { email, password, firstName, lastName, name, phone, image } = data;
+  const { email, password, firstName, lastName, name, phone, image,role,country,location,userId } = data;
   try {
     // Hash the PAASWORD
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -22,6 +23,7 @@ export async function createUser(data: UserProps) {
         data: null,
       };
     }
+    
     const newUser = await db.user.create({
       data: {
         email,
@@ -31,10 +33,15 @@ export async function createUser(data: UserProps) {
         name,
         phone,
         image,
+        role:role ?? UserRole.CLIENT,
+        country,
+        location,
+        userId 
       },
     });
-    // revalidatePath("/dashboard/users");
-    // console.log(newUser);
+    revalidatePath("/dashboard/clients");
+    revalidatePath("/dashboard/users");
+    console.log("this is the new user",newUser);
     return {
       error: null,
       status: 200,
@@ -51,6 +58,10 @@ export async function createUser(data: UserProps) {
 }
 export type KitResponseData = { fkUsers: number; hsaUsers: number };
 export async function getKitUsers() {
+  if (!process.env.KIT_API_ENDPOINT) {
+    console.error("KIT_API_ENDPOINT is not defined");
+    return null;
+  }
   const endpoint = process.env.KIT_API_ENDPOINT as string;
   try {
     const res = await fetch(endpoint, {
@@ -62,5 +73,50 @@ export async function getKitUsers() {
   } catch (error) {
     console.error("Error fetching the count:", error);
     return null;
+  }
+}
+
+export async function deleteUser(id: string) {
+  try {
+    const deletedUser = await db.user.delete({
+      where: {
+        id,
+      },
+    });
+
+    return {
+      ok: true,
+      data: deletedUser,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserById(id: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateUserById(id: string, data: UserProps) {
+  try {
+    const updatedUser = await db.user.update({
+      where: {
+        id,
+      },
+      data,
+    });
+    revalidatePath("/dashboard/clients");
+    return updatedUser;
+  } catch (error) {
+    console.log(error);
   }
 }
