@@ -44,6 +44,23 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: "name",
     header: ({ column }) => <SortableColumn column={column} title="Name" />,
   },
+   {
+      accessorKey: "budget",
+      header: "Budget",
+      cell: ({ row }) => {
+        const budget = row.original.budget
+        return <div className="">{budget?.toLocaleString()}</div>;
+      },
+      
+    },{
+      accessorKey: "deadline",
+      header: "Deadline (in days)",
+      cell: ({ row }) => {
+        const deadline = row.original.deadline
+        return <p>{deadline?.toLocaleString()}</p>;
+      },
+      
+    },
   {
     accessorKey: "startDate",
     header: "Project Start Date",
@@ -73,7 +90,7 @@ export const columns: ColumnDef<Project>[] = [
       return (
         <ActionColumn
           row={row}
-          model="category"
+          model="project"
           editEndpoint={`projects/update/${project.id}`}
           id={project.id}
         />

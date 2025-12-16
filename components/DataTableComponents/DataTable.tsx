@@ -41,6 +41,7 @@ import { ListFilter } from "lucide-react";
 import DateFilters from "./DateFilters";
 import DateRangeFilter from "./DateRangeFilter";
 import { DataTablePagination } from "./DataTablePagination";
+import  ProjectStatus  from "../DataTableColumns/ProjectStatus";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -85,6 +86,8 @@ export default function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center gap-8">
+        
+       
         <div className="flex-1 w-full">
           <SearchBar
             data={data}
@@ -92,6 +95,7 @@ export default function DataTable<TData, TValue>({
             setIsSearch={setIsSearch}
           />
         </div>
+       
         <div className="flex items-center gap-2 ">
           <DateRangeFilter
             data={data}
@@ -177,6 +181,7 @@ export default function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
+       <ProjectStatus   />
     </div>
   );
 }

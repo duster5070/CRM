@@ -203,7 +203,7 @@ export default function Sidebar() {
     setOpenSections((prev) => ({ ...prev, [title]: !prev[title] }));
 
   return (
-    <aside className="hidden md:block w-72 border-r bg-muted/40 h-screen sticky top-0 overflow-auto">
+    <aside className="hidden md:block w-71 border-r bg-muted/40 h-screen sticky top-0 overflow-auto ">
       <div className="flex flex-col h-full">
         <div className="flex items-center gap-2 px-4 py-4 border-b">
           <Logo />

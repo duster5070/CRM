@@ -43,6 +43,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "name",
     header: ({ column }) => <SortableColumn column={column} title="Name" />,
   },
+  
    {
     accessorKey: "phone",
     header: ({ column }) => <SortableColumn column={column} title="Phone" />,

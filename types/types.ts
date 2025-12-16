@@ -1,4 +1,6 @@
-import { UserRole } from "@prisma/client";
+import { Project, UserRole } from "@prisma/client";
+
+export type ProjectStatus = "ONGOING" | "COMPLETE";
 
 export type CategoryProps = {
   title: string;
@@ -28,10 +30,12 @@ description:string;
 bannerImage:string;
 thumbnail:string;
 startDate:any;
-endDate:Date | undefined | null;
-status:string;
+endDate:any;
+status:ProjectStatus;
 clientId:string;
 userId:string;
+budget :number;
+  deadline :number
 }
 
 export type LoginProps = {

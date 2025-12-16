@@ -76,6 +76,7 @@ export async function getKitUsers() {
   }
 }
 
+
 export async function deleteUser(id: string) {
   try {
     const deletedUser = await db.user.delete({
@@ -92,6 +93,7 @@ export async function deleteUser(id: string) {
     console.log(error);
   }
 }
+
 
 export async function getUserById(id: string) {
   try {
@@ -114,9 +116,19 @@ export async function updateUserById(id: string, data: UserProps) {
       },
       data,
     });
+
     revalidatePath("/dashboard/clients");
+
+    revalidatePath("/dashboard/users");
+
     return updatedUser;
   } catch (error) {
     console.log(error);
   }
+
+
 }
+
+
+
+
