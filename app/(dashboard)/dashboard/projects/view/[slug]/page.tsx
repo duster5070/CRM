@@ -16,6 +16,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CalendarDays,
+  ChevronLeft,
   DollarSign,
   Edit,
   Eye,
@@ -23,9 +24,11 @@ import {
   Users,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRouter } from "next/navigation";
 
 export default function ProjectDeatilPage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const router = useRouter();
 
   const modules = [
     {
@@ -49,6 +52,16 @@ export default function ProjectDeatilPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
+      {/*back to projects button*/}
+      <Button
+        onClick={() => router.push("/dashboard/projects")}
+        variant="outline"
+        className="mb-4"
+      >
+        <ChevronLeft className="mr-2 h-4 w-4" />
+        Back to All Projects
+      </Button>
+
       {/*project banner*/}
       <div className="relative h-64 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 mb-8 overflow-hidden">
         <img
@@ -59,6 +72,13 @@ export default function ProjectDeatilPage() {
         <div className="absolute inset-0 flex justify-center items-center">
           <h1 className="text-4xl font-bold text-white">Project Nebula</h1>
         </div>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="absolute top-4 right-4"
+        >
+          <Edit className="h-4 w-4" />
+        </Button>
       </div>
 
       {/*main content*/}
@@ -67,10 +87,11 @@ export default function ProjectDeatilPage() {
         <div className="lg:col-span-2 space-y-6">
           {/*project description*/}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-semibold">
-                Project Description
-              </CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Project Description</CardTitle>
+              <Button variant="ghost" size="icon">
+                <Edit className="h-4 w-4" />
+              </Button>
             </CardHeader>
             <CardContent>
               <p className="text-gray-700">
@@ -99,6 +120,45 @@ export default function ProjectDeatilPage() {
                 </ul>
               </div>
             </CardContent>
+          </Card>
+
+          {/*comments*/}
+          <Card>
+            <CardHeader>
+              <CardTitle>Comments</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-start space-x-4">
+                <Avatar>
+                  <AvatarImage src="/placeholder.svg?height=40&width=40" />
+                  <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold">Jane Doe</p>
+                  <p className="text-sm text-gray-500">
+                    Greate progress on the propulsion systems!
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <Avatar>
+                  <AvatarImage src="/placeholder.svg?height=40&width=40" />
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold">Jane Smith</p>
+                  <p className="text-sm text-gray-500">
+                    We need to review the life support module designs.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Add Comment
+              </Button>
+            </CardFooter>
           </Card>
 
           {/*Modules*/}
