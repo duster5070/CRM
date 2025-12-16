@@ -22,33 +22,25 @@ import {
   Eye,
   MessageSquare,
   Users,
+  X,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
+import { ProjectData } from "@/types/types";
+import emptyFolder from "@/public/empty-folder.png";
+import Image from "next/image";
+import DescriptionForm from "@/components/Forms/DescriptionForm";
 
-export default function ProjectDeatilPage() {
+export default function ProjectDeatilPage({
+  projectData,
+}: {
+  projectData: ProjectData;
+}) {
   const [activeTab, setActiveTab] = useState("overview");
   const router = useRouter();
 
-  const modules = [
-    {
-      id: 1,
-      title: "Propulsion",
-      category: "Engineering",
-    },
-    { id: 2, title: "Life Support", category: "Environmental" },
-    { id: 3, title: "Navigation", category: "Technology" },
-    { id: 4, title: "Communication", category: "Technology" },
-    { id: 5, title: "Power System", category: "Engineering" },
-    { id: 6, title: "Thermal Control", category: "Environmental" },
-  ];
-
-  const invoices = [
-    { id: "INV-001", title: "Initial design phase", amount: 250000 },
-    { id: "INV-002", title: "Propulsion System Development", amount: 500000 },
-    { id: "INV-003", title: "Life Support Systems", amount: 350000 },
-    { id: "INV-004", title: "Navigation and AI Integration", amount: 400000 },
-  ];
+  const [desc, setDesc] = useState(projectData.description);
+  const [isEditing, setIsEditing] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
@@ -63,19 +55,28 @@ export default function ProjectDeatilPage() {
       </Button>
 
       {/*project banner*/}
-      <div className="relative h-64 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 mb-8 overflow-hidden">
-        <img
-          src="/placeholder.svg?height=256&width=1024"
-          alt="Project Banner"
-          className="w-full h-full object-cover mix-blend-overlay"
-        />
+      <div className="relative h-64 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 mb-8 overflow-hidden group">
+        {projectData.bannerImage ? (
+          <img
+            src={projectData.bannerImage}
+            alt="Project Banner"
+            className="w-full h-full object-cover mix-blend-overlay"
+          />
+        ) : (
+          <img
+            src="/placeholder.svg?height=256&width=1024"
+            alt="Project Banner"
+            className="w-full h-full object-cover mix-blend-overlay"
+          />
+        )}
+
         <div className="absolute inset-0 flex justify-center items-center">
-          <h1 className="text-4xl font-bold text-white">Project Nebula</h1>
+          <h1 className="text-4xl font-bold text-white">{projectData.name}</h1>
         </div>
         <Button
           variant="secondary"
           size="icon"
-          className="absolute top-4 right-4"
+          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
         >
           <Edit className="h-4 w-4" />
         </Button>
@@ -84,21 +85,32 @@ export default function ProjectDeatilPage() {
       {/*main content*/}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/*left column*/}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-8">
           {/*project description*/}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Project Description</CardTitle>
-              <Button variant="ghost" size="icon">
-                <Edit className="h-4 w-4" />
+              <Button
+                onClick={() => setIsEditing(!isEditing)}
+                variant="ghost"
+                size="icon"
+              >
+                {isEditing ? (
+                  <X className="h-4 w-4" />
+                ) : (
+                  <Edit className="h-4 w-4" />
+                )}
               </Button>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700">
-                Project Nebula is an innovative space exploration initiative
-                aimed at developing cutting-edge technologies for interstellar
-                travel.
-              </p>
+              {isEditing ? (
+                <DescriptionForm
+                  editingId={projectData.id}
+                  initialDescription={projectData.description}
+                />
+              ) : (
+                <p>{projectData.description || "No description available."}</p>
+              )}
             </CardContent>
           </Card>
 
@@ -112,12 +124,13 @@ export default function ProjectDeatilPage() {
             </CardHeader>
             <CardContent>
               <div className="prose">
-                <h3>Key Objectives:</h3>
-                <ul>
-                  <li>Develop sustainable propulsion systems</li>
-                  <li>Design long term life support modules</li>
-                  <li>Create AI-driven navigation systems</li>
-                </ul>
+                {projectData.notes ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: projectData.notes }}
+                  ></div>
+                ) : (
+                  <p>No notes available.</p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -128,30 +141,19 @@ export default function ProjectDeatilPage() {
               <CardTitle>Comments</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-start space-x-4">
-                <Avatar>
-                  <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-semibold">Jane Doe</p>
-                  <p className="text-sm text-gray-500">
-                    Greate progress on the propulsion systems!
-                  </p>
+              {projectData.comments.map((comment) => (
+                <div key={comment.id} className="flex items-start space-x-4">
+                  <Avatar>
+                    <AvatarFallback>
+                      {comment.content.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold">User</p>
+                    <p className="text-sm text-gray-500">{comment.content}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <Avatar>
-                  <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                  <AvatarFallback>JS</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-semibold">Jane Smith</p>
-                  <p className="text-sm text-gray-500">
-                    We need to review the life support module designs.
-                  </p>
-                </div>
-              </div>
+              ))}
             </CardContent>
             <CardFooter>
               <Button variant="outline" className="w-full">
@@ -168,30 +170,40 @@ export default function ProjectDeatilPage() {
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[300px] pr-4">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {modules.map((module) => (
-                    <Card
-                      key={module.id}
-                      className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50"
-                    >
-                      <CardHeader className="p-4">
-                        <CardTitle className="text-sm">
-                          {module.title}
-                        </CardTitle>
-                        <CardDescription className="text-xs">
-                          {module.category}
-                        </CardDescription>
-                      </CardHeader>
-                    </Card>
-                  ))}
-                </div>
+                {projectData.modules.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {projectData.modules.map((module) => (
+                      <Card
+                        key={module.id}
+                        className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50"
+                      >
+                        <CardHeader className="p-4">
+                          <CardTitle className="text-sm">
+                            {module.name}
+                          </CardTitle>
+                        </CardHeader>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex justify-center items-center h-full">
+                    <div className="space-y-4">
+                      <Image
+                        src={emptyFolder}
+                        alt="No Modules"
+                        className="w-36 h-auto"
+                      />
+                      <Button variant="outline">Add New Module</Button>
+                    </div>
+                  </div>
+                )}
               </ScrollArea>
             </CardContent>
           </Card>
         </div>
 
         {/*right column*/}
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/*Project Info Card*/}
           <Card>
             <CardHeader>
@@ -201,7 +213,9 @@ export default function ProjectDeatilPage() {
               <div className="flex items-center">
                 <DollarSign className="mr-2 h-4 w-4 text-green-500" />
                 <span className="font-semibold">Budget:</span>
-                <span className="ml-2">$10,000,000</span>
+                <span className="ml-2">
+                  ${projectData.budget?.toLocaleString() || "N/A"}
+                </span>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center">
@@ -209,8 +223,19 @@ export default function ProjectDeatilPage() {
                   <span className="font-semibold">Timeline:</span>
                 </div>
                 <div className="ml-6 space-y-1">
-                  <div className="text-sm">Start: Jan 1, 2023</div>
-                  <div className="text-sm">End: Dec 31, 2025</div>
+                  <div className="text-sm">
+                    Start:{" "}
+                    {new Date(projectData.startDate).toLocaleDateString()}
+                  </div>
+                  <div className="text-sm">
+                    End:{" "}
+                    {projectData.endDate
+                      ? new Date(projectData.endDate).toLocaleDateString()
+                      : "Ongoing"}
+                  </div>
+                  <div className="text-sm">
+                    Remaining: {projectData.deadline} days
+                  </div>
                 </div>
               </div>
               <div>
@@ -219,12 +244,14 @@ export default function ProjectDeatilPage() {
                   <span className="font-semibold">Members:</span>
                 </div>
                 <div className="flex -space-x-2">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Avatar key={i}>
+                  {projectData.members.map((member, index) => (
+                    <Avatar key={member.id}>
                       <AvatarImage
-                        src={`/placeholder.svg?height=32&width=32&text=${i}`}
+                        src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
                       />
-                      <AvatarFallback>M{i}</AvatarFallback>
+                      <AvatarFallback>
+                        {member.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                   ))}
                 </div>
@@ -240,27 +267,33 @@ export default function ProjectDeatilPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src="/placeholder.svg?height=48&width=48&text=SC" />
-                  <AvatarFallback>SC</AvatarFallback>
+                  {projectData.client.image ? (
+                    <AvatarImage src={projectData.client.image} />
+                  ) : (
+                    <AvatarFallback>
+                      {projectData.client.name.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div>
-                  <p className="font-semibold">Space Corp</p>
+                  <p className="font-semibold">{projectData.client.name}</p>
                   <p className="text-sm text-gray-500">
-                    Leading space exploration company
+                    {projectData.client.companyName || "Individual Client"}
                   </p>
                 </div>
               </div>
               <div className="text-sm">
                 <p>
-                  <span className="font-semibold">Contact:</span> John Explorer
+                  <span className="font-semibold">Contact:</span>
+                  {projectData.client.firstName} {projectData.client.lastName}
                 </p>
                 <p>
                   <span className="font-semibold">Email:</span>{" "}
-                  John@spacecorp.com
+                  {projectData.client.email}
                 </p>
                 <p>
-                  <span className="font-semibold">Phone:</span> +1 (555)
-                  123-4567
+                  <span className="font-semibold">Phone:</span>{" "}
+                  {projectData.client.phone}
                 </p>
               </div>
             </CardContent>
@@ -278,39 +311,54 @@ export default function ProjectDeatilPage() {
                   <TabsTrigger value="payments">Payments</TabsTrigger>
                 </TabsList>
                 <TabsContent value="invoices" className="space-y-4">
-                  {invoices.map((invoice) => (
-                    <div
-                      key={invoice.id}
-                      className="flex justify-between items-center"
-                    >
-                      <div>
-                        <p className="font-semibold">{invoice.title}</p>
-                        <p className="text-sm text-gray-500">{invoice.id}</p>
+                  {projectData.invoices.length > 0 ? (
+                    projectData.invoices.map((invoice) => (
+                      <div
+                        key={invoice.id}
+                        className="flex justify-between items-center"
+                      >
+                        <div>
+                          <p className="font-semibold">
+                            {invoice.invoiceNumber}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Due:{" "}
+                            {new Date(invoice.dueDate).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant="secondary">
+                            ${invoice.amount.toLocaleString()}
+                          </Badge>
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="secondary">
-                          ${invoice.amount.toLocaleString()}
-                        </Badge>
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500">No Invoices Yet.</p>
+                  )}
                 </TabsContent>
                 <TabsContent value="payments" className="space-y-4">
-                  {["PAY-001", "PAY-002"].map((pay) => (
-                    <div
-                      key={pay}
-                      className="flex justify-between items-center"
-                    >
-                      <span>{pay}</span>
-                      <Badge variant="outline" className="bg-green-100">
-                        $500,000
-                      </Badge>
-                    </div>
-                  ))}
+                  {projectData.payments.length > 0 ? (
+                    projectData.payments.map((payment) => (
+                      <div
+                        key={payment.id}
+                        className="flex justify-between items-center"
+                      >
+                        <span>
+                          {new Date(payment.date).toLocaleDateString()}
+                        </span>
+                        <Badge variant="outline" className="bg-green-100">
+                          ${payment.amount.toLocaleString()}
+                        </Badge>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500">No Payments Yet.</p>
+                  )}
                 </TabsContent>
               </Tabs>
             </CardContent>
