@@ -119,6 +119,7 @@ export default withUt({
     addVariablesForColors,
 		addVariablesForSpacing,
     require("@tailwindcss/forms"),
+	require('@tailwindcss/typography'),
   ],
 });
 

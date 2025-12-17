@@ -14,26 +14,26 @@ import { NodeSelector } from "./selectors/node-selector";
 import { LinkSelector } from "./selectors/link-selector";
 import { ColorSelector } from "./selectors/color-selector";
 import { TextButtons } from "./selectors/text-buttons";
-import { slashCommand, suggestionItems } from "./slash-comand";
+import { slashCommand, suggestionItems } from "./slash-command";
 import { handleImageDrop, handleImagePaste } from "novel/plugins";
 import { Separator } from "../ui/separator";
 import { defaultExtensions } from "./extensions";
 import { uploadFn } from "./image-upload";
 import { cn } from "@/lib/utils";
-
+ 
 const extensions = [...defaultExtensions, slashCommand];
-
+ 
 interface EditorProp {
   initialValue?: any;
   isEditable?: boolean;
   onChange: (value: any) => void;
 }
-
+ 
 const Editor = ({ initialValue, onChange, isEditable = true }: EditorProp) => {
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
-
+ 
   return (
     <EditorRoot>
       <EditorContent
@@ -86,7 +86,7 @@ const Editor = ({ initialValue, onChange, isEditable = true }: EditorProp) => {
             ))}
           </EditorCommandList>
         </EditorCommand>
-
+ 
         <EditorBubble
           tippyOptions={{
             placement: "top",
@@ -106,5 +106,5 @@ const Editor = ({ initialValue, onChange, isEditable = true }: EditorProp) => {
     </EditorRoot>
   );
 };
-
+ 
 export default Editor;

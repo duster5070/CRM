@@ -41,7 +41,6 @@
     "@types/bcrypt": "^5.0.2",
     "@uploadthing/react": "^6.7.2",
     "@vercel/analytics": "^1.4.1",
-    "@vercel/blob": "^2.0.0",
     "axios": "^1.7.7",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.0",
@@ -50,6 +49,7 @@
     "dayjs": "^1.11.12",
     "emblor": "^1.3.5",
     "framer-motion": "^11.3.19",
+    "html-react-parser": "^5.2.10",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.418.0",
     "next": "15.0.4",
@@ -77,6 +77,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^20",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",

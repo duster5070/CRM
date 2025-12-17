@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import parse from 'html-react-parser';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -21,6 +22,7 @@ import {
   Edit,
   Eye,
   MessageSquare,
+  Plus,
   Users,
   X,
 } from "lucide-react";
@@ -132,16 +134,19 @@ export default function ProjectDeatilPage({
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="prose">
+              <div className="prose lg:prose-xl">
                 {isEditingNotes ? (
                   <NotesForm
+                    isEditable={true}
                     editingId={projectData.id}
-                    initialNotes={projectData.notes}
+                    initialNotes={JSON.parse(projectData.notes)??""}
                   />
                 ) : projectData.notes ? (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: projectData.notes }}
-                  ></div>
+                  <NotesForm
+                    isEditable={false}
+                    editingId={projectData.id}
+                    initialNotes={JSON.parse(projectData.notes)}
+                  />
                 ) : (
                   <p>No notes available.</p>
                 )}
@@ -258,7 +263,8 @@ export default function ProjectDeatilPage({
                   <span className="font-semibold">Members:</span>
                 </div>
                 <div className="flex -space-x-2">
-                  {projectData.members.map((member, index) => (
+                  {projectData.members.length > 0 ? (
+                    projectData.members.map((member, index) => (
                     <Avatar key={member.id}>
                       <AvatarImage
                         src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
@@ -267,7 +273,15 @@ export default function ProjectDeatilPage({
                         {member.name.substring(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                  ))}
+                  ))
+                  ):(
+                    <div>
+                      <Button variant="outline" size="sm">
+                        <Plus className="mr-2 h-4 w-4"/>
+                        Invite Member
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
