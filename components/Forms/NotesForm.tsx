@@ -4,30 +4,27 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ProjectProps } from "@/types/types";
-import TextArea from "../FormInputs/TextAreaInput";
 import { updateProjectById } from "@/actions/projects";
 import SubmitButton from "../FormInputs/SubmitButton";
+import Editor from "../Editor/advanced-editor";
 
 export type SelectOptionProps = {
   label: string;
   value: string;
 };
-export default function DescriptionForm({
+export default function NotesForm({
   editingId,
-  initialDescription,
+  initialNotes,
 }: {
   editingId?: string | undefined;
-  initialDescription?: string | undefined | null;
+  initialNotes?: string | undefined | null;
 }) {
+  const [content, setContent] = useState<any>(initialNotes);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProjectProps>({
-    defaultValues: {
-      description: initialDescription || "",
-    },
-  });
+  } = useForm<ProjectProps>();
 
   const [loading, setLoading] = useState(false);
 
@@ -49,12 +46,7 @@ export default function DescriptionForm({
   return (
     <form className="" onSubmit={handleSubmit(updateDescription)}>
       <div className="grid gap-3">
-        <TextArea
-          register={register}
-          errors={errors}
-          label=""
-          name="description"
-        />
+        <Editor initialValue={content} onChange={setContent} />
         <SubmitButton size={"sm"} title="Update" loading={loading} />
       </div>
     </form>

@@ -30,6 +30,7 @@ import { ProjectData } from "@/types/types";
 import emptyFolder from "@/public/empty-folder.png";
 import Image from "next/image";
 import DescriptionForm from "@/components/Forms/DescriptionForm";
+import NotesForm from "@/components/Forms/NotesForm";
 
 export default function ProjectDeatilPage({
   projectData,
@@ -39,8 +40,8 @@ export default function ProjectDeatilPage({
   const [activeTab, setActiveTab] = useState("overview");
   const router = useRouter();
 
-  const [desc, setDesc] = useState(projectData.description);
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
@@ -118,13 +119,26 @@ export default function ProjectDeatilPage({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Notes</CardTitle>
-              <Button variant="ghost" size="icon">
-                <Edit className="h-4 w-4" />
+              <Button
+                onClick={() => setIsEditingNotes(!isEditingNotes)}
+                variant="ghost"
+                size="icon"
+              >
+                {isEditingNotes ? (
+                  <X className="h-4 w-4" />
+                ) : (
+                  <Edit className="h-4 w-4" />
+                )}
               </Button>
             </CardHeader>
             <CardContent>
               <div className="prose">
-                {projectData.notes ? (
+                {isEditingNotes ? (
+                  <NotesForm
+                    editingId={projectData.id}
+                    initialNotes={projectData.notes}
+                  />
+                ) : projectData.notes ? (
                   <div
                     dangerouslySetInnerHTML={{ __html: projectData.notes }}
                   ></div>
