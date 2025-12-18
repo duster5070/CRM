@@ -5,11 +5,11 @@ import Link from "next/link";
 import { CustomLinkButton } from "../global/CustomLinkButton";
 import StarRating from "../global/StarRating";
 import { AnimatedAvatars } from "../global/avatar-circles";
-import { getKitUsers } from "@/actions/users";
+// import { getKitUsers } from "@/actions/users";
 
 export default async function HeroSection() {
-  const data = await getKitUsers();
-  const count = data ? data.fkUsers : 0;
+  // const data = await getKitUsers();
+  // const count = data ? data.fkUsers : 0;
 
   return (
     <section className="relative min-h-[100vh] w-full flex items-center justify-center bg-gradient-to-br from-background to-muted">
@@ -49,7 +49,7 @@ export default async function HeroSection() {
           </div>
           <div>
             <StarRating count={5} />
-            <p className="dark:text-slate-900">{count} teams trust our platform.</p>
+            <p className="dark:text-slate-900"> teams trust our platform.</p>
           </div>
         </div>
 

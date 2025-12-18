@@ -57,24 +57,7 @@ export async function createUser(data: UserProps) {
   }
 }
 export type KitResponseData = { fkUsers: number; hsaUsers: number };
-export async function getKitUsers() {
-  if (!process.env.KIT_API_ENDPOINT) {
-    console.error("KIT_API_ENDPOINT is not defined");
-    return null;
-  }
-  const endpoint = process.env.KIT_API_ENDPOINT as string;
-  try {
-    const res = await fetch(endpoint, {
-      next: { revalidate: 0 }, // Revalidate immediately
-    });
-    const response = await res.json();
-    const data = response.data;
-    return data as KitResponseData;
-  } catch (error) {
-    console.error("Error fetching the count:", error);
-    return null;
-  }
-}
+
 
 
 export async function deleteUser(id: string) {

@@ -21,7 +21,7 @@ export default async function page() {
         model="project"
       />
       <div className="py-8">
-        <DataTable data={projects} columns={columns} />
+        <DataTable model="project" data={projects} columns={columns} />
       </div>
     </div>
   );

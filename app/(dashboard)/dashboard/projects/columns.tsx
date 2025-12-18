@@ -12,6 +12,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import ActionColumn from "@/components/DataTableColumns/ActionColumn";
 import { Category, Project } from "@prisma/client";
 import Link from "next/link";
+
 export const columns: ColumnDef<Project>[] = [
   {
     id: "select",
@@ -44,45 +45,38 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: "name",
     header: ({ column }) => <SortableColumn column={column} title="Name" />,
   },
-   {
-      accessorKey: "budget",
-      header: "Budget",
-      cell: ({ row }) => {
-        const budget = row.original.budget
-        return <div className="">{budget?.toLocaleString()}</div>;
-      },
-      
-    },{
-      accessorKey: "deadline",
-      header: "Deadline (in days)",
-      cell: ({ row }) => {
-        const deadline = row.original.deadline
-        return <p>{deadline?.toLocaleString()}</p>;
-      },
-      
+  {
+    accessorKey: "budget",
+    header: "Budget",
+    cell: ({ row }) => {
+      const budget = row.original.budget;
+      return <div className="">{budget?.toLocaleString()}</div>;
     },
+  },
+  {
+    accessorKey: "deadline",
+    header: "Deadline (in days)",
+    cell: ({ row }) => {
+      const deadline = row.original.deadline;
+      return <p>{deadline?.toLocaleString()}</p>;
+    },
+  },
   {
     accessorKey: "startDate",
     header: "Project Start Date",
     cell: ({ row }) => <DateColumn row={row} accessorKey="startDate" />,
   },
-    {
-    accessorKey: "startDate",
+  {
+    id: "view",
     header: "view",
     cell: ({ row }) => {
-      return(
+      return (
         <Button asChild>
-          <Link href={"/dashboard/projects/view/project-name"}>View </Link>
+          <Link href={"/dashboard/projects/view/project-name"}>View</Link>
         </Button>
-      )
+      );
     },
   },
-
-  // {
-  //   accessorKey: "createdAt",
-  //   header: "Date Created",
-  //   cell: ({ row }) => <DateColumn row={row} accessorKey="createdAt" />,
-  // },
   {
     id: "actions",
     cell: ({ row }) => {

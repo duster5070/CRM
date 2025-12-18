@@ -7,7 +7,7 @@ export async function getUserClients(
 ): Promise<User[]> {
   return db.user.findMany({
     // where: {
-    //   role: UserRole.USER,   
+    //   role: "CLIENT",   
     //   userId: ownerId,       
     // },
     orderBy: {
