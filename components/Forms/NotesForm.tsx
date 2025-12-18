@@ -15,7 +15,7 @@ export type SelectOptionProps = {
 export default function NotesForm({
   editingId,
   initialNotes,
-  isEditable
+  isEditable,
 }: {
   editingId?: string | undefined;
   initialNotes?: string | undefined | null;
@@ -49,7 +49,11 @@ export default function NotesForm({
   return (
     <form className="" onSubmit={handleSubmit(updateDescription)}>
       <div className="grid gap-3">
-        <Editor isEditable={isEditable} initialValue={content} onChange={setContent} />
+        <Editor
+          isEditable={isEditable}
+          initialValue={content}
+          onChange={setContent}
+        />
         <SubmitButton size={"sm"} title="Update" loading={loading} />
       </div>
     </form>
