@@ -88,6 +88,8 @@ model User {
   description String?
   bannerImage String?
   thumbnail String?
+  budget Int? @default(0)
+  deadline Int? 
   startDate DateTime @default(now())
   endDate DateTime?
   status ProjectStatus @default(ONGOING)

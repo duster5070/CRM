@@ -15,7 +15,8 @@ export async function createProject(data: ProjectProps) {
     if (existingProject) {
       return {
         status:409,
-        error:`project  ${data.name} already exists`
+        error:`project  ${data.name} already exists`,
+        data:null
       };
     }
     const newProject = await db.project.create({
@@ -27,11 +28,18 @@ export async function createProject(data: ProjectProps) {
           startDate:data.startDate,
           clientId:data.clientId,
           userId:data.userId,
+          budget:data.budget,
+          deadline:data.deadline,
+          endDate:data.endDate
         },
     });
     // console.log(newProject);
     revalidatePath("/dashboard/projects");
-    return newProject;
+    return {
+      status:200,
+      error:null,
+      data:newProject
+    };
   } catch (error) {
     console.log(error);
     return null;
@@ -59,14 +67,14 @@ export async function getUserProjects(userId:string | undefined) {
 
 export async function updateProjectById(id: string, data: ProjectProps) {
   try {
-    const updatedCategory = await db.category.update({
+    const updatedProject = await db.project.update({
       where: {
         id,
       },
       data,
     });
     revalidatePath("/dashboard/projects");
-    return updatedCategory;
+    return updatedProject;
   } catch (error) {
     console.log(error);
   }
@@ -85,7 +93,7 @@ export async function getProjectById(id: string) {
 }
 export async function deleteProject(id: string) {
   try {
-    const deletedCategory = await db.category.delete({
+    const deletedProject = await db.project.delete({
       where: {
         id,
       },
