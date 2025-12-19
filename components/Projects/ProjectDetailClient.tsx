@@ -31,6 +31,7 @@ import emptyFolder from "@/public/empty-folder.png";
 import Image from "next/image";
 import DescriptionForm from "@/components/Forms/DescriptionForm";
 import NotesForm from "@/components/Forms/NotesForm";
+import ProjectBanner from "./ProjectBanner";
 
 export default function ProjectDetailClient({
   projectData,
@@ -69,32 +70,12 @@ export default function ProjectDetailClient({
       </Button>
 
       {/*project banner*/}
-      <div className="relative h-64 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 mb-8 overflow-hidden group">
-        {projectData.bannerImage ? (
-          <img
-            src={projectData.bannerImage}
-            alt="Project Banner"
-            className="w-full h-full object-cover mix-blend-overlay"
-          />
-        ) : (
-          <img
-            src="/placeholder.svg?height=256&width=1024"
-            alt="Project Banner"
-            className="w-full h-full object-cover mix-blend-overlay"
-          />
-        )}
-
-        <div className="absolute inset-0 flex justify-center items-center">
-          <h1 className="text-4xl font-bold text-white">{projectData.name}</h1>
-        </div>
-        <Button
-          variant="secondary"
-          size="icon"
-          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <Edit className="h-4 w-4" />
-        </Button>
-      </div>
+      <ProjectBanner
+        name={projectData.name}
+        bannerImage={projectData.bannerImage}
+        editingId={projectData.id}
+        bg={projectData.gradient}
+      />
 
       {/*main content*/}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -277,19 +258,19 @@ export default function ProjectDetailClient({
                 <div className="flex -space-x-2">
                   {projectData.members.length > 0 ? (
                     projectData.members.map((member, index) => (
-                    <Avatar key={member.id}>
-                      <AvatarImage
-                        src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
-                      />
-                      <AvatarFallback>
-                        {member.name.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  ))
-                  ):(
+                      <Avatar key={member.id}>
+                        <AvatarImage
+                          src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
+                        />
+                        <AvatarFallback>
+                          {member.name.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))
+                  ) : (
                     <div>
                       <Button variant="outline" size="sm">
-                        <Plus className="mr-2 h-4 w-4"/>
+                        <Plus className="mr-2 h-4 w-4" />
                         Invite Member
                       </Button>
                     </div>

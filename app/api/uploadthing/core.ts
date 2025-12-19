@@ -18,7 +18,13 @@ export const ourFileRouter = {
       return { uploadedBy: "JB" };
     }
   ),
-   projectThumbnail: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(
+  projectThumbnail: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(
+    async ({ metadata, file }) => {
+      console.log("file url", file.url);
+      return { uploadedBy: "JB" };
+    }
+  ),
+  bannerImage: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(
     async ({ metadata, file }) => {
       console.log("file url", file.url);
       return { uploadedBy: "JB" };

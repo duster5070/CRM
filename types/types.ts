@@ -30,6 +30,7 @@ export type ProjectProps = {
   notes: string;
   description: string;
   bannerImage: string;
+  gradient: string;
   thumbnail: string;
   startDate: any;
   endDate: any;
@@ -52,6 +53,7 @@ export type ProjectData = {
   notes: string;
   description: string | null;
   bannerImage: string | null;
+  gradient: string;
   thumbnail: string | null;
   budget: number | null;
   deadline: number | null;

@@ -89,6 +89,7 @@ model User {
   notes String?
   description String?
   bannerImage String?
+  gradient String?
   thumbnail String?
   budget Int? @default(0)
   deadline Int? 
