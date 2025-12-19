@@ -22,7 +22,7 @@ import TextInput from "../FormInputs/TextInput";
 import TextArea from "../FormInputs/TextAreaInput";
 import ImageInput from "../FormInputs/ImageInput";
 import FormFooter from "./FormFooter";
-import { Headset, Mail, User,Lock, Flag, MapPin } from "lucide-react";
+import { Headset, Mail, User,Lock, Flag, MapPin, Pencil, Building } from "lucide-react";
 import PasswordInput from "../FormInputs/PasswordInput";
 import { createUser, updateUserById } from "@/actions/users";
 
@@ -53,6 +53,8 @@ export default function ClientForm({
       email: initialData?.email || "",
       country: initialData?.country || "",
       location: initialData?.location || "",
+      companyName: initialData?.companyName || "",
+      companyDescription: initialData?.companyDescription || "",
       
     },
   });
@@ -120,74 +122,92 @@ export default function ClientForm({
             <CardContent>
               <div className="grid gap-6 pt-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextInput
-                              register={register}
-                              errors={errors}
-                              label="First Name"
-                              name="firstName"
-                              icon={User}
-                              placeholder="first Name"
-                            />
-                            <TextInput
-                              register={register}
-                              errors={errors}
-                              label="Last Name"
-                              name="lastName"
-                              icon={User}
-                              placeholder="last Name"
-                            />
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextInput
-                              register={register}
-                              errors={errors}
-                              label="Phone"
-                              name="phone"
-                              icon={Headset}
-                              placeholder="phone"
-                            />
-                            <div className="">
-                              <TextInput
-                                type="email"
-                                register={register}
-                                errors={errors}
-                                label="Email Address"
-                                name="email"
-                                icon={Mail}
-                                placeholder="email"
-                              />
-                              {emailErr && (
-                                <p className="text-red-500 text-xs mt-2">{emailErr}</p>
-                              )}
-                            </div>
-                          </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextInput
-                              register={register}
-                              errors={errors}
-                              label="Country"
-                              name="country"
-                              icon={Flag}
-                              placeholder="eg EGP"
-                            />
-                            <TextInput
-                              register={register}
-                              errors={errors}
-                              label="Location"
-                              name="location"
-                              icon={MapPin}
-                              placeholder="Cairo"
-                            />
-                          </div>
-                       {!editingId &&   <PasswordInput
-                            register={register}
-                            errors={errors}
-                            label="Password"
-                            name="password"
-                            icon={Lock}
-                            placeholder="password"
-                            type="password"
-                          />}
+                      <TextInput
+                        register={register}
+                        errors={errors}
+                        label="First Name"
+                        name="firstName"
+                        icon={User}
+                        placeholder="first Name"
+                      />
+                      <TextInput
+                        register={register}
+                        errors={errors}
+                        label="Last Name"
+                        name="lastName"
+                        icon={User}
+                        placeholder="last Name"
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <TextInput
+                        register={register}
+                        errors={errors}
+                        label="Phone"
+                        name="phone"
+                        icon={Headset}
+                        placeholder="phone"
+                      />
+                      <div className="">
+                        <TextInput
+                          type="email"
+                          register={register}
+                          errors={errors}
+                          label="Email Address"
+                          name="email"
+                          icon={Mail}
+                          placeholder="email"
+                        />
+                        {emailErr && (
+                          <p className="text-red-500 text-xs mt-2">{emailErr}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <TextInput
+                        register={register}
+                        errors={errors}
+                        label="Country"
+                        name="country"
+                        icon={Flag}
+                        placeholder="eg EGP"
+                      />
+                      <TextInput
+                        register={register}
+                        errors={errors}
+                        label="Location"
+                        name="location"
+                        icon={MapPin}
+                        placeholder="Cairo"
+                      />
+                    </div>
+                  {!editingId && <PasswordInput
+                      register={register}
+                      errors={errors}
+                      label="Password"
+                      name="password"
+                      icon={Lock}
+                      placeholder="password"
+                      type="password"
+                    />}
+                    <div className="space-y-4">
+                       <TextInput
+                        register={register}
+                        errors={errors}
+                        label="Company Name"
+                        name="companyName"
+                        icon={Building}
+                        placeholder="Space Corp"
+                      />
+                        <TextInput
+                        register={register}
+                        errors={errors}
+                        label="Company Description"
+                        name="companyDescription"
+                        icon={Pencil}
+                        placeholder="Leading Space Exploration Company"
+                      />
+                    </div>
               </div>
             </CardContent>
           </Card>

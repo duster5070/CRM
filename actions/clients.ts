@@ -6,10 +6,10 @@ export async function getUserClients(
   ownerId: string
 ): Promise<User[]> {
   return db.user.findMany({
-    // where: {
-    //   role: "CLIENT",   
-    //   userId: ownerId,       
-    // },
+    where: {
+      role: "CLIENT",   
+      userId: ownerId,       
+    },
     orderBy: {
       createdAt: "desc",
     },

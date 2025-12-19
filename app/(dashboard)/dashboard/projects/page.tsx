@@ -1,6 +1,6 @@
 import React from "react";
 import { columns } from "./columns";
-import { Category, Project } from "@prisma/client";
+import { Category,Project } from "@prisma/client";
 import DataTable from "@/components/DataTableComponents/DataTable";
 import TableHeader from "../../../../components/dashboard/Tables/TableHeader";
 import { getAllCategories } from "@/actions/categories";

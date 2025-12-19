@@ -70,9 +70,10 @@ export const columns: ColumnDef<Project>[] = [
     id: "view",
     header: "view",
     cell: ({ row }) => {
+      const project = row.original;
       return (
         <Button asChild>
-          <Link href={"/dashboard/projects/view/project-name"}>View</Link>
+          <Link href={`/dashboard/projects/view/${project.slug}`}>View</Link>
         </Button>
       );
     },

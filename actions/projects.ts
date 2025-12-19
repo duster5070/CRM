@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
-import { CategoryProps, ProjectProps } from "@/types/types";
+import { CategoryProps, ProjectData, ProjectProps } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
 export async function createProject(data: ProjectProps) {
@@ -91,6 +91,87 @@ export async function getProjectById(id: string) {
     console.log(error);
   }
 }
+
+export async function getProjectDetailsBySlug(slug: string):Promise<ProjectData|null> {
+  console.log(`[getProjectDetailsBySlug] Fetching project with slug: ${slug}`);
+  try {
+    // clientId
+    const project = await db.project.findUnique({
+      where: {
+        slug,
+      },
+      include:{
+        modules:true,
+        comments:true,
+        members:true,
+        invoices:true,
+        payments:true
+      }
+    });
+    
+    if(!project) {
+      console.log(`[getProjectDetailsBySlug] Project not found for slug: ${slug}`);
+      return null
+    }
+    console.log(`[getProjectDetailsBySlug] Project found: ${project.name}, ClientID: ${project.clientId}`);
+
+    const client = await db.user.findFirst({
+      where:{
+        id:project?.clientId,
+        role:"CLIENT"
+      },
+      select:{
+          id:true,
+          name:true,
+          firstName:true,
+          lastName:true,
+          phone:true,
+          email:true,
+          image:true,
+          country:true,
+          location:true,
+          role:true,
+          companyName:true,
+          companyDescription:true
+      }
+    });
+    if(!client)
+    {
+      console.log(`[getProjectDetailsBySlug] Client not found for ID: ${project.clientId}`);
+      // throw new Error('client not found') // Don't throw, just log. The page likely needs client data though.
+      // If client is mandatory, we might want to return null or partial data.
+      // For now, let's see if this is the failure point.
+      throw new Error('client not found');
+    }
+    console.log(`[getProjectDetailsBySlug] Client found: ${client.name}`);
+
+    if(!project.name){
+      return null
+    }
+
+    const mappedInvoices = project.invoices.map((inv: any) => ({
+      ...inv,
+      dueDate: inv.duedate || inv.dueDate
+    }));
+
+    const mappedPayments = project.payments.map((pay: any) => ({
+      ...pay,
+      date: pay.data || pay.date // Handle likely typo in DB 'data' vs 'date'
+    }));
+
+    return {
+      ...project,
+      invoices: mappedInvoices,
+      payments: mappedPayments,
+      notes: project.notes ?? "",
+      client
+    };
+  } catch (error) {
+    console.error('Error fetching project details',error);
+    return null
+  }
+}
+
 export async function deleteProject(id: string) {
   try {
     const deletedProject = await db.project.delete({
