@@ -6,7 +6,12 @@ import toast from "react-hot-toast";
 import { ProjectProps } from "@/types/types";
 import { updateProjectById } from "@/actions/projects";
 import SubmitButton from "../FormInputs/SubmitButton";
-import Editor from "../Editor/advanced-editor";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(() => import("../Editor/advanced-editor"), {
+  ssr: false,
+  loading: () => <div className="border p-4 rounded-xl animate-pulse h-64 bg-muted" />,
+});
 
 export type SelectOptionProps = {
   label: string;
@@ -15,7 +20,7 @@ export type SelectOptionProps = {
 export default function NotesForm({
   editingId,
   initialNotes,
-  isEditable,
+  isEditable
 }: {
   editingId?: string | undefined;
   initialNotes?: string | undefined | null;
@@ -49,12 +54,8 @@ export default function NotesForm({
   return (
     <form className="" onSubmit={handleSubmit(updateDescription)}>
       <div className="grid gap-3">
-        <Editor
-          isEditable={isEditable}
-          initialValue={content}
-          onChange={setContent}
-        />
-        <SubmitButton size={"sm"} title="Update" loading={loading} />
+        <Editor isEditable={isEditable} initialValue={content} onChange={setContent} />
+        {isEditable && <SubmitButton size={"sm"} title="Update" loading={loading} />}
       </div>
     </form>
   );

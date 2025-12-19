@@ -43,6 +43,19 @@ export default function ProjectDetailClient({
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
+  // Helper function to safely parse notes JSON
+  const parseNotes = (notes: string) => {
+    if (!notes || notes.trim() === "") {
+      return null;
+    }
+    try {
+      return JSON.parse(notes);
+    } catch (error) {
+      console.error("Failed to parse notes:", error);
+      return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/*back to projects button*/}
@@ -133,17 +146,18 @@ export default function ProjectDetailClient({
             </CardHeader>
             <CardContent>
               <div className="prose lg:prose-xl">
-                {isEditingNotes ? (
+                {projectData.notes && projectData.notes.trim() !== "" ? (
+                  <NotesForm
+                    key={isEditingNotes ? "editing" : "viewing"}
+                    isEditable={isEditingNotes}
+                    editingId={projectData.id}
+                    initialNotes={parseNotes(projectData.notes)}
+                  />
+                ) : isEditingNotes ? (
                   <NotesForm
                     isEditable={true}
                     editingId={projectData.id}
-                    initialNotes={JSON.parse(projectData.notes)??""}
-                  />
-                ) : projectData.notes ? (
-                  <NotesForm
-                    isEditable={false}
-                    editingId={projectData.id}
-                    initialNotes={JSON.parse(projectData.notes)}
+                    initialNotes={null}
                   />
                 ) : (
                   <p>No notes available.</p>
