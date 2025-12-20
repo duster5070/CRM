@@ -10,12 +10,12 @@ export default async function ProjectDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const projectData = await getProjectDetailsBySlug(slug);
   console.log(`[ProjectDetailPage] Received project data for slug ${slug}:`, projectData ? "FOUND" : "NULL");
   const session = await getServerSession(authOptions);
-  
+   
   if (!session) {
     redirect(
       `/login?callbackUrl=${encodeURIComponent(`/project/${slug}`)}`

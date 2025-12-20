@@ -37,6 +37,7 @@ import { Session } from "next-auth";
 import { getInitials } from "@/lib/generateInitials";
 import { ModeToggle } from "../mode-toggle";
 import AuthenticatedAvatar from "../global/AuthenticatedAvatar";
+import PaymentForm from "../Forms/PaymentForm";
 
 export default function ProjectDetailClient({
   projectData,
@@ -63,7 +64,8 @@ export default function ProjectDetailClient({
       return null;
     }
   };
-
+const paidAmount = projectData.payments.reduce((total, payment) => total + payment.amount, 0);
+const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 0;
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/*back to projects button*/}
@@ -378,6 +380,8 @@ export default function ProjectDetailClient({
                   )}
                 </TabsContent>
                 <TabsContent value="payments" className="space-y-4">
+                  <PaymentForm  projectId={projectData.id} userId={projectData.userId} clientId={projectData.clientId} remainingAmount={remainingAmount} />
+
                   {projectData.payments.length > 0 ? (
                     projectData.payments.map((payment) => (
                       <div
@@ -387,9 +391,21 @@ export default function ProjectDetailClient({
                         <span>
                           {new Date(payment.date).toLocaleDateString()}
                         </span>
+                       
+                         <Badge variant="outline" className="">
+                          {payment.title}
+                        </Badge>
                         <Badge variant="outline" className="bg-green-100">
                           ${payment.amount.toLocaleString()}
                         </Badge>
+
+                        <Button variant="outline" size="sm" className="ml-2">
+                          <Link href={`/dashboard/projects/${projectData.id}/payments/${payment.id}`}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Link>
+                        </Button>
+
                       </div>
                     ))
                   ) : (
