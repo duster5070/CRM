@@ -50,8 +50,9 @@ const PaymentForm = ({
     data.projectId = projectId;
     data.userId = userId;
     data.clientId = clientId;
+    const subTotal = Number(data.amount)
     data.tax = Number(data.tax);
-    data.amount = Number(data.amount);
+    data.amount = subTotal + data.tax;
     data.date = new Date(data.date).toISOString();
 
     try {

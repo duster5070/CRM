@@ -24,6 +24,55 @@ export async function createPayment(data: PaymentProps) {
   }
 }
 
+export async function getInvoiceById(id:string) {
+  try {
+    const payment = await db.payment.findUnique({
+    where:{id}
+    });
+
+    if(!payment){
+      return null;
+    }
+
+    const client = await db.user.findUnique({
+    where:{
+      id:payment?.clientId,
+      role: "CLIENT"
+    },
+    select:{
+          name:true,
+          phone:true,
+          email:true,
+          companyName:true,
+          companyDescription:true
+      }
+    });
+    const user = await db.user.findUnique({
+    where:{
+      id:payment?.userId,
+      role: "USER"
+    },
+    select:{
+          name:true,
+          phone:true,
+          email:true,
+          companyName:true,
+          companyDescription:true,
+          userLogo:true
+      }
+    });
+    return {
+      invoice:payment,
+      user,
+      client,
+    };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+
 // READ ALL
 export async function getAllPayments() {
   try {

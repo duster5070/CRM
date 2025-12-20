@@ -183,7 +183,7 @@ model Invoice{
 // }
 model Payment {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
-   title         String
+  title         String
   amount        Float
   tax           Float
   date          DateTime @default(now())
