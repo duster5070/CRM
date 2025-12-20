@@ -36,6 +36,8 @@ import Link from "next/link";
 import BudgetProgressBar from "./BudgetProgressBar";
 import CommentForm from "../Forms/CommentForm";
 import parse from "html-react-parser";
+import Module from "module";
+import ModuleForm from "../Forms/ModuleForm";
 
 export default function ProjectDetailClient({
   projectData,
@@ -308,7 +310,7 @@ export default function ProjectDetailClient({
                         alt="No Modules"
                         className="w-36 h-auto"
                       />
-                      <Button variant="outline">Add New Module</Button>
+                      <ModuleForm  projectId={projectData.id} userId={user.id} userName={user.name} />
                     </div>
                   </div>
                 )}

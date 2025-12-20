@@ -153,6 +153,16 @@ export type Payment = {
   invoiceNumber: string;
 };
 
+
+
+export type ModuleProps = {
+  name : string;
+  userName: string;
+  projectId: string;
+  userId: string;
+
+  
+}
 export type ClientData = {
   id: string;
   name: string;
