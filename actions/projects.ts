@@ -164,6 +164,7 @@ export async function getProjectDetailsBySlug(slug: string):Promise<ProjectData|
       invoices: mappedInvoices,
       payments: mappedPayments,
       notes: project.notes ?? "",
+      gradient: project.gradient ?? "",
       client
     };
   } catch (error) {

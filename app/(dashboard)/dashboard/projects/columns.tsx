@@ -73,7 +73,7 @@ export const columns: ColumnDef<Project>[] = [
       const project = row.original;
       return (
         <Button asChild>
-          <Link href={`/dashboard/projects/view/${project.slug}`}>View</Link>
+          <Link href={`/project/${project.slug}`}>View</Link>
         </Button>
       );
     },

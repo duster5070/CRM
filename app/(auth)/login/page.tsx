@@ -6,14 +6,23 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
-export default async function page() {
+interface Props {
+  searchParams?:{
+    callbackUrl?:string
+ 
+  }
+}
+
+export default async function page({ searchParams }:  Props) {
   const session = await getServerSession(authOptions);
+  const callbackUrl = searchParams?.callbackUrl || "/dashboard";
+ 
   if (session) {
-    redirect("/dashboard");
+    redirect(callbackUrl);
   }
   return (
     <section>
-      <LoginForm />
+      <LoginForm  />
     </section>
   );
 }

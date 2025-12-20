@@ -24,7 +24,7 @@ export default function LoginForm() {
     reset,
   } = useForm<LoginProps>();
   const params = useSearchParams();
-  const returnUrl = params.get("returnUrl") || "/dashboard";
+  const returnUrl = params.get("callbackUrl") || "/dashboard";
   const [passErr, setPassErr] = useState("");
   const router = useRouter();
   async function onSubmit(data: LoginProps) {

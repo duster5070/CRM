@@ -1,3 +1,4 @@
+
 import { Project, UserRole, ProjectStatus } from "@prisma/client";
 
 // export type ProjectStatus = "ONGOING" | "COMPLETE";
@@ -16,6 +17,7 @@ export type UserProps = {
   image: string;
   email: string;
   password: string;
+  userLogo?:string;
   role?: UserRole;
   userId?: string;
   country?: string;
@@ -23,6 +25,28 @@ export type UserProps = {
   companyName?: string;
   companyDescription?: string;
 };
+export type PaymentProps = {
+  amount: number;
+  title: string;
+  tax: number;
+  date: string;
+  invoiceNumber: string;
+  method: string;
+  projectId: string;
+  userId: string;
+  clientId: string;
+  
+};
+export type CreatePaymentInput = {
+  amount: number;
+  tax: number;
+  method: string;
+  date?: Date;
+  projectId: string;
+  userId: string;
+  clientId: string;
+};
+
 
 export type ProjectProps = {
   name: string;
@@ -113,12 +137,14 @@ export type Invoice = {
 export type Payment = {
   id: string;
   amount: number;
+  title: string;
   date: Date;
   method: string;
   projectId: string;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+  invoiceNumber:string
 };
 
 export type ClientData = {
