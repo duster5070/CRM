@@ -41,12 +41,12 @@ import Link from "next/link";
 
 export default function ProjectDetailClient({
   projectData,
-  session
+  session,
 }: {
-  projectData: ProjectData,
-  session: Session|null
+  projectData: ProjectData;
+  session: Session | null;
 }) {
-  const [activeTab, setActiveTab] = useState("overview");
+  // const [activeTab, setActiveTab] = useState("overview");
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -64,28 +64,32 @@ export default function ProjectDetailClient({
       return null;
     }
   };
-const paidAmount = projectData.payments.reduce((total, payment) => total + payment.amount, 0);
-const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 0;
+  const paidAmount = projectData.payments.reduce(
+    (total, payment) => total + payment.amount,
+    0
+  );
+  const remainingAmount = projectData.budget
+    ? projectData.budget - paidAmount
+    : 0;
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/*back to projects button*/}
       <div className="flex items-center justify-between">
         <Button
-        onClick={() => router.push("/dashboard/projects")}
-        variant="outline"
-        className="mb-4"
-        // asChild
-      >
-        {/* <Link href={"dashboard/projects"}><ChevronLeft className="mr-2 h-4 w-4" /> */}
-        Back to All Projects
-        {/* </Link> */}
-      </Button>
-      <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
-    
-
-    <ModeToggle />
-    <AuthenticatedAvatar session={session} />
-      </div>
+          // onClick={() => router.push("/dashboard/projects")}
+          variant="outline"
+          className="mb-4"
+          asChild
+        >
+          <Link href={"/dashboard/projects"}>
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back to All Projects
+          </Link>
+        </Button>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
+          <ModeToggle />
+          <AuthenticatedAvatar session={session} />
+        </div>
       </div>
 
       {/*project banner*/}
@@ -241,40 +245,40 @@ const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 
               <CardTitle>Project Info</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-             <div className="flex items-center justify-between pb-3 border-b">
-               <div className="flex items-center">
-                <DollarSign className="mr-2 h-4 w-4 text-green-500" />
-                <span className="font-semibold">Budget:</span>
-                <span className="ml-2">
-                  ${projectData.budget?.toLocaleString() || "N/A"}
-                </span>
+              <div className="flex items-center justify-between pb-3 border-b">
+                <div className="flex items-center">
+                  <DollarSign className="mr-2 h-4 w-4 text-green-500" />
+                  <span className="font-semibold">Budget:</span>
+                  <span className="ml-2">
+                    ${projectData.budget?.toLocaleString() || "N/A"}
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <DollarSign className="mr-2 h-4 w-4 text-green-500" />
+                  <span className="font-semibold">Total Paid:</span>
+                  <span className="ml-2">
+                    ${paidAmount?.toLocaleString() || "N/A"}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center">
-                <DollarSign className="mr-2 h-4 w-4 text-green-500" />
-                <span className="font-semibold">Total Paid:</span>
-                <span className="ml-2">
-                  ${paidAmount?.toLocaleString() || "N/A"}
-                </span>
-              </div>  
-             </div>
               <div className="space-y-2 border-b pb-3">
                 <div className="flex items-center">
                   <CalendarDays className="mr-2 h-4 w-4 text-blue-500" />
                   <span className="font-semibold">Timeline:</span>
                 </div>
                 <div className="ml-6 space-y-1">
-                <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                     <div className="text-sm">
-                    Start:{" "}
-                    {new Date(projectData.startDate).toLocaleDateString()}
+                      Start:{" "}
+                      {new Date(projectData.startDate).toLocaleDateString()}
+                    </div>
+                    <div className="text-sm">
+                      End:{" "}
+                      {projectData.endDate
+                        ? new Date(projectData.endDate).toLocaleDateString()
+                        : "Ongoing"}
+                    </div>
                   </div>
-                  <div className="text-sm">
-                    End:{" "}
-                    {projectData.endDate
-                      ? new Date(projectData.endDate).toLocaleDateString()
-                      : "Ongoing"}
-                  </div>
-                </div>
                   <div className="text-sm">
                     Remaining: {projectData.deadline} days
                   </div>
@@ -356,7 +360,11 @@ const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 
               <CardTitle>Invoices & Payments</CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="payments" value={activeTab} onValueChange={setActiveTab}>
+              <Tabs
+                defaultValue="payments"
+                // value={activeTab}
+                // onValueChange={setActiveTab}
+              >
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="payments">Payments</TabsTrigger>
                   <TabsTrigger value="invoices">Invoices</TabsTrigger>
@@ -373,17 +381,18 @@ const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 
                             #{invoice.invoiceNumber}
                           </p>
                           <p className="text-sm text-gray-500">
-                            Due:{" "}
-                            {new Date(invoice.date).toLocaleDateString()}
+                            Due: {new Date(invoice.date).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Badge variant="secondary">
                             ${invoice.amount.toLocaleString()}
                           </Badge>
-                          <Button variant="outline" size="sm"asChild >
-                           <Link  href={`/project/invoice/${invoice.id}?project=${projectData.slug}`}>
-                             <Eye className="h-4 w-4 mr-2" />
+                          <Button variant="outline" size="sm" asChild>
+                            <Link
+                              href={`/project/invoice/${invoice.id}?project=${projectData.slug}`}
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
                               view
                             </Link>
                           </Button>
@@ -395,7 +404,12 @@ const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 
                   )}
                 </TabsContent>
                 <TabsContent value="payments" className="space-y-4">
-                  <PaymentForm  projectId={projectData.id} userId={projectData.userId} clientId={projectData.clientId} remainingAmount={remainingAmount} />
+                  <PaymentForm
+                    projectId={projectData.id}
+                    userId={projectData.userId}
+                    clientId={projectData.clientId}
+                    remainingAmount={remainingAmount}
+                  />
 
                   {projectData.payments.length > 0 ? (
                     projectData.payments.map((payment) => (
@@ -406,8 +420,8 @@ const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 
                         <span>
                           {new Date(payment.date).toLocaleDateString()}
                         </span>
-                       
-                         <Badge variant="outline" className="">
+
+                        <Badge variant="outline" className="">
                           {payment.title}
                         </Badge>
                         <Badge variant="outline" className="bg-green-100">
@@ -419,7 +433,6 @@ const remainingAmount = projectData.budget ?  projectData.budget - paidAmount : 
                     <p className="text-sm text-gray-500">No Payments Yet.</p>
                   )}
                 </TabsContent>
-                
               </Tabs>
             </CardContent>
             <CardFooter>
