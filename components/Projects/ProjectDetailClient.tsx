@@ -19,6 +19,7 @@ import {
   DollarSign,
   Edit,
   Eye,
+  Link,
   MessageSquare,
   Plus,
   Users,
@@ -32,11 +33,17 @@ import Image from "next/image";
 import DescriptionForm from "@/components/Forms/DescriptionForm";
 import NotesForm from "@/components/Forms/NotesForm";
 import ProjectBanner from "./ProjectBanner";
+import { Session } from "next-auth";
+import { getInitials } from "@/lib/generateInitials";
+import { ModeToggle } from "../mode-toggle";
+import AuthenticatedAvatar from "../global/AuthenticatedAvatar";
 
 export default function ProjectDetailClient({
   projectData,
+  session
 }: {
-  projectData: ProjectData;
+  projectData: ProjectData,
+  session: Session|null
 }) {
   const [activeTab, setActiveTab] = useState("overview");
   const router = useRouter();
@@ -68,6 +75,14 @@ export default function ProjectDetailClient({
         <ChevronLeft className="mr-2 h-4 w-4" />
         Back to All Projects
       </Button>
+      
+
+      <div className="flex absolute right-0 top-0">
+    
+
+    <ModeToggle />
+    <AuthenticatedAvatar session={session} />
+      </div>
 
       {/*project banner*/}
       <ProjectBanner

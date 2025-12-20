@@ -1,16 +1,26 @@
 import { getProjectDetailsBySlug } from "@/actions/projects";
 import ProjectDetailClient from "@/components/Projects/ProjectDetailClient";
+import { authOptions } from "@/config/auth";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import React from "react";
 
 export default async function ProjectDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
+
   const projectData = await getProjectDetailsBySlug(slug);
   console.log(`[ProjectDetailPage] Received project data for slug ${slug}:`, projectData ? "FOUND" : "NULL");
-
+  const session = await getServerSession(authOptions);
+  
+  if (!session) {
+    redirect(
+      `/login?callbackUrl=${encodeURIComponent(`/project/${slug}`)}`
+    );
+  }
   if (!projectData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -19,5 +29,5 @@ export default async function ProjectDetailPage({
     );
   }
 
-  // return <ProjectDetailClient projectData={projectData} />; change this to project/slug
+  return <ProjectDetailClient projectData={projectData}  session={session}/>;
 }
