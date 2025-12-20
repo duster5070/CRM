@@ -1,29 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  CalendarDays,
-  ChevronLeft,
-  DollarSign,
-  Edit,
-  Eye,
-  MessageSquare,
-  Plus,
-  Users,
-  X,
-} from "lucide-react";
+import { CalendarDays, ChevronLeft, DollarSign, Edit, Eye, MessageSquare, Plus, Users, X, } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
 import { ProjectData } from "@/types/types";
@@ -38,6 +22,7 @@ import { ModeToggle } from "../mode-toggle";
 import AuthenticatedAvatar from "../global/AuthenticatedAvatar";
 import PaymentForm from "../Forms/PaymentForm";
 import Link from "next/link";
+import BudgetProgressBar from "./BudgetProgressBar";
 
 export default function ProjectDetailClient({
   projectData,
@@ -71,6 +56,61 @@ export default function ProjectDetailClient({
   const remainingAmount = projectData.budget
     ? projectData.budget - paidAmount
     : 0;
+  // //==========================================
+  function calculateDaysDifference(endDate: Date | string): number {
+    const end = new Date(endDate);
+    const now = new Date();
+    const diffTime = end.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+  function formatDaysDifference(days: number): string {
+    if (days === 0) {
+      return 'Deadline is today';
+    }
+
+    if (days > 0) {
+      const years = Math.floor(days / 365);
+      const remainingDays = days % 365;
+
+      if (years > 0 && remainingDays > 0) {
+        return `${years} year${years !== 1 ? 's' : ''} and ${remainingDays} day${remainingDays !== 1 ? 's' : ''} remaining`;
+      } else if (years > 0) {
+        return `${years} year${years !== 1 ? 's' : ''} remaining`;
+      } else {
+        return `${days} day${days !== 1 ? 's' : ''} remaining`;
+      }
+    }
+
+    if (days < 0) {
+      const absDays = Math.abs(days);
+      const years = Math.floor(absDays / 365);
+      const remainingDays = absDays % 365;
+
+      if (years > 0 && remainingDays > 0) {
+        return `${years} year${years !== 1 ? 's' : ''} and ${remainingDays} day${remainingDays !== 1 ? 's' : ''} past deadline`;
+      } else if (years > 0) {
+        return `${years} year${years !== 1 ? 's' : ''} past deadline`;
+      } else {
+        return `${absDays} day${absDays !== 1 ? 's' : ''} past deadline`;
+      }
+    }
+
+    return 'Ongoing';
+  }
+  const [daysDifference, setDaysDifference] = useState<number | null>(null);
+  useEffect(() => {
+    if (projectData.endDate) {
+      setDaysDifference(calculateDaysDifference(projectData.endDate))
+    }
+    const intervalId = setInterval(() => {
+      if (projectData.endDate) {
+        setDaysDifference(calculateDaysDifference(projectData.endDate));
+      }
+    }, 24 * 60 * 60 * 1000);
+    return () => clearInterval(intervalId); //////////////////////////////////////////////////////////////////////////////////////
+  }, [projectData.endDate]);
+  //==========================
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/*back to projects button*/}
@@ -279,9 +319,18 @@ export default function ProjectDetailClient({
                         : "Ongoing"}
                     </div>
                   </div>
-                  <div className="text-sm">
-                    Remaining: {projectData.deadline} days
+                  {/* ============================= */}
+                  <div
+                    className={`text-sm font-medium ${daysDifference !== null && daysDifference < 0
+                      ? 'text-red-600'      // Past deadline - RED
+                      : daysDifference === 0
+                        ? 'text-orange-600' // Today - ORANGE
+                        : 'text-green-600'  // Future - GREEN
+                      }`}
+                  >
+                    Status:{''} {projectData.endDate && daysDifference !== null ? formatDaysDifference(daysDifference) : 'Ongoing'}
                   </div>
+                  {/* ================================= */}
                 </div>
               </div>
               <div>
@@ -362,8 +411,8 @@ export default function ProjectDetailClient({
             <CardContent>
               <Tabs
                 defaultValue="payments"
-                // value={activeTab}
-                // onValueChange={setActiveTab}
+              // value={activeTab}
+              // onValueChange={setActiveTab}
               >
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -436,7 +485,9 @@ export default function ProjectDetailClient({
               </Tabs>
             </CardContent>
             <CardFooter>
-              <Progress value={50} className="w-full" />
+              {projectData.budget && (
+                <BudgetProgressBar budget={projectData.budget} paidAmount={paidAmount} />
+              )}
             </CardFooter>
           </Card>
         </div>
