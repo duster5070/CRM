@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
@@ -10,21 +8,16 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { CommentProps } from "@/types/types";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SubmitButton from "../FormInputs/SubmitButton";
 import toast from "react-hot-toast";
-import dynamic from "next/dynamic";
+import router from "next/router";
 import { UserRole } from "@prisma/client";
 import { createComment, updateCommentById } from "@/actions/comments";
 import { Button } from "../ui/button";
-import { MessageSquare } from "lucide-react";
-const QuillEditor = dynamic(
-  () => import("@/components/FormInputs/QuilEditor"),
-  {
-    ssr: false,
-  }
-);
+import { MessageSquare, Pen } from "lucide-react";
+import Tiptap from "@/components/FormInputs/QuillEditor";
 
 const CommentForm = ({
   projectId,
@@ -51,17 +44,24 @@ const CommentForm = ({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState(initialContent);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  function isRichTextEmpty(html?: string) {
+    if (!html) return true;
+
+    const text = html
+      .replace(/<(.|\n)*?>/g, "") // remove HTML tags
+      .replace(/&nbsp;/g, " ")
+      .trim();
+
+    return text.length === 0;
+  }
 
   async function saveComment(data: CommentProps) {
-    if (!content) {
+    if (isRichTextEmpty(content)) {
       toast.error("Please write something");
       return;
     }
+
     data.content = content ?? "";
     data.userName = userName;
     data.projectId = projectId;
@@ -91,14 +91,22 @@ const CommentForm = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          <MessageSquare className="mr-2 h-4 w-4" />
-          Add Comment
-        </Button>
+        {editingId ? (
+          <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Pen className="h-4 w-4" />
+          </button>
+        ) : (
+          <Button variant="outline" className="w-full">
+            <MessageSquare className="mr-2 h-4 w-4" />
+            Add Comment
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Comment</DialogTitle>
+          <DialogTitle>
+            {editingId ? "Edit Comment" : "Add New Comment"}
+          </DialogTitle>
           <DialogDescription>
             Please write your Comment here, with respect
           </DialogDescription>
@@ -107,24 +115,15 @@ const CommentForm = ({
         <form onSubmit={handleSubmit(saveComment)}>
           <div className="grid grid-cols-12 gap-6 py-8">
             <div className="col-span-full space-y-3">
-              <Card>
-                <CardContent>
-                  <div className="grid gap-6 mt-4">
-                    {mounted && (
-                      <QuillEditor
-                        label="Write the Content of the Comment"
-                        className=""
-                        value={content}
-                        onChange={setContent}
-                      />
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              <Tiptap value={content} onChange={setContent} />
             </div>
           </div>
 
-          <SubmitButton title="Save Comment" loading={loading} />
+          <SubmitButton
+            className="w-full"
+            title={editingId ? "Update Comment" : "Add Comment"}
+            loading={loading}
+          />
         </form>
       </DialogContent>
     </Dialog>

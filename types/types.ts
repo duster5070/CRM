@@ -112,6 +112,8 @@ export type ProjectComment = {
   id: string;
   content: string;
   projectId: string;
+  userName: string;
+  userRole: UserRole;
   createdAt: Date;
   updatedAt: Date;
 };

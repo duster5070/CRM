@@ -20,6 +20,7 @@ import {
   Edit,
   Eye,
   MessageSquare,
+  Pen,
   Plus,
   Users,
   X,
@@ -39,6 +40,7 @@ import AuthenticatedAvatar from "../global/AuthenticatedAvatar";
 import PaymentForm from "../Forms/PaymentForm";
 import Link from "next/link";
 import CommentForm from "../Forms/CommentForm";
+import parse from "html-react-parser";
 
 export default function ProjectDetailClient({
   projectData,
@@ -175,31 +177,55 @@ export default function ProjectDetailClient({
           {/*comments*/}
           <Card>
             <CardHeader>
-              <CardTitle>Comments</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {projectData.comments.map((comment) => (
-                <div key={comment.id} className="flex items-start space-x-4">
-                  <Avatar>
-                    <AvatarFallback>
-                      {comment.content.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+              <CardTitle>
+                <div className="flex items-center justify-between">
+                  <h2>Comments</h2>
                   <div>
-                    <p className="font-semibold">User</p>
-                    <p className="text-sm text-gray-500">{comment.content}</p>
+                    <CommentForm
+                      projectId={projectData.id}
+                      userId={user.id}
+                      userName={user.name}
+                      userRole={user.role}
+                    />
                   </div>
                 </div>
-              ))}
-            </CardContent>
-            <CardFooter>
-              <CommentForm
-                projectId={projectData.id}
-                userId={user.id}
-                userName={user.name}
-                userRole={user.role}
-              />
-            </CardFooter>
+              </CardTitle>
+            </CardHeader>
+
+            {projectData.comments.length > 0 ? (
+              <CardContent className="space-y-4">
+                {projectData.comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="flex items-start space-x-4 group cursor-pointer"
+                  >
+                    <Avatar>
+                      <AvatarFallback>
+                        {getInitials(comment.userName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="flex space-x-3">
+                        <p className="font-semibold">{comment.userName}</p>
+                        <CommentForm
+                          projectId={projectData.id}
+                          userId={user.id}
+                          userName={user.name}
+                          userRole={user.role}
+                          editingId={comment.id}
+                          initialContent={comment.content}
+                        />
+                      </div>
+                      <div className="prose">{parse(comment.content)}</div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            ) : (
+              <CardFooter>
+                <p>No comments available.</p>
+              </CardFooter>
+            )}
           </Card>
 
           {/*Modules*/}
