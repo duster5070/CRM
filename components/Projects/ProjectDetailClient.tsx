@@ -38,6 +38,7 @@ import { ModeToggle } from "../mode-toggle";
 import AuthenticatedAvatar from "../global/AuthenticatedAvatar";
 import PaymentForm from "../Forms/PaymentForm";
 import Link from "next/link";
+import CommentForm from "../Forms/CommentForm";
 
 export default function ProjectDetailClient({
   projectData,
@@ -49,6 +50,7 @@ export default function ProjectDetailClient({
   // const [activeTab, setActiveTab] = useState("overview");
   const router = useRouter();
 
+  const user = session?.user;
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
@@ -191,10 +193,12 @@ export default function ProjectDetailClient({
               ))}
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Add Comment
-              </Button>
+              <CommentForm
+                projectId={projectData.id}
+                userId={user.id}
+                userName={user.name}
+                userRole={user.role}
+              />
             </CardFooter>
           </Card>
 
