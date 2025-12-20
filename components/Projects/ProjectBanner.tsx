@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { Edit, Link } from "lucide-react";
+import { Edit, Link, Pen } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -88,6 +88,7 @@ export default function ProjectBanner({
   } = useForm<ProjectProps>({
     defaultValues: {
       bannerImage: "",
+      name: name || "",
     },
   });
   async function updateBannerByURL(data: ProjectProps) {
@@ -105,6 +106,22 @@ export default function ProjectBanner({
       console.log(error);
     }
   }
+  const [editing, setEditing] = useState(false);
+  async function updateProjectTitle(data: ProjectProps) {
+    try {
+      setLoading(true);
+      if (editingId) {
+        await updateProjectById(editingId, data);
+        setLoading(false);
+        toast.success("Title Updated Successfully!");
+        reset();
+        setEditing(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  }
   return (
     <div
       className={`relative h-64 rounded-xl ${gradient} mb-8 overflow-hidden group`}
@@ -116,7 +133,37 @@ export default function ProjectBanner({
       />
 
       <div className="absolute inset-0 flex justify-center items-center">
+        {editing ?         
+        <form className="max-w-[600px]" onSubmit={handleSubmit(updateProjectTitle)}>
+          <div className="flex w-full items-center gap-3">
+            <TextInput
+              register={register}
+              errors={errors}
+              label=""
+              name="name"
+              placeholder="Enter project title"
+            />
+            <SubmitButton
+              size={"sm"}
+              title="Update"
+              loading={loading}
+            />
+          </div>
+        </form> 
+        :
         <h1 className="text-4xl font-bold text-white">{name}</h1>
+        }
+        {!editing &&  
+          <Button
+            onClick={() => setEditing(true)}
+            variant="link"
+            size="icon"
+            className="group-hover:opacity-100 opacity-0 ml-4 transition-opacity"
+          >
+          <Pen className="h-4 w-4 text-white" />
+          </Button>
+        }
+
       </div>
       <Sheet>
         <SheetTrigger asChild>
