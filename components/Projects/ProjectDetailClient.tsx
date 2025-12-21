@@ -20,6 +20,8 @@ import {
   Edit,
   Eye,
   Plus,
+  Trash,
+  TriangleAlert,
   Users,
   X,
 } from "lucide-react";
@@ -42,6 +44,19 @@ import CommentForm from "../Forms/CommentForm";
 import parse from "html-react-parser";
 
 import ModuleForm from "../Forms/ModuleForm";
+import toast from "react-hot-toast";
+import { deleteModule } from "@/actions/module";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function ProjectDetailClient({
   projectData,
@@ -137,6 +152,21 @@ export default function ProjectDetailClient({
     return () => clearInterval(intervalId); //////////////////////////////////////////////////////////////////////////////////////
   }, [projectData.endDate]);
   //==========================
+
+  async function handleDeleteModule(id: string) {
+    try {
+      const res = await deleteModule(id);
+      if (res.ok) {
+        toast.success("Module deleted successfully");
+        return;
+      }
+      toast.error("Failed to delete module");
+    } catch (error) {
+      console.error("Error deleting module:", error);
+      toast.error("Failed to delete module");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/*back to projects button*/}
@@ -234,19 +264,63 @@ export default function ProjectDetailClient({
                         {projectData.modules.map((module) => (
                           <Card
                             key={module.id}
-                            className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 group-[]:"
+                            className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 group p-3"
                           >
-                            <CardHeader className="p-4">
+                            <CardHeader className="p-3">
                               <CardTitle className="text-sm flex items-center justify-between group pl-5">
                                 <span>{module.name}</span>
 
-                                <ModuleForm
-                                  editingId={module.id}
-                                  initialContent={module.name}
-                                  projectId={projectData.id}
-                                  userId={user.id}
-                                  userName={user.name}
-                                />
+                                <div className="flex items-center gap-2">
+                                  <ModuleForm
+                                    editingId={module.id}
+                                    initialContent={module.name}
+                                    projectId={projectData.id}
+                                    userId={user.id}
+                                    userName={user.name}
+                                  />
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Trash className="h-4 w-4 text-red-500" />
+                                      </button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                          <div className="flex text-red-600">
+                                            <TriangleAlert className="h-5 w-5 mr-2" />
+                                            Are you absolutely sure?
+                                          </div>
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          This action cannot be undone. This
+                                          will permanently delete your Module.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel className="text-white hover:text-white bg-gray-600 hover:bg-gray-700">
+                                          Cancel
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction asChild>
+                                          <Button
+                                            onClick={() =>
+                                              handleDeleteModule(module.id)
+                                            }
+                                            className="bg-red-600 hover:bg-red-700"
+                                          >
+                                            Delete
+                                          </Button>
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                  <Link
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                    href={`/projects/${module.id}`}
+                                  >
+                                    <Eye className="w-4 h-4" />
+                                  </Link>
+                                </div>
                               </CardTitle>
                             </CardHeader>
                           </Card>

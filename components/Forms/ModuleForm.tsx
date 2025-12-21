@@ -33,7 +33,7 @@ const ModuleForm = ({
   projectId: string;
   userId: string;
   userName: string;
- 
+
   initialContent?: string;
   editingId?: string;
 }) => {
@@ -44,8 +44,7 @@ const ModuleForm = ({
     formState: { errors },
   } = useForm<ModuleProps>({
     defaultValues: {
-      name:initialContent||'',
-
+      name: initialContent || "",
     },
   });
 
@@ -64,12 +63,9 @@ const ModuleForm = ({
   }
 
   async function saveModule(data: ModuleProps) {
-    
-
-   
     data.userName = userName;
     data.projectId = projectId;
-   
+
     data.userId = userId;
 
     try {
@@ -99,7 +95,7 @@ const ModuleForm = ({
       <DialogTrigger asChild>
         {editingId ? (
           <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <Pen className="h-4 w-4" />
+            <Pen className="h-4 w-4 text-green-500" />
           </button>
         ) : (
           <Button variant="outline" className="w-full">
@@ -146,6 +142,3 @@ const ModuleForm = ({
 };
 
 export default ModuleForm;
-
-
-

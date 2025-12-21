@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
-import { CommentProps, ModuleProps } from "@/types/types";
+import { ModuleProps } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
 export async function createModule(data: ModuleProps) {
@@ -57,19 +57,23 @@ export async function getCategoryById(id: string) {
     console.log(error);
   }
 }
-export async function deleteCategory(id: string) {
+export async function deleteModule(id: string) {
   try {
-    const deletedCategory = await db.category.delete({
+    const deletedModule = await db.module.delete({
       where: {
         id,
       },
     });
+    revalidatePath("/dashboard/projects");
 
     return {
       ok: true,
-      data: deletedCategory,
+      data: deletedModule,
     };
   } catch (error) {
-    console.log(error);
+    return {
+      ok: false,
+      data: null,
+    };
   }
 }
