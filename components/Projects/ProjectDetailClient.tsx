@@ -109,9 +109,8 @@ export default function ProjectDetailClient({
       const remainingDays = days % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${
-          years !== 1 ? "s" : ""
-        } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""} remaining`;
+        return `${years} year${years !== 1 ? "s" : ""
+          } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""} remaining`;
       } else if (years > 0) {
         return `${years} year${years !== 1 ? "s" : ""} remaining`;
       } else {
@@ -125,11 +124,9 @@ export default function ProjectDetailClient({
       const remainingDays = absDays % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${
-          years !== 1 ? "s" : ""
-        } and ${remainingDays} day${
-          remainingDays !== 1 ? "s" : ""
-        } past deadline`;
+        return `${years} year${years !== 1 ? "s" : ""
+          } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""
+          } past deadline`;
       } else if (years > 0) {
         return `${years} year${years !== 1 ? "s" : ""} past deadline`;
       } else {
@@ -316,7 +313,7 @@ export default function ProjectDetailClient({
                                   </AlertDialog>
                                   <Link
                                     className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                    href={`/projects/${module.id}`}
+                                    href={`/project/modules/${module.id}?projectId=${module.projectId}`}
                                   >
                                     <Eye className="w-4 h-4" />
                                   </Link>
@@ -463,8 +460,8 @@ export default function ProjectDetailClient({
                   <CardContent>
                     <Tabs
                       defaultValue="payments"
-                      // value={activeTab}
-                      // onValueChange={setActiveTab}
+                    // value={activeTab}
+                    // onValueChange={setActiveTab}
                     >
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -599,13 +596,12 @@ export default function ProjectDetailClient({
                   </div>
                   {/* ============================= */}
                   <div
-                    className={`text-sm font-medium ${
-                      daysDifference !== null && daysDifference < 0
-                        ? "text-red-600" // Past deadline - RED
-                        : daysDifference === 0
+                    className={`text-sm font-medium ${daysDifference !== null && daysDifference < 0
+                      ? "text-red-600" // Past deadline - RED
+                      : daysDifference === 0
                         ? "text-orange-600" // Today - ORANGE
                         : "text-green-600" // Future - GREEN
-                    }`}
+                      }`}
                   >
                     Status:{""}{" "}
                     {projectData.endDate && daysDifference !== null
