@@ -1,11 +1,14 @@
 import { getModuleById, getProjectModules } from "@/actions/module";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MoreVertical, Plus } from "lucide-react";
+import { Delete, Edit, MoreVertical, Plus, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
+import { handleCommandNavigation } from "novel/extensions";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 export default async function Page({
   params: { id },
   searchParams,
@@ -20,14 +23,15 @@ export default async function Page({
     return notFound()
   }
   return (
-    <div className="bg-gradient-to-r from-cyan-500 to-blue-500">
+    <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-8">
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow min-h-96">
-        <div className="grid grid-cols-12 p-8">
-          <div className="col-span-3">
+        <div className="grid grid-cols-12">
+          <div className="col-span-3 p-8">
             <h2 className="py-2 text-xl font-bold">Project Modules</h2>
             <ScrollArea className="h-[calc(100vh-8rem)] pr-4">
               {modules.map((module) => (
-                <div
+                <Link
+                  href={`/project/modules/${module.id}?projectId=${module.projectId}`}
                   key={module.id}
                   className={`p-2 mb-2 cursor-pointer rounded-lg flex items-center ${activeModule?.id === module.id
                     ? 'bg-blue-100'
@@ -36,7 +40,7 @@ export default async function Page({
                 >
                   <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
                   <span>{module.name}</span>
-                </div>
+                </Link>
               ))}
             </ScrollArea>
             <Button>
@@ -44,25 +48,31 @@ export default async function Page({
               Add Project
             </Button>
           </div>
-          <div className="col-span-9">
+          <div className="col-span-9 bg-gray-100 p-8">
             <div className="flex-1 p-8">
               {activeModule && (
                 <>
-                  <div className="mb-6">
-                    <h1 className="text-3xl font-bold mb-2">{activeModule.name}</h1>
-                    <div className="flex item-center">
-                      <Progress value={50} className="w-64 mr-4" />
-                      <span className="texr-sm text-gray-500">
-                        {50}% complete
-                      </span>
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="">
+                      <h1 className="text-3xl font-bold mb-2">{activeModule.name}</h1>
+                      <div className="flex item-center">
+                        <Progress value={50} className="w-64 mr-4" />
+                        <span className="texr-sm text-gray-500">
+                          {50}% complete
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      {activeModule.tasks.length > 0 && <p>({activeModule.tasks.length} Tasks)</p>}
+                      <Button> Add New Task</Button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-4 gap-6">
+                  <div className="grid grid-cols-3 gap-6">
                     {(
                       ["TODO", "INPROGRESS", "COMPLETE"] as const
                     ).map((status) => (
                       <Card key={status}>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardHeader className={cn("flex flex-row items-center justify-between space-y-0 pb-2 rounded-t-lg", status === "TODO" ? "bg-orange-50" : status === "INPROGRESS" ? "bg-blue-50" : status === "COMPLETE" ? "bg-green-50" : "")}>
                           <CardTitle className="text-sm font-medium">
                             {status
                               .split("-")
@@ -73,13 +83,6 @@ export default async function Page({
                               .join("")}
                           </CardTitle>
                           <div className="flex items-center space-x-2">
-                            <span className="text-sm text-gray-500">
-                              {
-                                activeModule.tasks.filter(
-                                  (task) => task.status === status
-                                ).length
-                              }
-                            </span>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -109,7 +112,14 @@ export default async function Page({
                                         </Button>
                                       </DropdownMenuTrigger>
                                       <DropdownMenuContent align="end">
-
+                                        <DropdownMenuItem>
+                                          <Edit className="mr-2 h-4 w-4" />
+                                          Edit
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                          <Trash2 className="mr-2 h-4 w-4" />
+                                          Delete
+                                        </DropdownMenuItem>
                                       </DropdownMenuContent>
                                     </DropdownMenu>
                                   </div>
@@ -126,6 +136,6 @@ export default async function Page({
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
