@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { CommentProps } from "@/types/types";
+import { CommentProps, ModuleProps } from "@/types/types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SubmitButton from "../FormInputs/SubmitButton";
@@ -16,22 +16,24 @@ import router from "next/router";
 import { UserRole } from "@prisma/client";
 import { createComment, updateCommentById } from "@/actions/comments";
 import { Button } from "../ui/button";
-import { MessageSquare, Pen } from "lucide-react";
+import { Check, MessageSquare, Pen, Plus } from "lucide-react";
 import Tiptap from "@/components/FormInputs/QuillEditor";
-import { set } from "date-fns";
+import TextInput from "../FormInputs/TextInput";
+import Module from "module";
+import { createModule, updateModuleById } from "@/actions/module";
 
-const CommentForm = ({
+const ModuleForm = ({
   projectId,
   userId,
   userName,
-  userRole,
+
   initialContent,
   editingId,
 }: {
   projectId: string;
   userId: string;
   userName: string;
-  userRole: UserRole;
+
   initialContent?: string;
   editingId?: string;
 }) => {
@@ -40,11 +42,14 @@ const CommentForm = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CommentProps>();
+  } = useForm<ModuleProps>({
+    defaultValues: {
+      name: initialContent || "",
+    },
+  });
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [content, setContent] = useState(initialContent);
 
   function isRichTextEmpty(html?: string) {
     if (!html) return true;
@@ -57,28 +62,22 @@ const CommentForm = ({
     return text.length === 0;
   }
 
-  async function saveComment(data: CommentProps) {
-    if (isRichTextEmpty(content)) {
-      toast.error("Please write something");
-      return;
-    }
-
-    data.content = content ?? "";
+  async function saveModule(data: ModuleProps) {
     data.userName = userName;
     data.projectId = projectId;
-    data.userRole = userRole;
+
     data.userId = userId;
 
     try {
       setLoading(true);
       if (editingId) {
-        await updateCommentById(editingId, data);
+        await updateModuleById(editingId, data);
         setLoading(false);
         setOpen(false);
         // Toast
         toast.success("Updated Successfully!");
       } else {
-        await createComment(data);
+        await createModule(data);
         setLoading(false);
         setOpen(false);
         // Toast
@@ -96,35 +95,44 @@ const CommentForm = ({
       <DialogTrigger asChild>
         {editingId ? (
           <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <Pen className="h-4 w-4" />
+            <Pen className="h-4 w-4 text-green-500" />
           </button>
         ) : (
           <Button variant="outline" className="w-full">
-            <MessageSquare className="mr-2 h-4 w-4" />
-            Add Comment
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Module
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {editingId ? "Edit Comment" : "Add New Comment"}
+            {editingId ? "Edit Module" : "Add New Module"}
           </DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Please write your Comment here, with respect
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(saveComment)}>
+        <form onSubmit={handleSubmit(saveModule)}>
           <div className="grid grid-cols-12 gap-6 py-8">
             <div className="col-span-full space-y-3">
-              <Tiptap value={content} onChange={setContent} />
+              {/* <Tiptap value={content} onChange={setContent} /> */}
+              <div className="grid gap-3">
+                <TextInput
+                  register={register}
+                  errors={errors}
+                  label=""
+                  name="name"
+                  icon={Check}
+                />
+              </div>
             </div>
           </div>
 
           <SubmitButton
             className="w-full"
-            title={editingId ? "Update Comment" : "Add Comment"}
+            title={editingId ? "Update Module" : "Add Module"}
             loading={loading}
           />
         </form>
@@ -133,4 +141,4 @@ const CommentForm = ({
   );
 };
 
-export default CommentForm;
+export default ModuleForm;

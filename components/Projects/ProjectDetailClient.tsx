@@ -2,10 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter, } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CalendarDays,
@@ -13,9 +19,9 @@ import {
   DollarSign,
   Edit,
   Eye,
-  MessageSquare,
-  Pen,
   Plus,
+  Trash,
+  TriangleAlert,
   Users,
   X,
 } from "lucide-react";
@@ -37,6 +43,21 @@ import BudgetProgressBar from "./BudgetProgressBar";
 import CommentForm from "../Forms/CommentForm";
 import parse from "html-react-parser";
 
+import ModuleForm from "../Forms/ModuleForm";
+import toast from "react-hot-toast";
+import { deleteModule } from "@/actions/module";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 export default function ProjectDetailClient({
   projectData,
   session,
@@ -45,9 +66,9 @@ export default function ProjectDetailClient({
   session: Session | null;
 }) {
   // const [activeTab, setActiveTab] = useState("overview");
-  const router = useRouter();
 
   const user = session?.user;
+
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
@@ -80,7 +101,7 @@ export default function ProjectDetailClient({
   }
   function formatDaysDifference(days: number): string {
     if (days === 0) {
-      return 'Deadline is today';
+      return "Deadline is today";
     }
 
     if (days > 0) {
@@ -88,11 +109,13 @@ export default function ProjectDetailClient({
       const remainingDays = days % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${years !== 1 ? 's' : ''} and ${remainingDays} day${remainingDays !== 1 ? 's' : ''} remaining`;
+        return `${years} year${
+          years !== 1 ? "s" : ""
+        } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""} remaining`;
       } else if (years > 0) {
-        return `${years} year${years !== 1 ? 's' : ''} remaining`;
+        return `${years} year${years !== 1 ? "s" : ""} remaining`;
       } else {
-        return `${days} day${days !== 1 ? 's' : ''} remaining`;
+        return `${days} day${days !== 1 ? "s" : ""} remaining`;
       }
     }
 
@@ -102,20 +125,24 @@ export default function ProjectDetailClient({
       const remainingDays = absDays % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${years !== 1 ? 's' : ''} and ${remainingDays} day${remainingDays !== 1 ? 's' : ''} past deadline`;
+        return `${years} year${
+          years !== 1 ? "s" : ""
+        } and ${remainingDays} day${
+          remainingDays !== 1 ? "s" : ""
+        } past deadline`;
       } else if (years > 0) {
-        return `${years} year${years !== 1 ? 's' : ''} past deadline`;
+        return `${years} year${years !== 1 ? "s" : ""} past deadline`;
       } else {
-        return `${absDays} day${absDays !== 1 ? 's' : ''} past deadline`;
+        return `${absDays} day${absDays !== 1 ? "s" : ""} past deadline`;
       }
     }
 
-    return 'Ongoing';
+    return "Ongoing";
   }
   const [daysDifference, setDaysDifference] = useState<number | null>(null);
   useEffect(() => {
     if (projectData.endDate) {
-      setDaysDifference(calculateDaysDifference(projectData.endDate))
+      setDaysDifference(calculateDaysDifference(projectData.endDate));
     }
     const intervalId = setInterval(() => {
       if (projectData.endDate) {
@@ -125,6 +152,21 @@ export default function ProjectDetailClient({
     return () => clearInterval(intervalId); //////////////////////////////////////////////////////////////////////////////////////
   }, [projectData.endDate]);
   //==========================
+
+  async function handleDeleteModule(id: string) {
+    try {
+      const res = await deleteModule(id);
+      if (res.ok) {
+        toast.success("Module deleted successfully");
+        return;
+      }
+      toast.error("Failed to delete module");
+    } catch (error) {
+      console.error("Error deleting module:", error);
+      toast.error("Failed to delete module");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/*back to projects button*/}
@@ -159,6 +201,7 @@ export default function ProjectDetailClient({
         {/*left column*/}
         <div className="lg:col-span-2 space-y-8">
           {/*project description*/}
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Project Description</CardTitle>
@@ -185,136 +228,331 @@ export default function ProjectDetailClient({
               )}
             </CardContent>
           </Card>
+          <Tabs defaultValue="modules" className="w-full">
+            <TabsList>
+              <TabsTrigger value="modules">Modules</TabsTrigger>
+              <TabsTrigger value="notes">Notes</TabsTrigger>
+              <TabsTrigger value="comments">Comments</TabsTrigger>
+              <TabsTrigger value="payments">Payments</TabsTrigger>
+            </TabsList>
+            <TabsContent value="modules">
+              {" "}
+              {/*Modules*/}
+              <Card>
+                <CardHeader>
+                  {/* changed the style here ya hassan i had to change it */}
 
-          {/*notes*/}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Notes</CardTitle>
-              <Button
-                onClick={() => setIsEditingNotes(!isEditingNotes)}
-                variant="ghost"
-                size="icon"
-              >
-                {isEditingNotes ? (
-                  <X className="h-4 w-4" />
-                ) : (
-                  <Edit className="h-4 w-4" />
-                )}
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="prose lg:prose-xl">
-                {projectData.notes && projectData.notes.trim() !== "" ? (
-                  <NotesForm
-                    key={isEditingNotes ? "editing" : "viewing"}
-                    isEditable={isEditingNotes}
-                    editingId={projectData.id}
-                    initialNotes={parseNotes(projectData.notes)}
-                  />
-                ) : isEditingNotes ? (
-                  <NotesForm
-                    isEditable={true}
-                    editingId={projectData.id}
-                    initialNotes={null}
-                  />
-                ) : (
-                  <p>No notes available.</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                  <CardTitle>
+                    {" "}
+                    <div className="flex items-center justify-between">
+                      <h2>Project Modules</h2>
 
-          {/*comments*/}
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <div className="flex items-center justify-between">
-                  <h2>Comments</h2>
-                  <div>
-                    <CommentForm
-                      projectId={projectData.id}
-                      userId={user.id}
-                      userName={user.name}
-                      userRole={user.role}
-                    />
-                  </div>
-                </div>
-              </CardTitle>
-            </CardHeader>
+                      <div className="flex-shrink-0">
+                        <ModuleForm
+                          projectId={projectData.id}
+                          userId={user.id}
+                          userName={user.name}
+                        />
+                      </div>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ScrollArea className="h-[300px] pr-4">
+                    {projectData.modules.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {projectData.modules.map((module) => (
+                          <Card
+                            key={module.id}
+                            className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 group p-3"
+                          >
+                            <CardHeader className="p-3">
+                              <CardTitle className="text-sm flex items-center justify-between group pl-5">
+                                <span>{module.name}</span>
 
-            {projectData.comments.length > 0 ? (
-              <CardContent className="space-y-4">
-                {projectData.comments.map((comment) => (
-                  <div
-                    key={comment.id}
-                    className="flex items-start space-x-4 group cursor-pointer"
+                                <div className="flex items-center gap-2">
+                                  <ModuleForm
+                                    editingId={module.id}
+                                    initialContent={module.name}
+                                    projectId={projectData.id}
+                                    userId={user.id}
+                                    userName={user.name}
+                                  />
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Trash className="h-4 w-4 text-red-500" />
+                                      </button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                          <div className="flex text-red-600">
+                                            <TriangleAlert className="h-5 w-5 mr-2" />
+                                            Are you absolutely sure?
+                                          </div>
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          This action cannot be undone. This
+                                          will permanently delete your Module.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel className="text-white hover:text-white bg-gray-600 hover:bg-gray-700">
+                                          Cancel
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction asChild>
+                                          <Button
+                                            onClick={() =>
+                                              handleDeleteModule(module.id)
+                                            }
+                                            className="bg-red-600 hover:bg-red-700"
+                                          >
+                                            Delete
+                                          </Button>
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                  <Link
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                    href={`/projects/${module.id}`}
+                                  >
+                                    <Eye className="w-4 h-4" />
+                                  </Link>
+                                </div>
+                              </CardTitle>
+                            </CardHeader>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex justify-center items-center h-full">
+                        <div className="space-y-4">
+                          <Image
+                            src={emptyFolder}
+                            alt="No Modules"
+                            className="w-36 h-auto"
+                          />
+                          <ModuleForm
+                            projectId={projectData.id}
+                            userId={user.id}
+                            userName={user.name}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="notes">
+              {" "}
+              {/*notes*/}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Notes</CardTitle>
+                  <Button
+                    onClick={() => setIsEditingNotes(!isEditingNotes)}
+                    variant="ghost"
+                    size="icon"
                   >
-                    <Avatar>
-                      <AvatarFallback>
-                        {getInitials(comment.userName)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="flex space-x-3">
-                        <p className="font-semibold">{comment.userName}</p>
+                    {isEditingNotes ? (
+                      <X className="h-4 w-4" />
+                    ) : (
+                      <Edit className="h-4 w-4" />
+                    )}
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose lg:prose-xl">
+                    {projectData.notes && projectData.notes.trim() !== "" ? (
+                      <NotesForm
+                        key={isEditingNotes ? "editing" : "viewing"}
+                        isEditable={isEditingNotes}
+                        editingId={projectData.id}
+                        initialNotes={parseNotes(projectData.notes)}
+                      />
+                    ) : isEditingNotes ? (
+                      <NotesForm
+                        isEditable={true}
+                        editingId={projectData.id}
+                        initialNotes={null}
+                      />
+                    ) : (
+                      <p>No notes available.</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="comments">
+              {" "}
+              {/*comments*/}
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    <div className="flex items-center justify-between">
+                      <h2>Comments</h2>
+                      <div>
                         <CommentForm
                           projectId={projectData.id}
                           userId={user.id}
                           userName={user.name}
                           userRole={user.role}
-                          editingId={comment.id}
-                          initialContent={comment.content}
                         />
                       </div>
-                      <div className="prose">{parse(comment.content)}</div>
                     </div>
-                  </div>
-                ))}
-              </CardContent>
-            ) : (
-              <CardFooter>
-                <p>No comments available.</p>
-              </CardFooter>
-            )}
-          </Card>
+                  </CardTitle>
+                </CardHeader>
 
-          {/*Modules*/}
-          <Card>
-            <CardHeader>
-              <CardTitle>Project Modules</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[300px] pr-4">
-                {projectData.modules.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {projectData.modules.map((module) => (
-                      <Card
-                        key={module.id}
-                        className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50"
+                {projectData.comments.length > 0 ? (
+                  <CardContent className="space-y-4">
+                    {projectData.comments.map((comment) => (
+                      <div
+                        key={comment.id}
+                        className="flex items-start space-x-4 group cursor-pointer"
                       >
-                        <CardHeader className="p-4">
-                          <CardTitle className="text-sm">
-                            {module.name}
-                          </CardTitle>
-                        </CardHeader>
-                      </Card>
+                        <Avatar>
+                          <AvatarFallback>
+                            {getInitials(comment.userName)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex space-x-3">
+                            <p className="font-semibold">{comment.userName}</p>
+                            <CommentForm
+                              projectId={projectData.id}
+                              userId={user.id}
+                              userName={user.name}
+                              userRole={user.role}
+                              editingId={comment.id}
+                              initialContent={comment.content}
+                            />
+                          </div>
+                          <div className="prose">{parse(comment.content)}</div>
+                        </div>
+                      </div>
                     ))}
-                  </div>
+                  </CardContent>
                 ) : (
-                  <div className="flex justify-center items-center h-full">
-                    <div className="space-y-4">
-                      <Image
-                        src={emptyFolder}
-                        alt="No Modules"
-                        className="w-36 h-auto"
-                      />
-                      <Button variant="outline">Add New Module</Button>
-                    </div>
-                  </div>
+                  <CardFooter>
+                    <p>No comments available.</p>
+                  </CardFooter>
                 )}
-              </ScrollArea>
-            </CardContent>
-          </Card>
+              </Card>
+            </TabsContent>
+            <TabsContent value="payments">
+              {" "}
+              {/*Invoices and Payments*/}
+              <div className="max-w-3xl mx-auto">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <div className="flex items-center justify-between">
+                        <h2>Payments</h2>
+                        <PaymentForm
+                          projectId={projectData.id}
+                          userId={projectData.userId}
+                          clientId={projectData.clientId}
+                          remainingAmount={remainingAmount}
+                        />
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Tabs
+                      defaultValue="payments"
+                      // value={activeTab}
+                      // onValueChange={setActiveTab}
+                    >
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="payments">Payments</TabsTrigger>
+                        <TabsTrigger value="invoices">Invoices</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="invoices" className="space-y-4">
+                        {projectData.payments.length > 0 ? (
+                          projectData.payments.map((invoice) => (
+                            <div
+                              key={invoice.id}
+                              className="flex justify-between items-center"
+                            >
+                              <div>
+                                <p className="font-semibold">
+                                  #{invoice.invoiceNumber}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  Due:{" "}
+                                  {new Date(invoice.date).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Badge variant="secondary">
+                                  ${invoice.amount.toLocaleString()}
+                                </Badge>
+                                <Button variant="outline" size="sm" asChild>
+                                  <Link
+                                    href={`/project/invoice/${invoice.id}?project=${projectData.slug}`}
+                                  >
+                                    <Eye className="h-4 w-4 mr-2" />
+                                    view
+                                  </Link>
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-sm text-gray-500">
+                            No Invoices Yet.
+                          </p>
+                        )}
+                      </TabsContent>
+                      <TabsContent value="payments" className="space-y-4">
+                        <PaymentForm
+                          projectId={projectData.id}
+                          userId={projectData.userId}
+                          clientId={projectData.clientId}
+                          remainingAmount={remainingAmount}
+                        />
+
+                        {projectData.payments.length > 0 ? (
+                          projectData.payments.map((payment) => (
+                            <div
+                              key={payment.id}
+                              className="flex justify-between items-center"
+                            >
+                              <span>
+                                {new Date(payment.date).toLocaleDateString()}
+                              </span>
+
+                              <Badge variant="outline" className="">
+                                {payment.title}
+                              </Badge>
+                              <Badge variant="outline" className="bg-green-100">
+                                ${payment.amount.toLocaleString()}
+                              </Badge>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-sm text-gray-500">
+                            No Payments Yet.
+                          </p>
+                        )}
+                      </TabsContent>
+                    </Tabs>
+                  </CardContent>
+                  <CardFooter>
+                    {projectData.budget && (
+                      <BudgetProgressBar
+                        budget={projectData.budget}
+                        paidAmount={paidAmount}
+                      />
+                    )}
+                  </CardFooter>
+                </Card>{" "}
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
 
         {/*right column*/}
@@ -361,14 +599,18 @@ export default function ProjectDetailClient({
                   </div>
                   {/* ============================= */}
                   <div
-                    className={`text-sm font-medium ${daysDifference !== null && daysDifference < 0
-                      ? 'text-red-600'      // Past deadline - RED
-                      : daysDifference === 0
-                        ? 'text-orange-600' // Today - ORANGE
-                        : 'text-green-600'  // Future - GREEN
-                      }`}
+                    className={`text-sm font-medium ${
+                      daysDifference !== null && daysDifference < 0
+                        ? "text-red-600" // Past deadline - RED
+                        : daysDifference === 0
+                        ? "text-orange-600" // Today - ORANGE
+                        : "text-green-600" // Future - GREEN
+                    }`}
                   >
-                    Status:{''} {projectData.endDate && daysDifference !== null ? formatDaysDifference(daysDifference) : 'Ongoing'}
+                    Status:{""}{" "}
+                    {projectData.endDate && daysDifference !== null
+                      ? formatDaysDifference(daysDifference)
+                      : "Ongoing"}
                   </div>
                   {/* ================================= */}
                 </div>
@@ -441,94 +683,6 @@ export default function ProjectDetailClient({
                 </p>
               </div>
             </CardContent>
-          </Card>
-
-          {/*Invoices and Payments*/}
-          <Card>
-            <CardHeader>
-              <CardTitle>Invoices & Payments</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs
-                defaultValue="payments"
-              // value={activeTab}
-              // onValueChange={setActiveTab}
-              >
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="payments">Payments</TabsTrigger>
-                  <TabsTrigger value="invoices">Invoices</TabsTrigger>
-                </TabsList>
-                <TabsContent value="invoices" className="space-y-4">
-                  {projectData.payments.length > 0 ? (
-                    projectData.payments.map((invoice) => (
-                      <div
-                        key={invoice.id}
-                        className="flex justify-between items-center"
-                      >
-                        <div>
-                          <p className="font-semibold">
-                            #{invoice.invoiceNumber}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            Due: {new Date(invoice.date).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="secondary">
-                            ${invoice.amount.toLocaleString()}
-                          </Badge>
-                          <Button variant="outline" size="sm" asChild>
-                            <Link
-                              href={`/project/invoice/${invoice.id}?project=${projectData.slug}`}
-                            >
-                              <Eye className="h-4 w-4 mr-2" />
-                              view
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-gray-500">No Invoices Yet.</p>
-                  )}
-                </TabsContent>
-                <TabsContent value="payments" className="space-y-4">
-                  <PaymentForm
-                    projectId={projectData.id}
-                    userId={projectData.userId}
-                    clientId={projectData.clientId}
-                    remainingAmount={remainingAmount}
-                  />
-
-                  {projectData.payments.length > 0 ? (
-                    projectData.payments.map((payment) => (
-                      <div
-                        key={payment.id}
-                        className="flex justify-between items-center"
-                      >
-                        <span>
-                          {new Date(payment.date).toLocaleDateString()}
-                        </span>
-
-                        <Badge variant="outline" className="">
-                          {payment.title}
-                        </Badge>
-                        <Badge variant="outline" className="bg-green-100">
-                          ${payment.amount.toLocaleString()}
-                        </Badge>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-gray-500">No Payments Yet.</p>
-                  )}
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-            <CardFooter>
-              {projectData.budget && (
-                <BudgetProgressBar budget={projectData.budget} paidAmount={paidAmount} />
-              )}
-            </CardFooter>
           </Card>
         </div>
       </div>

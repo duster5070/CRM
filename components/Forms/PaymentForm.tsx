@@ -72,7 +72,10 @@ const PaymentForm = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>+ Add new Payment</DialogTrigger>
+
+      <DialogTrigger className="group-hover:opacity-100 hover:bg-sidebar-accent border rounded-md px-4 py-2 text-sm">+ Add new Payment</DialogTrigger>
+      
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Payment</DialogTitle>
@@ -82,7 +85,7 @@ const PaymentForm = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(saveCategory)}>
-          <div className="grid grid-cols-12 gap-6 py-8">
+          <div className="grid grid-cols-12 gap-6 py-">
             <div className="col-span-full space-y-3">
               <Card>
                 <CardContent>

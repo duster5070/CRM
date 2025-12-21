@@ -7,6 +7,7 @@ import { ProjectProps } from "@/types/types";
 import { updateProjectById } from "@/actions/projects";
 import SubmitButton from "../FormInputs/SubmitButton";
 import dynamic from "next/dynamic";
+import { set } from "date-fns";
 
 const Editor = dynamic(() => import("../Editor/advanced-editor"), {
   ssr: false,
@@ -34,6 +35,7 @@ export default function NotesForm({
   } = useForm<ProjectProps>();
 
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   async function updateDescription(data: ProjectProps) {
     try {
@@ -43,6 +45,7 @@ export default function NotesForm({
       if (editingId) {
         await updateProjectById(editingId, data);
         setLoading(false);
+        setOpen(false);
         toast.success("Notes Updated Successfully!");
       }
     } catch (error) {
@@ -54,7 +57,7 @@ export default function NotesForm({
   return (
     <form className="" onSubmit={handleSubmit(updateDescription)}>
       <div className="grid gap-3">
-        <Editor isEditable={isEditable} initialValue={content} onChange={setContent} />
+        <Editor  isEditable={isEditable} initialValue={content} onChange={setContent} />
         {isEditable && <SubmitButton size={"sm"} title="Update" loading={loading} />}
       </div>
     </form>
