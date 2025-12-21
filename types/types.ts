@@ -1,4 +1,4 @@
-import { Project, UserRole, ProjectStatus } from "@prisma/client";
+import { Project, UserRole, ProjectStatus, TaskStatus } from "@prisma/client";
 
 // export type ProjectStatus = "ONGOING" | "COMPLETE";
 
@@ -100,9 +100,31 @@ export type ProjectData = {
   client: ClientData;
 };
 
+export type moduleData = {
+  id: string;
+  name: string | null;
+  userName: string;
+  projectId: string;
+  userId: string;
+  tasks: Task[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Module = {
   id: string;
   name: string;
+  projectId: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+export type Task = {
+  id: string;
+  title: string;
+  description: string;
+  status: TaskStatus;
+  dueDate: Date;
+  moduleId: string;
   projectId: string;
   createdAt: Date;
   updatedAt: Date;
