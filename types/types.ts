@@ -153,7 +153,14 @@ export type Payment = {
   invoiceNumber: string;
 };
 
-
+export type analyticsProps = {
+          title: string;
+          total: string;
+          href: string;
+         
+          icon: any
+          isCurrency?: boolean
+}
 
 export type ModuleProps = {
   name : string;

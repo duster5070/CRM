@@ -45,6 +45,27 @@ export async function createProject(data: ProjectProps) {
     return null;
   }
 }
+export async function getRecentUserProjects(userId:string | undefined) {
+ if(userId){
+   try {
+    const projects = await db.project.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where:{
+          userId
+      },
+      take:3
+
+    });
+
+    return projects;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+ }
+}
 export async function getUserProjects(userId:string | undefined) {
  if(userId){
    try {

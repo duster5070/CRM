@@ -17,4 +17,19 @@ export async function getUserClients(
 
 }
 
+export async function getRecentUserClients(
+  ownerId: string
+): Promise<User[]> {
+  return db.user.findMany({
+    // where: {
+    //   role: "CLIENT",   
+    //   userId: ownerId,       
+    // },
+    orderBy: {
+      createdAt: "desc",
+    },take:4
+  });
+
+}
+
 
