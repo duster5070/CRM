@@ -74,6 +74,7 @@ export async function deleteTask(id: string) {
         id,
       },
     });
+    revalidatePath("/dashboard/projects");
 
     return {
       ok: true,
