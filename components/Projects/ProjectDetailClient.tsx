@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CalendarDays,
@@ -13,8 +13,8 @@ import {
   DollarSign,
   Edit,
   Eye,
-  MessageSquare,
-  Pen,
+
+
   Plus,
   Users,
   X,
@@ -36,7 +36,7 @@ import Link from "next/link";
 import BudgetProgressBar from "./BudgetProgressBar";
 import CommentForm from "../Forms/CommentForm";
 import parse from "html-react-parser";
-import Module from "module";
+
 import ModuleForm from "../Forms/ModuleForm";
 
 export default function ProjectDetailClient({
@@ -47,9 +47,11 @@ export default function ProjectDetailClient({
   session: Session | null;
 }) {
   // const [activeTab, setActiveTab] = useState("overview");
-  const router = useRouter();
+
+  
 
   const user = session?.user;
+
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
@@ -282,8 +284,23 @@ export default function ProjectDetailClient({
 
           {/*Modules*/}
           <Card>
-            <CardHeader>
-              <CardTitle>Project Modules</CardTitle>
+            <CardHeader> 
+              {/* changed the style here ya hassan i had to change it */}
+             
+              <CardTitle> <div className="flex items-center justify-between">
+  <h2>Project Modules</h2>
+
+  <div className="flex-shrink-0">
+    <ModuleForm
+      projectId={projectData.id}
+      userId={user.id}
+      userName={user.name}
+    />
+  </div>
+</div></CardTitle>
+
+             
+             
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[300px] pr-4">
@@ -292,13 +309,21 @@ export default function ProjectDetailClient({
                     {projectData.modules.map((module) => (
                       <Card
                         key={module.id}
-                        className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50"
+                        className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 group-[]:"
                       >
-                        <CardHeader className="p-4">
-                          <CardTitle className="text-sm">
-                            {module.name}
-                          </CardTitle>
-                        </CardHeader>
+                      <CardHeader className="p-4">
+                   <CardTitle className="text-sm flex items-center justify-between group pl-5">
+                        <span>{module.name}</span>
+
+    <ModuleForm
+      editingId={module.id}
+      initialContent={module.name}
+      projectId={projectData.id}
+      userId={user.id}
+      userName={user.name}
+    />
+  </CardTitle>
+</CardHeader>
                       </Card>
                     ))}
                   </div>

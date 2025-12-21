@@ -18,6 +18,7 @@ import { createComment, updateCommentById } from "@/actions/comments";
 import { Button } from "../ui/button";
 import { MessageSquare, Pen } from "lucide-react";
 import Tiptap from "@/components/FormInputs/QuillEditor";
+import { set } from "date-fns";
 
 const CommentForm = ({
   projectId,
@@ -73,11 +74,13 @@ const CommentForm = ({
       if (editingId) {
         await updateCommentById(editingId, data);
         setLoading(false);
+        setOpen(false);
         // Toast
         toast.success("Updated Successfully!");
       } else {
         await createComment(data);
         setLoading(false);
+        setOpen(false);
         // Toast
         toast.success("Successfully Created!");
       }

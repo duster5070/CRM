@@ -20,7 +20,7 @@ import { Check, MessageSquare, Pen, Plus } from "lucide-react";
 import Tiptap from "@/components/FormInputs/QuillEditor";
 import TextInput from "../FormInputs/TextInput";
 import Module from "module";
-import { updateModuleById } from "@/actions/module";
+import { createModule, updateModuleById } from "@/actions/module";
 
 const ModuleForm = ({
   projectId,
@@ -77,11 +77,13 @@ const ModuleForm = ({
       if (editingId) {
         await updateModuleById(editingId, data);
         setLoading(false);
+        setOpen(false);
         // Toast
         toast.success("Updated Successfully!");
       } else {
         await createModule(data);
         setLoading(false);
+        setOpen(false);
         // Toast
         toast.success("Successfully Created!");
       }
@@ -144,7 +146,6 @@ const ModuleForm = ({
 };
 
 export default ModuleForm;
-function createModule(data: ModuleProps) {
-    throw new Error("Function not implemented.");
-}
+
+
 

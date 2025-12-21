@@ -4,7 +4,7 @@ import { db } from "@/prisma/db";
 import { CommentProps, ModuleProps } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
-export async function createComment(data: ModuleProps) {
+export async function createModule(data: ModuleProps) {
   try {
     const newModule = await db.module.create({
       data,
