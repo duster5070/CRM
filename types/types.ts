@@ -176,22 +176,27 @@ export type Payment = {
 };
 
 export type analyticsProps = {
-          title: string;
-          total: string;
-          href: string;
-         
-          icon: any
-          isCurrency?: boolean
-}
+  title: string;
+  total: string;
+  href: string;
+
+  icon: any;
+  isCurrency?: boolean;
+};
 
 export type ModuleProps = {
-  name : string;
+  name: string;
   userName: string;
   projectId: string;
   userId: string;
+};
 
-  
-}
+export type TaskProps = {
+  title: string;
+  status: TaskStatus;
+  moduleId: string;
+};
+
 export type ClientData = {
   id: string;
   name: string;
