@@ -17,20 +17,7 @@ export async function createModule(data: ModuleProps) {
     return null;
   }
 }
-export async function getAllCategories() {
-  try {
-    const categories = await db.category.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
 
-    return categories;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
 export async function updateModuleById(id: string, data: ModuleProps) {
   try {
     const updatedModule = await db.module.update({
@@ -45,18 +32,7 @@ export async function updateModuleById(id: string, data: ModuleProps) {
     console.log(error);
   }
 }
-export async function getCategoryById(id: string) {
-  try {
-    const category = await db.category.findUnique({
-      where: {
-        id,
-      },
-    });
-    return category;
-  } catch (error) {
-    console.log(error);
-  }
-}
+
 export async function deleteModule(id: string) {
   try {
     const deletedModule = await db.module.delete({
