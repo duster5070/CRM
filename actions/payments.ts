@@ -2,7 +2,7 @@
 
 import { generateInvoiceNumber } from "@/lib/genrateinvoiveNum";
 import { db } from "@/prisma/db";
-import { PaymentProps } from "@/types/types";
+import { InvoiceDetails, PaymentProps } from "@/types/types";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -65,7 +65,7 @@ export async function getInvoiceById(id:string) {
       invoice:payment,
       user,
       client,
-    };
+    } as InvoiceDetails;
   } catch (error) {
     console.error(error);
     return null;

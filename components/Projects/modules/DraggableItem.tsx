@@ -37,14 +37,15 @@ export default memo(function DraggableItem({
   return (
     <div
       ref={setNodeRef}
+      {...listeners} 
+      {...attributes} 
       style={style}
       className={`my-2 p-3 bg-white rounded-md shadow transition-all duration-200 cursor-move ${
         isDragging ? "opacity-0" : ""
       }`}
     >
       <div 
-        {...listeners} 
-        {...attributes} 
+       
         className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
       >
         <GripVertical className="h-4 w-4 text-gray-400" />
