@@ -17,8 +17,8 @@ const title=`Payment for ${data.invoice.title} made on ${date}`
 
 
  const response = await resend.emails.send({
-  from: 'Project X <onboarding@resend.dev>',
-  to: "tarekanwer2345@gmail.com", 
+  from: 'Project X <noreply@yourdomain.com>',
+  to: data.client?.email??"",                       //tarekanwer2345@gmail.com to test email 
   subject: `Invoice for your project made on ${date}`,
   react: InvoiceLink({
     invoiceLink,
@@ -26,8 +26,10 @@ const title=`Payment for ${data.invoice.title} made on ${date}`
     title,
     userName: data.user?.name??"",
   }),
+
 });
-console.log("Email sent successfully:", response);
+console.log(response);
+
   } catch (error) {
     console.error(error);
      throw error; 

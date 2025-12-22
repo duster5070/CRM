@@ -28,12 +28,12 @@ export const Invoice = ({invoiceDetails,project,role}:{invoiceDetails:InvoiceDet
     }
     const invoiceLink = `${baseUrl}/project/invoice/${invoiceDetails?.invoice.id}?project=${project}`
   const handleSendEmail = async () => {
-     console.log("CLICK HANDLER FIRED"); // 👈 browser log
+   
     setLoading(true);
     try{
       console.log("start sending email"+invoiceDetails);
   const res =  await sendEmail(invoiceDetails,invoiceLink);
-   console.log("CLICK HANDLER FIRED to email"); // 👈 browser log
+ 
 
 setLoading(false);
 toast.success("Email sent successfully");
@@ -63,14 +63,7 @@ toast.success("Email sent successfully");
             {loading ? "Sending..." : "Send to Client"}
           </button>
           )}
-        
-          
-     
-          
-            <button disabled={loading} onClick={() => handleSendEmail()} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-            <Mail className="shrink-0 size-4" />
-            Sent to Client
-          </button>
+      
           
           <button onClick={reactToPrintFn} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
             <Printer className="shrink-0 size-4" />
