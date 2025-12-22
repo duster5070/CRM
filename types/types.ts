@@ -121,11 +121,8 @@ export type Module = {
 export type Task = {
   id: string;
   title: string;
-  description: string;
   status: TaskStatus;
-  dueDate: Date;
   moduleId: string;
-  projectId: string;
   createdAt: Date;
   updatedAt: Date;
 };

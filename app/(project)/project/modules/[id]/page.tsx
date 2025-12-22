@@ -9,31 +9,58 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Delete, Edit, MoreVertical, Plus, Trash2 } from "lucide-react";
+import { Check, CheckCheck, ChevronLeft, Delete, Edit, MoreVertical, Plus, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { handleCommandNavigation } from "novel/extensions";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import TaskForm from "@/components/Forms/TaskForm";
 import { DeleteTask } from "@/components/Forms/DeleteTask";
+import TaskBoard from "@/components/Projects/modules/TaskBoard";
+import AuthenticatedAvatar from "@/components/global/AuthenticatedAvatar";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/config/auth";
+import ModuleForm from "@/components/Forms/ModuleForm";
+import { ModeToggle } from "@/components/mode-toggle";
+import BackBtn from "@/components/BackBtn";
+
 export default async function Page({
-  params: { id },
+  params,
   searchParams,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { projectId } = searchParams;
+  const {id} = await params
+  const { projectId } = await searchParams;
+   const session = await getServerSession(authOptions)
+  const user = session?.user
   const modules = (await getProjectModules(projectId as string)) || [];
   const activeModule = modules.find((module, i) => module.id === id);
   if (!activeModule || modules?.length < 0) {
     return notFound();
   }
+ 
+  let percentageCompletion = 0;
+  let allTasks = activeModule.tasks.length ?? 0;
+  const completedTasks =activeModule.tasks.length > 0 ? activeModule.tasks.filter((task,i)=>task.status=="COMPLETED").length:0
+  if(allTasks==0 || completedTasks==0){
+    percentageCompletion=0;
+  } else {
+    percentageCompletion = (completedTasks/allTasks)*100
+  }
   return (
     <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-8">
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow min-h-96">
+         <div className="flex items-center p-4 justify-between">
+                <BackBtn title="Back to Project"/>
+                <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
+                  <ModeToggle />
+                  <AuthenticatedAvatar session={session} />
+                </div>
+              </div>
         <div className="grid grid-cols-12">
-          <div className="col-span-3 p-8">
+          <div className="col-span-full lg:col-span-3 px-8 py-4">
             <h2 className="py-2 text-xl font-bold">Project Modules</h2>
             <ScrollArea className="h-[calc(100vh-8rem)] pr-4">
               {modules.map((module) => (
@@ -46,115 +73,25 @@ export default async function Page({
                       : "hover:bg-gray-100"
                   }`}
                 >
-                  <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                    { activeModule?.id === module.id?
+                    (<CheckCheck className="w-4 h-4 mr-2 text-blue-500"/>):
+                    (<Check className="w-4 h-4 mr-2 text-muted-foreground"/>)}
+                    
                   <span>{module.name}</span>
                 </Link>
               ))}
             </ScrollArea>
-            <Button>
-              <Plus className="mr-2 w-4 h-4" />
-              Add Project
-            </Button>
+            <ModuleForm
+              projectId={projectId as string}
+              userId={user.id}
+              userName={user.name}
+            />
           </div>
-          <div className="col-span-9 bg-gray-100 p-8">
+          <div className="col-span-full lg:col-span-9 bg-gray-100 px-8 py-4">
             <div className="flex-1 p-8">
               {activeModule && (
                 <>
-                  <div className="mb-6 flex items-center justify-between">
-                    <div className="">
-                      <h1 className="text-3xl font-bold mb-2">
-                        {activeModule.name}
-                      </h1>
-                      <div className="flex item-center">
-                        <Progress value={50} className="w-64 mr-4" />
-                        <span className="texr-sm text-gray-500">
-                          {50}% complete
-                        </span>
-                      </div>
-                    </div>
-                    <div>
-                      {activeModule.tasks.length > 0 && (
-                        <p>({activeModule.tasks.length} Tasks)</p>
-                      )}
-                      <TaskForm
-                        moduleId={activeModule.id}
-                        initialStatus="TODO"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-6">
-                    {(["TODO", "INPROGRESS", "COMPLETE"] as const).map(
-                      (status) => (
-                        <Card key={status}>
-                          <CardHeader
-                            className={cn(
-                              "flex flex-row items-center justify-between space-y-0 pb-2 rounded-t-lg",
-                              status === "TODO"
-                                ? "bg-orange-50"
-                                : status === "INPROGRESS"
-                                ? "bg-blue-50"
-                                : status === "COMPLETE"
-                                ? "bg-green-50"
-                                : ""
-                            )}
-                          >
-                            <CardTitle className="text-sm font-medium">
-                              {status
-                                .split("-")
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join("")}
-                            </CardTitle>
-                            <div className="flex items-center space-x-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                              >
-                                <Plus className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <ScrollArea className="h-[calc(100vh-16rem)]">
-                              {activeModule.tasks
-                                .filter((task) => task.status === status)
-                                .map((task) => (
-                                  <div
-                                    key={task.id}
-                                    className="mb-2 p-3 bg-white rounded-lg shadow"
-                                  >
-                                    <div className=" flex justify-between items-start mb-2">
-                                      <span className="font-medium">
-                                        {task.title}
-                                      </span>
-                                      <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                          <Button variant="ghost" className="">
-                                            <MoreVertical className="h-4 w-4" />
-                                          </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                          <DropdownMenuItem>
-                                            <Edit className="mr-2 h-4 w-4" />
-                                            Edit
-                                          </DropdownMenuItem>
-                                          <DropdownMenuItem asChild>
-                                            <DeleteTask id={task.id} />
-                                          </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                      </DropdownMenu>
-                                    </div>
-                                  </div>
-                                ))}
-                            </ScrollArea>
-                          </CardContent>
-                        </Card>
-                      )
-                    )}
-                  </div>
+                  <TaskBoard activeModule={activeModule}/>
                 </>
               )}
             </div>

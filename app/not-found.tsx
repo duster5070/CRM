@@ -2,6 +2,7 @@ import { ArrowLeft, Briefcase, Home, Settings, Users } from "lucide-react";
 // import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import BackBtn from "@/components/BackBtn";
 
 
 export default function NotFound() {
@@ -46,10 +47,7 @@ export default function NotFound() {
         </div>
 
         <div className="mt-8">
-          <Button /*onClick={() => router.back()}*/ className="w-full">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Projects
-          </Button>
+          <BackBtn title="Back to Project"/>
         </div>
       </div>
     </div>
