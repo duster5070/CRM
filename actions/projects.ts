@@ -158,7 +158,8 @@ export async function getProjectDetailsBySlug(slug: string):Promise<ProjectData|
         comments:true,
         members:true,
         invoices:true,
-        payments:true
+        payments:true,
+        user:true
       }
     });
     
@@ -183,6 +184,7 @@ export async function getProjectDetailsBySlug(slug: string):Promise<ProjectData|
           image:true,
           country:true,
           location:true,
+          plain:true,
           role:true,
           companyName:true,
           companyDescription:true

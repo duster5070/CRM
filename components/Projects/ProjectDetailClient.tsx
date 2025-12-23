@@ -57,6 +57,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import InviteClient from "../DataTableColumns/InviteClient";
 
 export default function ProjectDetailClient({
   projectData,
@@ -68,7 +69,7 @@ export default function ProjectDetailClient({
   // const [activeTab, setActiveTab] = useState("overview");
 
   const user = session?.user;
-
+  const role = user?.role;
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
@@ -99,12 +100,12 @@ export default function ProjectDetailClient({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   }
-//   function calculateDaysDifference(endDate: Date | string): number {
-//   const end = new Date(endDate).setHours(0, 0, 0, 0)
-//   const now = new Date().setHours(0, 0, 0, 0)
+  //   function calculateDaysDifference(endDate: Date | string): number {
+  //   const end = new Date(endDate).setHours(0, 0, 0, 0)
+  //   const now = new Date().setHours(0, 0, 0, 0)
 
-//   return Math.ceil((end - now) / (1000 * 60 * 60 * 24))
-// }
+  //   return Math.ceil((end - now) / (1000 * 60 * 60 * 24))
+  // }
 
   function formatDaysDifference(days: number): string {
     if (days === 0) {
@@ -461,12 +462,14 @@ export default function ProjectDetailClient({
                     <CardTitle>
                       <div className="flex items-center justify-between">
                         <h2>Payments</h2>
-                        <PaymentForm
-                          projectId={projectData.id}
-                          userId={projectData.userId}
-                          clientId={projectData.clientId}
-                          remainingAmount={remainingAmount}
-                        />
+                        {role === "USER" && (
+                          <PaymentForm
+                            projectId={projectData.id}
+                            userId={projectData.userId}
+                            clientId={projectData.clientId}
+                            remainingAmount={remainingAmount}
+                          />
+                        )}
                       </div>
                     </CardTitle>
                   </CardHeader>
@@ -491,17 +494,14 @@ export default function ProjectDetailClient({
                                 <p className="font-semibold">
                                   #{invoice.invoiceNumber}
                                 </p>
-                              
+
                                 <p className="text-sm text-gray-500">
                                   Due:{" "}
                                   {new Date(invoice.date).toLocaleDateString()}
                                 </p>
                               </div>
                               <div>
-                                  <h2>   {invoice.title}</h2>
-                               
-                              
-
+                                <h2> {invoice.title}</h2>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Badge variant="secondary">
@@ -632,73 +632,122 @@ export default function ProjectDetailClient({
                   {/* ================================= */}
                 </div>
               </div>
-              <div>
-                <div className="flex items-center mb-2">
-                  <Users className="mr-2 h-4 w-4 text-purple-500" />
-                  <span className="font-semibold">Members:</span>
+              {role === "USER" && (
+                <div>
+                  <div className="flex items-center mb-2">
+                    <Users className="mr-2 h-4 w-4 text-purple-500" />
+                    <span className="font-semibold">Members:</span>
+                  </div>
+                  <div className="flex -space-x-2">
+                    {projectData.members.length > 0 ? (
+                      projectData.members.map((member, index) => (
+                        <Avatar key={member.id}>
+                          <AvatarImage
+                            src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
+                          />
+                          <AvatarFallback>
+                            {member.name.substring(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      ))
+                    ) : (
+                      <div>
+                        <Button variant="outline" size="sm">
+                          <Plus className="mr-2 h-4 w-4" />
+                          Invite Member
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="flex -space-x-2">
-                  {projectData.members.length > 0 ? (
-                    projectData.members.map((member, index) => (
-                      <Avatar key={member.id}>
-                        <AvatarImage
-                          src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
-                        />
-                        <AvatarFallback>
-                          {member.name.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))
-                  ) : (
-                    <div>
-                      <Button variant="outline" size="sm">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Invite Member
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
 
           {/*Client Card*/}
           <Card>
             <CardHeader>
-              <CardTitle>Client Details</CardTitle>
+              <CardTitle>
+                {role === "USER" ? "Client" : "User"} Details
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <Avatar className="h-12 w-12">
-                  {projectData.client.image ? (
-                    <AvatarImage src={projectData.client.image} />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  {role === "USER" ? (
+                    <Avatar className="h-12 w-12">
+                      {projectData.client.image ? (
+                        <AvatarImage src={projectData.client.image} />
+                      ) : (
+                        <AvatarFallback>
+                          {projectData.client.name
+                            .substring(0, 2)
+                            .toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
                   ) : (
-                    <AvatarFallback>
-                      {projectData.client.name.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
+                    <Avatar className="h-12 w-12">
+                      {user.id ? (
+                        <AvatarImage
+                          src={projectData.user.image ?? "/placeholder.svg"}
+                        />
+                      ) : (
+                        <AvatarFallback>
+                          {projectData.user.name.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
                   )}
-                </Avatar>
-                <div>
-                  <p className="font-semibold">{projectData.client.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {projectData.client.companyName || "Individual Client"}
+                  {role === "USER" ? (
+                    <div>
+                      <p className="font-semibold">{projectData.client.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {projectData.client.companyName || "Individual Client"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="font-semibold">{projectData.user.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {projectData.user.companyName || "Individual User"}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                {role === "USER" && <InviteClient row={{ projectData }} />}
+              </div>
+              {role === "USER" ? (
+                <div className="text-sm">
+                  <p>
+                    <span className="font-semibold">Contact:</span>
+                    {projectData.client.firstName} {projectData.client.lastName}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Email:</span>{" "}
+                    {projectData.client.email}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Phone:</span>{" "}
+                    {projectData.client.phone}
                   </p>
                 </div>
-              </div>
-              <div className="text-sm">
-                <p>
-                  <span className="font-semibold">Contact:</span>
-                  {projectData.client.firstName} {projectData.client.lastName}
-                </p>
-                <p>
-                  <span className="font-semibold">Email:</span>{" "}
-                  {projectData.client.email}
-                </p>
-                <p>
-                  <span className="font-semibold">Phone:</span>{" "}
-                  {projectData.client.phone}
-                </p>
-              </div>
+              ) : (
+                <div className="text-sm">
+                  <p>
+                    <span className="font-semibold">Contact:</span>
+                    {projectData.user.firstName} {projectData.user.lastName}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Email:</span>{" "}
+                    {projectData.user.email}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Phone:</span>{" "}
+                    {projectData.user.phone}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

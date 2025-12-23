@@ -6,6 +6,7 @@ import { Resend } from 'resend';
 
 import { getNormalDate } from "@/lib/getNormalDate";
 import { InvoiceLink } from "@/components/Email-Templates/invoice";
+import ClientInvititation, { InvitationProps } from "@/components/Email-Templates/ClientInvitation";
 export async function sendEmail(data:InvoiceDetails,invoiceLink:string) {
     try {
 if(!process.env.RESEND_API_KEY){
@@ -14,7 +15,7 @@ if(!process.env.RESEND_API_KEY){
 const resend = new Resend(process.env.RESEND_API_KEY);
 const date = getNormalDate(data.invoice.date);
 const title=`Payment for ${data.invoice.title} made on ${date}`
-
+const clientMail = data.client?.email?? "desishub.info@gmail.com";;
 
  const response = await resend.emails.send({
   from: 'Project X <noreply@yourdomain.com>',
@@ -25,6 +26,33 @@ const title=`Payment for ${data.invoice.title} made on ${date}`
     previewText: `Invoice for your project made on ${date}`,
     title,
     userName: data.user?.name??"",
+  }),
+
+});
+console.log(response);
+
+  } catch (error) {
+    console.error(error);
+     throw error; 
+   
+  }
+}
+
+export async function sendClientInvitation(data:InvitationProps) {
+    try {
+const resend = new Resend(process.env.RESEND_API_KEY);
+const loginLink = data.loginLink;
+ const response = await resend.emails.send({
+  from: 'Project X ahmedelmdfagia@gmail.com',
+  to: data?.loginEmail??"",                       //tarekanwer2345@gmail.com to test email 
+  subject: `Invitation to collaborate on project ${data.projectName}`,
+  react: ClientInvititation({
+    clientName: data.clientName,
+    projectName: data.projectName,
+    message: data.message,
+    loginEmail: data.loginEmail,
+    loginPassword: data.loginPassword,
+    loginLink,
   }),
 
 });

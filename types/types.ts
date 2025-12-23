@@ -4,6 +4,7 @@ import {
   ProjectStatus,
   TaskStatus,
   Payment as IPayment,
+  User,
 } from "@prisma/client";
 
 // export type ProjectStatus = "ONGOING" | "COMPLETE";
@@ -104,6 +105,7 @@ export type ProjectData = {
   createdAt: Date;
   updatedAt: Date;
   client: ClientData;
+  user: User;
 };
 export type ProjectWithPayments = {
   id: string;
@@ -244,6 +246,7 @@ export type ClientData = {
   country: string | null;
   location: string | null;
   role: UserRole;
+  plain: string | null;
   companyName: string | null;
   companyDescription: string | null;
 };

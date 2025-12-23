@@ -53,11 +53,11 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "email",
     header: ({ column }) => <SortableColumn column={column} title="Email" />,
   },
-  {
-    accessorKey: "createdAt",
-    header: "Invite",
-    cell: ({ row }) => <InviteClient row={row} />,
-  },
+  // {
+  //   accessorKey: "createdAt",
+  //   header: "Invite",
+  //   cell: ({ row }) => <InviteClient row={row} />,
+  // },
 
   {
     accessorKey: "createdAt",
