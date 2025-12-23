@@ -18,6 +18,7 @@ export default function AuthenticatedAvatar({
 }: {
   session: Session | null;
 }) {
+  const role = session?.user.role;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer" asChild>
@@ -38,9 +39,12 @@ export default function AuthenticatedAvatar({
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link href="/dashboard">Dashboard</Link>
-        </DropdownMenuItem>
+        {role === "USER" && (
+          <DropdownMenuItem>
+            <Link href="/dashboard">Dashboard</Link>
+          </DropdownMenuItem>
+        )}
+
         <DropdownMenuItem>Services</DropdownMenuItem>
         {/* <DropdownMenuItem>Team</DropdownMenuItem> */}
         <DropdownMenuItem>

@@ -3,10 +3,12 @@ import { ArrowLeft, Briefcase, Home, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import BackBtn from "@/components/BackBtn";
+import { getAuthUser } from "@/config/useAuth";
 
 
-export default function NotFound() {
-  // const router = useRouter()
+export default async function NotFound() {
+  const user = await getAuthUser();
+  const role = user?.role;
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-lg w-full space-y-8 text-center">
@@ -16,7 +18,8 @@ export default function NotFound() {
           <p className="mt-4 text-lg text-gray-600">Oops! It seems you've ventured into uncharted territory.</p>
         </div>
 
-        <div className="mt-8 space-y-4">
+{role === "USER"&&(
+          <div className="mt-8 space-y-4">
           <p className="text-md text-gray-600">Here are some helpful links to get you back on track:</p>
           <div className="grid grid-cols-2 gap-4">
             <Link href="/dashboard" passHref>
@@ -45,9 +48,16 @@ export default function NotFound() {
             </Link>
           </div>
         </div>
+)}
 
         <div className="mt-8">
-          <BackBtn title="Back to Project"/>
+          <BackBtn title="Go Back"/>
+        </div>
+
+        <div className="mt-8 text-sm text-gray-500">
+<p>
+  If you believe this is an error, please contact support or check the URL for mistakes.
+</p>
         </div>
       </div>
     </div>

@@ -58,6 +58,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import InviteClient from "../DataTableColumns/InviteClient";
+import LogoutBtn from "../global/LogoutBtn";
 
 export default function ProjectDetailClient({
   projectData,
@@ -182,17 +183,23 @@ export default function ProjectDetailClient({
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/*back to projects button*/}
       <div className="flex items-center justify-between">
-        <Button
-          // onClick={() => router.push("/dashboard/projects")}
-          variant="outline"
-          className="mb-4"
-          asChild
-        >
-          <Link href={"/dashboard/projects"}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to All Projects
-          </Link>
-        </Button>
+        {role === "USER" ? (
+          <Button
+            // onClick={() => router.push("/dashboard/projects")}
+            variant="outline"
+            className="mb-4"
+            asChild
+          >
+            <Link href={"/dashboard/projects"}>
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Back to All Projects
+            </Link>
+          </Button>
+        ) : (
+          <div className="bg-slate-800 rounded-md text-white py-2 px-4 my-2">
+            <LogoutBtn />
+          </div>
+        )}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
           <ModeToggle />
           <AuthenticatedAvatar session={session} />
