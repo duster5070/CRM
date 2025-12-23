@@ -12,6 +12,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import ActionColumn from "@/components/DataTableColumns/ActionColumn";
 import { Category, Project } from "@prisma/client";
 import Link from "next/link";
+import { ProjectDeadline } from "@/components/DataTableColumns/ProjectDeadline";
 
 export const columns: ColumnDef<Project>[] = [
   {
@@ -56,10 +57,7 @@ export const columns: ColumnDef<Project>[] = [
   {
     accessorKey: "deadline",
     header: "Deadline (in days)",
-    cell: ({ row }) => {
-      const deadline = row.original.deadline;
-      return <p>{deadline?.toLocaleString()}</p>;
-    },
+    cell: ({ row }) => <ProjectDeadline row={row} />,
   },
   {
     accessorKey: "startDate",
