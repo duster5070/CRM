@@ -10,7 +10,8 @@ import ImageColumn from "@/components/DataTableColumns/ImageColumn";
 import SortableColumn from "@/components/DataTableColumns/SortableColumn";
 import { ColumnDef } from "@tanstack/react-table";
 import ActionColumn from "@/components/DataTableColumns/ActionColumn";
-import {  User } from "@prisma/client";
+import { User } from "@prisma/client";
+import InviteClient from "@/components/DataTableColumns/InviteClient";
 export const columns: ColumnDef<User>[] = [
   {
     id: "select",
@@ -43,18 +44,19 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "name",
     header: ({ column }) => <SortableColumn column={column} title="Name" />,
   },
-  
-   {
+
+  {
     accessorKey: "phone",
     header: ({ column }) => <SortableColumn column={column} title="Phone" />,
   },
-   {
+  {
     accessorKey: "email",
     header: ({ column }) => <SortableColumn column={column} title="Email" />,
   },
-    {
-    accessorKey: "location",
-    header: ({ column }) => <SortableColumn column={column} title="Location" />,
+  {
+    accessorKey: "createdAt",
+    header: "Invite",
+    cell: ({ row }) => <InviteClient row={row} />,
   },
 
   {

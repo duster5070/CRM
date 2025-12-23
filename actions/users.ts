@@ -8,19 +8,19 @@ import { revalidatePath } from "next/cache";
 import { UserRole } from "@prisma/client";
 export async function createUser(data: UserProps) {
   const { email,
-          password,
-          firstName,
-          lastName,
-          name,
-          phone,
-          image,
-          role,
-          country,
-          location,
-          userId,
-          companyName,
-          companyDescription
-    } = data;
+    password,
+    firstName,
+    lastName,
+    name,
+    phone,
+    image,
+    role,
+    country,
+    location,
+    userId,
+    companyName,
+    companyDescription
+  } = data;
   try {
     // Hash the PAASWORD
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -36,27 +36,28 @@ export async function createUser(data: UserProps) {
         data: null,
       };
     }
-    
+
     const newUser = await db.user.create({
       data: {
         email,
         password: hashedPassword,
+        plain: role === "CLIENT" ? password : "",
         firstName,
         lastName,
         name,
         phone,
         image,
-        role:role ?? UserRole.CLIENT,
+        role: role ?? UserRole.CLIENT,
         country,
         location,
         userId,
         companyName,
-        companyDescription 
+        companyDescription
       },
     });
     revalidatePath("/dashboard/clients");
     revalidatePath("/dashboard/users");
-    console.log("this is the new user",newUser);
+    console.log("this is the new user", newUser);
     return {
       error: null,
       status: 200,

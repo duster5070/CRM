@@ -62,6 +62,7 @@ model User {
   location String?
   role          UserRole  @default(USER)
   password      String?
+  plain      String?
   companyName      String?
   companyDescription      String?
   userId String? @db.ObjectId

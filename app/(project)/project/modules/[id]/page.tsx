@@ -4,9 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Delete, Edit, MoreVertical, Plus, Trash2 } from "lucide-react";
+import { Edit, MoreVertical, Plus, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
-import { handleCommandNavigation } from "novel/extensions";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 export default async function Page({
