@@ -1,5 +1,10 @@
-
-import { Project, UserRole, ProjectStatus, TaskStatus ,Payment as IPayment} from "@prisma/client";
+import {
+  Project,
+  UserRole,
+  ProjectStatus,
+  TaskStatus,
+  Payment as IPayment,
+} from "@prisma/client";
 
 // export type ProjectStatus = "ONGOING" | "COMPLETE";
 
@@ -100,6 +105,18 @@ export type ProjectData = {
   updatedAt: Date;
   client: ClientData;
 };
+export type ProjectWithPayments = {
+  id: string;
+  name: string | null;
+  slug: string;
+
+  thumbnail: string | null;
+
+  status: ProjectStatus;
+
+  payments: Payment[];
+};
+export type ProjectWithPaymentsArray = ProjectWithPayments[]
 
 export type moduleData = {
   id: string;
@@ -148,27 +165,25 @@ export type Member = {
   updatedAt: Date;
 };
 export type InvoiceDetails = {
-invoice:IPayment,
-user:IUser|null,
-client: IClient|null
-  
-}
+  invoice: IPayment;
+  user: IUser | null;
+  client: IClient | null;
+};
 
-interface IUser{
-           name:string,
-          phone:string,
-          email:string,
-          companyName:string,
-          companyDescription:string,
-          userLogo:any
+interface IUser {
+  name: string;
+  phone: string;
+  email: string;
+  companyName: string;
+  companyDescription: string;
+  userLogo: any;
 }
-interface IClient{
-           name:string,
-          phone:string,
-          email:string,
-          companyName:string,
-          companyDescription:string,
-
+interface IClient {
+  name: string;
+  phone: string;
+  email: string;
+  companyName: string;
+  companyDescription: string;
 }
 
 export type Invoice = {
