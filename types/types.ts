@@ -1,4 +1,5 @@
-import { Project, UserRole, ProjectStatus, TaskStatus } from "@prisma/client";
+
+import { Project, UserRole, ProjectStatus, TaskStatus ,Payment as IPayment} from "@prisma/client";
 
 // export type ProjectStatus = "ONGOING" | "COMPLETE";
 
@@ -121,11 +122,8 @@ export type Module = {
 export type Task = {
   id: string;
   title: string;
-  description: string;
   status: TaskStatus;
-  dueDate: Date;
   moduleId: string;
-  projectId: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -149,6 +147,29 @@ export type Member = {
   createdAt: Date;
   updatedAt: Date;
 };
+export type InvoiceDetails = {
+invoice:IPayment,
+user:IUser|null,
+client: IClient|null
+  
+}
+
+interface IUser{
+           name:string,
+          phone:string,
+          email:string,
+          companyName:string,
+          companyDescription:string,
+          userLogo:any
+}
+interface IClient{
+           name:string,
+          phone:string,
+          email:string,
+          companyName:string,
+          companyDescription:string,
+
+}
 
 export type Invoice = {
   id: string;
@@ -176,22 +197,27 @@ export type Payment = {
 };
 
 export type analyticsProps = {
-          title: string;
-          total: string;
-          href: string;
-         
-          icon: any
-          isCurrency?: boolean
-}
+  title: string;
+  total: string;
+  href: string;
+
+  icon: any;
+  isCurrency?: boolean;
+};
 
 export type ModuleProps = {
-  name : string;
+  name: string;
   userName: string;
   projectId: string;
   userId: string;
+};
 
-  
-}
+export type TaskProps = {
+  title: string;
+  status: TaskStatus;
+  moduleId: string;
+};
+
 export type ClientData = {
   id: string;
   name: string;
