@@ -80,10 +80,10 @@ const SIDEBAR: Group[] = [
     title: "Financial",
     icon: DollarSign,
     items: [
-      {
-        title: "Invoices",
-        items: [{ title: "Invoice List", href: "/dashboard/invoices" }],
-      },
+      // {
+      //   title: "Invoices",
+      //   items: [{ title: "Invoice List", href: "/dashboard/invoices" }],
+      // },
       // { title: "Quotations", items: [{ title: "Quotation List", href: "/quotations" }, { title: "Create Quotation", href: "/quotations/new" }] },
       {
         title: "Payments",

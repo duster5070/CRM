@@ -491,10 +491,17 @@ export default function ProjectDetailClient({
                                 <p className="font-semibold">
                                   #{invoice.invoiceNumber}
                                 </p>
+                              
                                 <p className="text-sm text-gray-500">
                                   Due:{" "}
                                   {new Date(invoice.date).toLocaleDateString()}
                                 </p>
+                              </div>
+                              <div>
+                                  <h2>   {invoice.title}</h2>
+                               
+                              
+
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Badge variant="secondary">

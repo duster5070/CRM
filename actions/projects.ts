@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
-import { CategoryProps, ProjectData, ProjectProps } from "@/types/types";
+import { CategoryProps, ProjectData, ProjectProps, ProjectWithPayments } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
 export async function createProject(data: ProjectProps) {
@@ -79,6 +79,38 @@ export async function getUserProjects(userId:string | undefined) {
     });
 
     return projects;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+ }
+}
+
+
+export async function getDetailedUserProjects(userId:string | undefined) {
+ if(userId){
+   try {
+    const projects = await db.project.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where:{
+          userId
+      },
+     select: {
+      id: true,
+     name: true,
+      slug: true,
+     status: true,
+      thumbnail: true,
+     
+     
+      
+     payments: true
+     }
+    });
+
+    return projects ;
   } catch (error) {
     console.log(error);
     return null;
