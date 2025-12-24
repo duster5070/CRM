@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
-import { ModuleProps, TaskProps } from "@/types/types";
+import { TaskProps } from "@/types/types";
 import { TaskStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 

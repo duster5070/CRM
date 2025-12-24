@@ -71,6 +71,12 @@ const SIDEBAR: Group[] = [
         title: "Projects",
         items: [{ title: "Project List", href: "/dashboard/projects" }],
       },
+      {
+        title: "Guest Projects",
+        items: [
+          { title: "Guest Project List", href: "/dashboard/guest-projects" },
+        ],
+      },
       // { title: "Modules", items: [{ title: "Module List", href: "/modules" }, { title: "Add New Module", href: "/modules/new" }] },
       // { title: "Tasks", items: [{ title: "Task List", href: "/tasks" }, { title: "Add New Task", href: "/tasks/new" }] },
     ],

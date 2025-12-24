@@ -135,10 +135,10 @@ model User {
    projectLink String
    guestName String
    projectName String 
- 
    projectOwner String
    user User @relation(fields: [guestId],references: [id])
   guestId String @db.ObjectId
+  ownerId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
  }
