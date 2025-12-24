@@ -1,3 +1,4 @@
+import { GuestProject } from './../node_modules/.prisma/client/index.d';
 "use server";
 
 import { InvoiceDetails } from "@/types/types";
@@ -9,6 +10,7 @@ import { InvoiceLink } from "@/components/Email-Templates/invoice";
 import ClientInvititation, { InvitationProps } from "@/components/Email-Templates/ClientInvitation";
 import { ExistingUser } from "./users";
 import MemberInvitation from "@/components/Email-Templates/MemberInvitation";
+import { db } from '@/prisma/db';
 export async function sendEmail(data:InvoiceDetails,invoiceLink:string) {
     try {
 if(!process.env.RESEND_API_KEY){
@@ -72,6 +74,7 @@ type InvitationPayload = {
   members: ExistingUser[];
   memberName: string;
   projectName: string;
+  projectOwner: string;
   message?: string;
   loginLink: string;
 };
@@ -80,17 +83,32 @@ export async function sendMemberInvitation({
   memberName,
   projectName,
   loginLink,
+  projectOwner
 }: InvitationPayload) {
   if (!process.env.RESEND_API_KEY) {
     throw new Error('RESEND_API_KEY is missing');
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-
+  
   const message =
-    "We're excited to have you on board! Please use the following credentials to log in and start collaborating on the project.";
-
+  "We're excited to have you on board! Please use the following credentials to log in and start collaborating on the project.";
+  
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    //create the guest project 
+    members.map(async (user) => {
+    const guestProject =  await db.guestProject.create({
+        data: {
+          projectLink: loginLink,
+          guestName: user.name,
+          projectName: projectName,
+          projectOwner: projectOwner,
+          guestId: user.id
+        }
+      })
+      console.log(guestProject)
+    })
     const batch = members.map((user) => ({
       from: 'Project X <onboarding@resend.dev>',
       to: user.email,

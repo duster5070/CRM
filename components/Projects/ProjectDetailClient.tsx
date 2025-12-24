@@ -74,8 +74,10 @@ export default function ProjectDetailClient({
   // const [activeTab, setActiveTab] = useState("overview");
 
   const user = session?.user;
-  // const role = user?.role;
-   const role ="USER";
+  let role = user?.role;
+ if(user.id !== projectData.user.id) {
+  role = "Member"
+ }
   
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);

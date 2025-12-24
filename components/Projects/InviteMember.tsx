@@ -72,6 +72,7 @@ if(!baseUrl){
         projectName: projectData.name ?? "",
         memberName: projectData.client.name,
         loginLink: `${baseUrl}/login?callbackUrl=/project/${projectData.slug}`,
+        projectOwner: projectData.user.name
       });
       console.log(res);
       toast.success("Email sent successfully");
