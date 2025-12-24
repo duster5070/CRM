@@ -467,12 +467,12 @@ export default function ProjectDetailClient({
                       <div className="flex items-center justify-between">
                         <h2>Payments</h2>
                         {role === "USER" && (
-                          <PaymentForm
-                            projectId={projectData.id}
-                            userId={projectData.userId}
-                            clientId={projectData.clientId}
-                            remainingAmount={remainingAmount}
-                          />
+                        <PaymentForm
+                          projectId={projectData.id}
+                          userId={projectData.userId}
+                          clientId={projectData.clientId}
+                          remainingAmount={remainingAmount}
+                        />
                         )}
                       </div>
                     </CardTitle>
@@ -529,13 +529,6 @@ export default function ProjectDetailClient({
                         )}
                       </TabsContent>
                       <TabsContent value="payments" className="space-y-4">
-                        <PaymentForm
-                          projectId={projectData.id}
-                          userId={projectData.userId}
-                          clientId={projectData.clientId}
-                          remainingAmount={remainingAmount}
-                        />
-
                         {projectData.payments.length > 0 ? (
                           projectData.payments.map((payment) => (
                             <div
