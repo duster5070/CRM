@@ -15,10 +15,10 @@ export default async function DashboardLayout({
   if (!session) {
     redirect("/login");
   }
-  const role = session.user.role;
-  if (role !== "USER") {
-    return notFound();
-  }
+  // const role = session.user.role;
+  // if (role !== "USER") {
+  //   return notFound();
+  // }
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar />

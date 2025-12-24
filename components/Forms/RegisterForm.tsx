@@ -12,7 +12,7 @@ import TextInput from "../FormInputs/TextInput";
 import PasswordInput from "../FormInputs/PasswordInput";
 import SubmitButton from "../FormInputs/SubmitButton";
 import { Button } from "../ui/button";
-import { FaGithub, FaGitter, FaGoogle } from "react-icons/fa";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 import { createUser } from "@/actions/users";
 import { signIn } from "next-auth/react";
 export default function RegisterForm() {
@@ -30,6 +30,7 @@ export default function RegisterForm() {
     data.name = `${data.firstName} ${data.lastName}`;
     data.image =
       "https://utfs.io/f/59b606d1-9148-4f50-ae1c-e9d02322e834-2558r.png";
+    data.role = "USER"
     try {
       const res = await createUser(data);
       if (res.status === 409) {

@@ -59,20 +59,27 @@ import {
 } from "@/components/ui/alert-dialog";
 import InviteClient from "../DataTableColumns/InviteClient";
 import LogoutBtn from "../global/LogoutBtn";
+import InviteMembersModal from "./InviteMember";
+import { ExistingUser } from "@/actions/users";
 
 export default function ProjectDetailClient({
   projectData,
   session,
+  existingUsers,
 }: {
   projectData: ProjectData;
   session: Session | null;
+  existingUsers:ExistingUser[] ;
 }) {
   // const [activeTab, setActiveTab] = useState("overview");
 
   const user = session?.user;
-  const role = user?.role;
+  // const role = user?.role;
+   const role ="USER";
+  
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
+   const [open, setOpen] = useState(false);
 
   // Helper function to safely parse notes JSON
   const parseNotes = (notes: string) => {
@@ -647,12 +654,31 @@ export default function ProjectDetailClient({
                         </Avatar>
                       ))
                     ) : (
-                      <div>
-                        <Button variant="outline" size="sm">
+
+
+
+                     <>
+     
+                       <div>
+                        <Button  onClick={() => setOpen(true)} variant="outline" size="sm">
                           <Plus className="mr-2 h-4 w-4" />
                           Invite Member
                         </Button>
                       </div>
+
+      <InviteMembersModal
+        projectData={projectData}
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        members={existingUsers.filter((member) => member.id !== user.id)}
+       
+      />
+    </>
+
+
+
+
+                     
                     )}
                   </div>
                 </div>

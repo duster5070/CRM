@@ -7,6 +7,8 @@ import { Resend } from 'resend';
 import { getNormalDate } from "@/lib/getNormalDate";
 import { InvoiceLink } from "@/components/Email-Templates/invoice";
 import ClientInvititation, { InvitationProps } from "@/components/Email-Templates/ClientInvitation";
+import { ExistingUser } from "./users";
+import MemberInvitation from "@/components/Email-Templates/MemberInvitation";
 export async function sendEmail(data:InvoiceDetails,invoiceLink:string) {
     try {
 if(!process.env.RESEND_API_KEY){
@@ -43,7 +45,7 @@ export async function sendClientInvitation(data:InvitationProps) {
 const resend = new Resend(process.env.RESEND_API_KEY);
 const loginLink = data.loginLink;
  const response = await resend.emails.send({
-  from: 'Project X ahmedelmdfagia@gmail.com',
+  from: 'Project X <no-reply@yourdomain.com>',
   to: data?.loginEmail??"",                       //tarekanwer2345@gmail.com to test email 
   subject: `Invitation to collaborate on project ${data.projectName}`,
   react: ClientInvititation({
@@ -62,5 +64,56 @@ console.log(response);
     console.error(error);
      throw error; 
    
+  }
+}
+
+
+type InvitationPayload = {
+  members: ExistingUser[];
+  memberName: string;
+  projectName: string;
+  message?: string;
+  loginLink: string;
+};
+export async function sendMemberInvitation({
+  members,
+  memberName,
+  projectName,
+  loginLink,
+}: InvitationPayload) {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY is missing');
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  const message =
+    "We're excited to have you on board! Please use the following credentials to log in and start collaborating on the project.";
+
+  try {
+    const batch = members.map((user) => ({
+      from: 'Project X <onboarding@resend.dev>',
+      to: user.email,
+      subject: `Invitation to ${projectName}`,
+      react: MemberInvitation({
+        memberName,
+        projectName,
+        message,
+        loginLink,
+      }),
+    }));
+
+    const { data, error } = await resend.batch.send(batch);
+
+    if (error) {
+      console.error('Failed to send invitations:', error);
+      throw error;
+    }
+
+    console.log('Invitations sent successfully:', data);
+    
+  } catch (error) {
+    console.error('Failed to send invitations:', error);
+    throw error;
   }
 }
