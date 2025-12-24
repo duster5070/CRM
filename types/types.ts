@@ -1,4 +1,11 @@
-import { Project, UserRole, ProjectStatus, TaskStatus } from "@prisma/client";
+import {
+  Project,
+  UserRole,
+  ProjectStatus,
+  TaskStatus,
+  Payment as IPayment,
+  User,
+} from "@prisma/client";
 
 // export type ProjectStatus = "ONGOING" | "COMPLETE";
 
@@ -98,7 +105,41 @@ export type ProjectData = {
   createdAt: Date;
   updatedAt: Date;
   client: ClientData;
+  user: User;
 };
+
+export type ProjectWithUser = {
+  id: string;
+  name: string | null;
+  slug: string;
+  notes: string | null;
+  description: string | null;
+  bannerImage: string | null;
+  gradient: string | null;
+  thumbnail: string | null;
+  budget: number | null;
+  deadline: number | null;
+  startDate: Date;
+  endDate: Date | null;
+  status: ProjectStatus;
+  clientId: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
+};
+export type ProjectWithPayments = {
+  id: string;
+  name: string | null;
+  slug: string;
+
+  thumbnail: string | null;
+
+  status: ProjectStatus;
+
+  payments: Payment[];
+};
+export type ProjectWithPaymentsArray = ProjectWithPayments[]
 
 export type moduleData = {
   id: string;
@@ -121,11 +162,8 @@ export type Module = {
 export type Task = {
   id: string;
   title: string;
-  description: string;
   status: TaskStatus;
-  dueDate: Date;
   moduleId: string;
-  projectId: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -149,6 +187,27 @@ export type Member = {
   createdAt: Date;
   updatedAt: Date;
 };
+export type InvoiceDetails = {
+  invoice: IPayment;
+  user: IUser | null;
+  client: IClient | null;
+};
+
+interface IUser {
+  name: string;
+  phone: string;
+  email: string;
+  companyName: string;
+  companyDescription: string;
+  userLogo: any;
+}
+interface IClient {
+  name: string;
+  phone: string;
+  email: string;
+  companyName: string;
+  companyDescription: string;
+}
 
 export type Invoice = {
   id: string;
@@ -208,6 +267,7 @@ export type ClientData = {
   country: string | null;
   location: string | null;
   role: UserRole;
+  plain: string | null;
   companyName: string | null;
   companyDescription: string | null;
 };

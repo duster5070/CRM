@@ -1,4 +1,5 @@
 import { getProjectDetailsBySlug } from "@/actions/projects";
+import { getExistingUsers } from "@/actions/users";
 import ProjectDetailClient from "@/components/Projects/ProjectDetailClient";
 import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
@@ -15,6 +16,7 @@ export default async function ProjectDetailPage({
   const projectData = await getProjectDetailsBySlug(slug);
   console.log(`[ProjectDetailPage] Received project data for slug ${slug}:`, projectData ? "FOUND" : "NULL");
   const session = await getServerSession(authOptions);
+  const existingUsers = await getExistingUsers();
    
   if (!session) {
     redirect(
@@ -29,5 +31,5 @@ export default async function ProjectDetailPage({
     );
   }
 
-  return <ProjectDetailClient projectData={projectData}  session={session}/>;
+  return <ProjectDetailClient projectData={projectData}  session={session} existingUsers={existingUsers??[]}/>;
 }

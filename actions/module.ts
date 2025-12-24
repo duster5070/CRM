@@ -42,6 +42,7 @@ export async function getProjectModules(projectId: string | undefined) {
 
 export async function getModuleById(id: string) {
   try {
+    // eslint-disable-next-line @next/next/no-assign-module-variable
     const module = await db.module.findUnique({
       where: {
         id,

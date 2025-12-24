@@ -19,10 +19,10 @@ export function DeleteTask({ id }: { id: string }) {
   return (
     <Button
       variant="ghost"
-      className="w-full text-red-500 hover:text-red-600"
+      className="w-full flex items-center text-red-500 hover:text-red-600"
       onClick={handleDeleteTask}
     >
-      <Trash2 className="mr-2 h-4 w-4" />
+      <Trash2 className="mr-2 h-4 w-4 " />
       Delete
     </Button>
   );

@@ -57,20 +57,31 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import InviteClient from "../DataTableColumns/InviteClient";
+import LogoutBtn from "../global/LogoutBtn";
+import InviteMembersModal from "./InviteMember";
+import { ExistingUser } from "@/actions/users";
 
 export default function ProjectDetailClient({
   projectData,
   session,
+  existingUsers,
 }: {
   projectData: ProjectData;
   session: Session | null;
+  existingUsers:ExistingUser[] ;
 }) {
   // const [activeTab, setActiveTab] = useState("overview");
 
   const user = session?.user;
-
+  let role = user?.role;
+ if(user.id !== projectData.user.id) {
+  role = "Member"
+ }
+  
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
+   const [open, setOpen] = useState(false);
 
   // Helper function to safely parse notes JSON
   const parseNotes = (notes: string) => {
@@ -91,7 +102,7 @@ export default function ProjectDetailClient({
   const remainingAmount = projectData.budget
     ? projectData.budget - paidAmount
     : 0;
-  // //==========================================
+  //==========================================
   function calculateDaysDifference(endDate: Date | string): number {
     const end = new Date(endDate);
     const now = new Date();
@@ -99,6 +110,13 @@ export default function ProjectDetailClient({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   }
+  //   function calculateDaysDifference(endDate: Date | string): number {
+  //   const end = new Date(endDate).setHours(0, 0, 0, 0)
+  //   const now = new Date().setHours(0, 0, 0, 0)
+
+  //   return Math.ceil((end - now) / (1000 * 60 * 60 * 24))
+  // }
+
   function formatDaysDifference(days: number): string {
     if (days === 0) {
       return "Deadline is today";
@@ -141,11 +159,14 @@ export default function ProjectDetailClient({
     if (projectData.endDate) {
       setDaysDifference(calculateDaysDifference(projectData.endDate));
     }
-    const intervalId = setInterval(() => {
-      if (projectData.endDate) {
-        setDaysDifference(calculateDaysDifference(projectData.endDate));
-      }
-    }, 24 * 60 * 60 * 1000);
+    const intervalId = setInterval(
+      () => {
+        if (projectData.endDate) {
+          setDaysDifference(calculateDaysDifference(projectData.endDate));
+        }
+      },
+      24 * 60 * 60 * 1000
+    );
     return () => clearInterval(intervalId); //////////////////////////////////////////////////////////////////////////////////////
   }, [projectData.endDate]);
   //==========================
@@ -165,20 +186,26 @@ export default function ProjectDetailClient({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-slate-950 dark:via-black dark:to-slate-950 p-8">
       {/*back to projects button*/}
       <div className="flex items-center justify-between">
-        <Button
-          // onClick={() => router.push("/dashboard/projects")}
-          variant="outline"
-          className="mb-4"
-          asChild
-        >
-          <Link href={"/dashboard/projects"}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to All Projects
-          </Link>
-        </Button>
+        {role === "USER" ? (
+          <Button
+            // onClick={() => router.push("/dashboard/projects")}
+            variant="outline"
+            className="mb-4"
+            asChild
+          >
+            <Link href={"/dashboard/projects"}>
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Back to All Projects
+            </Link>
+          </Button>
+        ) : (
+          <div className="bg-slate-800 dark:bg-slate-800/80 dark:border dark:border-slate-700 rounded-md text-white dark:text-slate-100 py-2 px-4 my-2">
+            <LogoutBtn />
+          </div>
+        )}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
           <ModeToggle />
           <AuthenticatedAvatar session={session} />
@@ -201,7 +228,7 @@ export default function ProjectDetailClient({
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Project Description</CardTitle>
+              <CardTitle className="dark:text-slate-100">Project Description</CardTitle>
               <Button
                 onClick={() => setIsEditing(!isEditing)}
                 variant="ghost"
@@ -221,7 +248,7 @@ export default function ProjectDetailClient({
                   initialDescription={projectData.description}
                 />
               ) : (
-                <p>{projectData.description || "No description available."}</p>
+                <p className="dark:text-slate-100">{projectData.description || "No description available."}</p>
               )}
             </CardContent>
           </Card>
@@ -239,7 +266,7 @@ export default function ProjectDetailClient({
                 <CardHeader>
                   {/* changed the style here ya hassan i had to change it */}
 
-                  <CardTitle>
+                  <CardTitle className="dark:text-slate-100">
                     {" "}
                     <div className="flex items-center justify-between">
                       <h2>Project Modules</h2>
@@ -261,10 +288,10 @@ export default function ProjectDetailClient({
                         {projectData.modules.map((module) => (
                           <Card
                             key={module.id}
-                            className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 group p-3"
+                            className="hover:shadow-md dark:hover:shadow-xl dark:hover:shadow-indigo-500/10 transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-slate-800/90 dark:to-slate-700/90 dark:border-slate-600/50 dark:bg-slate-800 group p-3"
                           >
                             <CardHeader className="p-3">
-                              <CardTitle className="text-sm flex items-center justify-between group pl-5">
+                              <CardTitle className="text-sm flex items-center justify-between group pl-5 dark:text-slate-100">
                                 <span>{module.name}</span>
 
                                 <div className="flex items-center gap-2">
@@ -278,13 +305,13 @@ export default function ProjectDetailClient({
                                   <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                       <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Trash className="h-4 w-4 text-red-500" />
+                                        <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                                       </button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                       <AlertDialogHeader>
                                         <AlertDialogTitle>
-                                          <div className="flex text-red-600">
+                                          <div className="flex text-red-600 dark:text-red-400">
                                             <TriangleAlert className="h-5 w-5 mr-2" />
                                             Are you absolutely sure?
                                           </div>
@@ -295,7 +322,7 @@ export default function ProjectDetailClient({
                                         </AlertDialogDescription>
                                       </AlertDialogHeader>
                                       <AlertDialogFooter>
-                                        <AlertDialogCancel className="text-white hover:text-white bg-gray-600 hover:bg-gray-700">
+                                        <AlertDialogCancel className="text-white hover:text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">
                                           Cancel
                                         </AlertDialogCancel>
                                         <AlertDialogAction asChild>
@@ -303,7 +330,7 @@ export default function ProjectDetailClient({
                                             onClick={() =>
                                               handleDeleteModule(module.id)
                                             }
-                                            className="bg-red-600 hover:bg-red-700"
+                                            className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600"
                                           >
                                             Delete
                                           </Button>
@@ -348,7 +375,7 @@ export default function ProjectDetailClient({
               {/*notes*/}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Notes</CardTitle>
+                  <CardTitle className="dark:text-slate-100">Notes</CardTitle>
                   <Button
                     onClick={() => setIsEditingNotes(!isEditingNotes)}
                     variant="ghost"
@@ -362,7 +389,7 @@ export default function ProjectDetailClient({
                   </Button>
                 </CardHeader>
                 <CardContent>
-                  <div className="prose lg:prose-xl">
+                  <div className="prose lg:prose-xl dark:prose-invert">
                     {projectData.notes && projectData.notes.trim() !== "" ? (
                       <NotesForm
                         key={isEditingNotes ? "editing" : "viewing"}
@@ -377,7 +404,7 @@ export default function ProjectDetailClient({
                         initialNotes={null}
                       />
                     ) : (
-                      <p>No notes available.</p>
+                      <p className="dark:text-slate-100">No notes available.</p>
                     )}
                   </div>
                 </CardContent>
@@ -388,7 +415,7 @@ export default function ProjectDetailClient({
               {/*comments*/}
               <Card>
                 <CardHeader>
-                  <CardTitle>
+                  <CardTitle className="dark:text-slate-100">
                     <div className="flex items-center justify-between">
                       <h2>Comments</h2>
                       <div>
@@ -417,7 +444,7 @@ export default function ProjectDetailClient({
                         </Avatar>
                         <div>
                           <div className="flex space-x-3">
-                            <p className="font-semibold">{comment.userName}</p>
+                            <p className="font-semibold dark:text-slate-100">{comment.userName}</p>
                             <CommentForm
                               projectId={projectData.id}
                               userId={user.id}
@@ -427,14 +454,14 @@ export default function ProjectDetailClient({
                               initialContent={comment.content}
                             />
                           </div>
-                          <div className="prose">{parse(comment.content)}</div>
+                          <div className="prose dark:prose-invert">{parse(comment.content)}</div>
                         </div>
                       </div>
                     ))}
                   </CardContent>
                 ) : (
                   <CardFooter>
-                    <p>No comments available.</p>
+                    <p className="dark:text-slate-100">No comments available.</p>
                   </CardFooter>
                 )}
               </Card>
@@ -445,15 +472,17 @@ export default function ProjectDetailClient({
               <div className="max-w-3xl mx-auto">
                 <Card>
                   <CardHeader>
-                    <CardTitle>
+                    <CardTitle className="dark:text-slate-100">
                       <div className="flex items-center justify-between">
                         <h2>Payments</h2>
+                        {role === "USER" && (
                         <PaymentForm
                           projectId={projectData.id}
                           userId={projectData.userId}
                           clientId={projectData.clientId}
                           remainingAmount={remainingAmount}
                         />
+                        )}
                       </div>
                     </CardTitle>
                   </CardHeader>
@@ -475,13 +504,17 @@ export default function ProjectDetailClient({
                               className="flex justify-between items-center"
                             >
                               <div>
-                                <p className="font-semibold">
+                                <p className="font-semibold dark:text-slate-100">
                                   #{invoice.invoiceNumber}
                                 </p>
-                                <p className="text-sm text-gray-500">
+
+                                <p className="text-sm text-gray-500 dark:text-gray-300">
                                   Due:{" "}
                                   {new Date(invoice.date).toLocaleDateString()}
                                 </p>
+                              </div>
+                              <div>
+                                <h2 className="dark:text-slate-100"> {invoice.title}</h2>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Badge variant="secondary">
@@ -499,19 +532,12 @@ export default function ProjectDetailClient({
                             </div>
                           ))
                         ) : (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-500 dark:text-gray-300">
                             No Invoices Yet.
                           </p>
                         )}
                       </TabsContent>
                       <TabsContent value="payments" className="space-y-4">
-                        <PaymentForm
-                          projectId={projectData.id}
-                          userId={projectData.userId}
-                          clientId={projectData.clientId}
-                          remainingAmount={remainingAmount}
-                        />
-
                         {projectData.payments.length > 0 ? (
                           projectData.payments.map((payment) => (
                             <div
@@ -525,13 +551,13 @@ export default function ProjectDetailClient({
                               <Badge variant="outline" className="">
                                 {payment.title}
                               </Badge>
-                              <Badge variant="outline" className="bg-green-100">
+                              <Badge variant="outline" className="bg-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700">
                                 ${payment.amount.toLocaleString()}
                               </Badge>
                             </div>
                           ))
                         ) : (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-500 dark:text-gray-300">
                             No Payments Yet.
                           </p>
                         )}
@@ -557,37 +583,37 @@ export default function ProjectDetailClient({
           {/*Project Info Card*/}
           <Card>
             <CardHeader>
-              <CardTitle>Project Info</CardTitle>
+              <CardTitle className="dark:text-slate-100">Project Info</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b">
+              <div className="flex items-center justify-between pb-3 border-b dark:border-slate-600">
                 <div className="flex items-center">
-                  <DollarSign className="mr-2 h-4 w-4 text-green-500" />
-                  <span className="font-semibold">Budget:</span>
-                  <span className="ml-2">
+                  <DollarSign className="mr-2 h-4 w-4 text-green-500 dark:text-green-400" />
+                  <span className="font-semibold dark:text-slate-200">Budget:</span>
+                  <span className="ml-2 dark:text-slate-200">
                     ${projectData.budget?.toLocaleString() || "N/A"}
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <DollarSign className="mr-2 h-4 w-4 text-green-500" />
-                  <span className="font-semibold">Total Paid:</span>
-                  <span className="ml-2">
+                  <DollarSign className="mr-2 h-4 w-4 text-green-500 dark:text-green-400" />
+                  <span className="font-semibold dark:text-slate-200">Total Paid:</span>
+                  <span className="ml-2 dark:text-slate-200">
                     ${paidAmount?.toLocaleString() || "N/A"}
                   </span>
                 </div>
               </div>
-              <div className="space-y-2 border-b pb-3">
+              <div className="space-y-2 border-b dark:border-slate-600 pb-3">
                 <div className="flex items-center">
-                  <CalendarDays className="mr-2 h-4 w-4 text-blue-500" />
-                  <span className="font-semibold">Timeline:</span>
+                  <CalendarDays className="mr-2 h-4 w-4 text-blue-500 dark:text-blue-400" />
+                  <span className="font-semibold dark:text-slate-200">Timeline:</span>
                 </div>
                 <div className="ml-6 space-y-1">
                   <div className="flex items-center justify-between">
-                    <div className="text-sm">
+                    <div className="text-sm dark:text-slate-200">
                       Start:{" "}
                       {new Date(projectData.startDate).toLocaleDateString()}
                     </div>
-                    <div className="text-sm">
+                    <div className="text-sm dark:text-slate-200">
                       End:{" "}
                       {projectData.endDate
                         ? new Date(projectData.endDate).toLocaleDateString()
@@ -597,10 +623,10 @@ export default function ProjectDetailClient({
                   {/* ============================= */}
                   <div
                     className={`text-sm font-medium ${daysDifference !== null && daysDifference < 0
-                      ? "text-red-600" // Past deadline - RED
+                      ? "text-red-600 dark:text-red-400" // Past deadline - RED
                       : daysDifference === 0
-                        ? "text-orange-600" // Today - ORANGE
-                        : "text-green-600" // Future - GREEN
+                        ? "text-orange-600 dark:text-orange-400" // Today - ORANGE
+                        : "text-green-600 dark:text-green-400" // Future - GREEN
                       }`}
                   >
                     Status:{""}{" "}
@@ -611,73 +637,141 @@ export default function ProjectDetailClient({
                   {/* ================================= */}
                 </div>
               </div>
-              <div>
-                <div className="flex items-center mb-2">
-                  <Users className="mr-2 h-4 w-4 text-purple-500" />
-                  <span className="font-semibold">Members:</span>
+              {role === "USER" && (
+                <div>
+                  <div className="flex items-center mb-2">
+                    <Users className="mr-2 h-4 w-4 text-purple-500 dark:text-purple-400" />
+                    <span className="font-semibold dark:text-slate-200">Members:</span>
+                  </div>
+                  <div className="flex -space-x-2">
+                    {projectData.members.length > 0 ? (
+                      projectData.members.map((member, index) => (
+                        <Avatar key={member.id}>
+                          <AvatarImage
+                            src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
+                          />
+                          <AvatarFallback>
+                            {member.name.substring(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      ))
+                    ) : (
+
+
+
+                     <>
+     
+                       <div>
+                        <Button  onClick={() => setOpen(true)} variant="outline" size="sm">
+                          <Plus className="mr-2 h-4 w-4" />
+                          Invite Member
+                        </Button>
+                      </div>
+
+      <InviteMembersModal
+        projectData={projectData}
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        members={existingUsers.filter((member) => member.id !== user.id)}
+       
+      />
+    </>
+
+
+
+
+                     
+                    )}
+                  </div>
                 </div>
-                <div className="flex -space-x-2">
-                  {projectData.members.length > 0 ? (
-                    projectData.members.map((member, index) => (
-                      <Avatar key={member.id}>
-                        <AvatarImage
-                          src={`/placeholder.svg?height=32&width=32&text=${member.id}`}
-                        />
-                        <AvatarFallback>
-                          {member.name.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))
-                  ) : (
-                    <div>
-                      <Button variant="outline" size="sm">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Invite Member
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
 
           {/*Client Card*/}
           <Card>
             <CardHeader>
-              <CardTitle>Client Details</CardTitle>
+              <CardTitle className="dark:text-slate-100">
+                {role === "USER" ? "Client" : "User"} Details
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <Avatar className="h-12 w-12">
-                  {projectData.client.image ? (
-                    <AvatarImage src={projectData.client.image} />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  {role === "USER" ? (
+                    <Avatar className="h-12 w-12">
+                      {projectData.client.image ? (
+                        <AvatarImage src={projectData.client.image} />
+                      ) : (
+                        <AvatarFallback>
+                          {projectData.client.name
+                            .substring(0, 2)
+                            .toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
                   ) : (
-                    <AvatarFallback>
-                      {projectData.client.name.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
+                    <Avatar className="h-12 w-12">
+                      {user.id ? (
+                        <AvatarImage
+                          src={projectData.user.image ?? "/placeholder.svg"}
+                        />
+                      ) : (
+                        <AvatarFallback>
+                          {projectData.user.name.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
                   )}
-                </Avatar>
-                <div>
-                  <p className="font-semibold">{projectData.client.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {projectData.client.companyName || "Individual Client"}
+                  {role === "USER" ? (
+                    <div>
+                      <p className="font-semibold dark:text-slate-100">{projectData.client.name}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
+                        {projectData.client.companyName || "Individual Client"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="font-semibold dark:text-slate-100">{projectData.user.name}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
+                        {projectData.user.companyName || "Individual User"}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                {role === "USER" && <InviteClient row={{ projectData }} />}
+              </div>
+              {role === "USER" ? (
+                <div className="text-sm">
+                  <p className="dark:text-slate-200">
+                    <span className="font-semibold">Contact:</span>
+                    {projectData.client.firstName} {projectData.client.lastName}
+                  </p>
+                  <p className="dark:text-slate-200">
+                    <span className="font-semibold">Email:</span>{" "}
+                    {projectData.client.email}
+                  </p>
+                  <p className="dark:text-slate-200">
+                    <span className="font-semibold">Phone:</span>{" "}
+                    {projectData.client.phone}
                   </p>
                 </div>
-              </div>
-              <div className="text-sm">
-                <p>
-                  <span className="font-semibold">Contact:</span>
-                  {projectData.client.firstName} {projectData.client.lastName}
-                </p>
-                <p>
-                  <span className="font-semibold">Email:</span>{" "}
-                  {projectData.client.email}
-                </p>
-                <p>
-                  <span className="font-semibold">Phone:</span>{" "}
-                  {projectData.client.phone}
-                </p>
-              </div>
+              ) : (
+                <div className="text-sm">
+                  <p className="dark:text-slate-200">
+                    <span className="font-semibold">Contact:</span>
+                    {projectData.user.firstName} {projectData.user.lastName}
+                  </p>
+                  <p className="dark:text-slate-200">
+                    <span className="font-semibold">Email:</span>{" "}
+                    {projectData.user.email}
+                  </p>
+                  <p className="dark:text-slate-200">
+                    <span className="font-semibold">Phone:</span>{" "}
+                    {projectData.user.phone}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

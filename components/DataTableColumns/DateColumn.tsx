@@ -1,65 +1,115 @@
-import { getNormalDate } from "@/lib/getNormalDate";
-import React from "react";
-const getPastDays = (isoString: string): number => {
-  const createdDate = new Date(isoString);
-  const currentDate = new Date();
+// import { getNormalDate } from "@/lib/getNormalDate";
+// import React from "react";
+// const getPastDays = (isoString: string): number => {
+//   const createdDate = new Date(isoString);
+//   const currentDate = new Date();
 
-  // Reset times to midnight for accurate day calculation
-  createdDate.setHours(0, 0, 0, 0);
-  currentDate.setHours(0, 0, 0, 0);
+//   // Reset times to midnight for accurate day calculation
+//   createdDate.setHours(0, 0, 0, 0);
+//   currentDate.setHours(0, 0, 0, 0);
 
-  const diffTime = currentDate.getTime() - createdDate.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
-};
-function timeAgo(createdAt: string): string {
-  const createdDate = new Date(createdAt); // Convert the string to a Date object
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - createdDate.getTime()) / 1000);
+//   const diffTime = currentDate.getTime() - createdDate.getTime();
+//   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+//   return diffDays;
+// };
+// function timeAgo(createdAt: string): string {
+//   const createdDate = new Date(createdAt); // Convert the string to a Date object
+//   const now = new Date();
+//   const seconds = Math.floor((now.getTime() - createdDate.getTime()) / 1000);
 
-  if (seconds < 60) {
-    return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
-  }
+//   if (seconds < 60) {
+//     return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+//   }
 
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
-  }
+//   const minutes = Math.floor(seconds / 60);
+//   if (minutes < 60) {
+//     return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+//   }
 
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
-    return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
-  }
+//   const hours = Math.floor(minutes / 60);
+//   if (hours < 24) {
+//     return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+//   }
 
-  const days = Math.floor(hours / 24);
-  if (days < 30) {
-    return `${days} day${days !== 1 ? "s" : ""} ago`;
-  }
+//   const days = Math.floor(hours / 24);
+//   if (days < 30) {
+//     return `${days} day${days !== 1 ? "s" : ""} ago`;
+//   }
 
-  const months = Math.floor(days / 30);
-  if (months < 12) {
-    return `${months} month${months !== 1 ? "s" : ""} ago`;
-  }
+//   const months = Math.floor(days / 30);
+//   if (months < 12) {
+//     return `${months} month${months !== 1 ? "s" : ""} ago`;
+//   }
 
-  const years = Math.floor(months / 12);
-  return `${years} year${years !== 1 ? "s" : ""} ago`;
+//   const years = Math.floor(months / 12);
+//   return `${years} year${years !== 1 ? "s" : ""} ago`;
+// }
+
+// export default function DateColumn({
+//   row,
+//   accessorKey,
+// }: {
+//   row: any;
+//   accessorKey: any;
+// }) {
+//   const createdAt = row.getValue(`${accessorKey}`);
+//   const date = getNormalDate(createdAt);
+//   const originalDate = new Date(createdAt);
+
+//   const day = originalDate.getDate();
+//   const month = originalDate.toLocaleString("default", { month: "short" });
+//   const year = originalDate.getFullYear();
+//   const time = timeAgo(createdAt);
+//   const pastDays = getPastDays(createdAt);
+//   return <div className="">{pastDays > 10 ? date : time}</div>;
+// }
+
+
+
+import { Row } from "@tanstack/react-table"
+import React from "react"
+
+function getPastDays(isoString: string): number {
+  const createdDate = new Date(isoString)
+  const currentDate = new Date()
+
+  createdDate.setHours(0, 0, 0, 0)
+  currentDate.setHours(0, 0, 0, 0)
+
+  const diffTime = currentDate.getTime() - createdDate.getTime()
+  return Math.floor(diffTime / (1000 * 60 * 60 * 24))
 }
 
-export default function DateColumn({
+function formatDaysAgo(days: number): string {
+  if (days < 0) return " future"
+  if (days === 0) return "Today"
+  if (days === 1) return "1 day ago"
+  return `${days} days ago`
+}
+
+type DateColumnProps<T> = {
+  row: Row<T>
+  accessorKey: keyof T & string
+}
+
+export default function DateColumn<T>({
   row,
   accessorKey,
-}: {
-  row: any;
-  accessorKey: any;
-}) {
-  const createdAt = row.getValue(`${accessorKey}`);
-  const date = getNormalDate(createdAt);
-  const originalDate = new Date(createdAt);
+}: DateColumnProps<T>) {
+  const createdAt = row.getValue<string>(accessorKey)
+  if (!createdAt) return null
 
-  const day = originalDate.getDate();
-  const month = originalDate.toLocaleString("default", { month: "short" });
-  const year = originalDate.getFullYear();
-  const time = timeAgo(createdAt);
-  const pastDays = getPastDays(createdAt);
-  return <div className="">{pastDays > 10 ? date : time}</div>;
+  const pastDays = getPastDays(createdAt)
+
+  const actualDate = new Date(createdAt).toLocaleDateString("en-US", {
+    month: "numeric",
+    day: "numeric",
+    year: "numeric",
+  })
+
+  return (
+    <div>
+      {formatDaysAgo(pastDays)} ({actualDate})
+    </div>
+  )
 }

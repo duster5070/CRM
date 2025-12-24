@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
-import { CategoryProps, ProjectData, ProjectProps } from "@/types/types";
+import { CategoryProps, ProjectData, ProjectProps, ProjectWithPayments } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
 export async function createProject(data: ProjectProps) {
@@ -66,6 +66,30 @@ export async function getRecentUserProjects(userId:string | undefined) {
   }
  }
 }
+export async function getUserPublicProjects(userId:string | undefined) {
+ if(userId){
+   try {
+    const projects = await db.project.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where:{
+          userId,
+          isPublic:true
+      },
+      include:{
+        user:true
+      }
+
+    });
+
+    return projects;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+ }
+}
 export async function getUserProjects(userId:string | undefined) {
  if(userId){
    try {
@@ -79,6 +103,38 @@ export async function getUserProjects(userId:string | undefined) {
     });
 
     return projects;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+ }
+}
+
+
+export async function getDetailedUserProjects(userId:string | undefined) {
+ if(userId){
+   try {
+    const projects = await db.project.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where:{
+          userId
+      },
+     select: {
+      id: true,
+     name: true,
+      slug: true,
+     status: true,
+      thumbnail: true,
+     
+     
+      
+     payments: true
+     }
+    });
+
+    return projects ;
   } catch (error) {
     console.log(error);
     return null;
@@ -126,7 +182,8 @@ export async function getProjectDetailsBySlug(slug: string):Promise<ProjectData|
         comments:true,
         members:true,
         invoices:true,
-        payments:true
+        payments:true,
+        user:true
       }
     });
     
@@ -151,6 +208,7 @@ export async function getProjectDetailsBySlug(slug: string):Promise<ProjectData|
           image:true,
           country:true,
           location:true,
+          plain:true,
           role:true,
           companyName:true,
           companyDescription:true
@@ -211,3 +269,25 @@ export async function deleteProject(id: string) {
   }
 }
 
+export async function updateProjectPublicity(id: string, isPublic: boolean) {
+  try {
+    const updatedProject = await db.project.update({
+      where: {
+        id,
+      },
+      data:{
+        isPublic
+      },
+    });
+    revalidatePath("/dashboard/projects");
+    return {
+      data:updatedProject,
+      ok:true
+    }
+  } catch (error) {
+    return {
+      data:null,
+      ok:true
+    }
+  }
+}

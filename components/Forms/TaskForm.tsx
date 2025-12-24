@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 import { TaskStatus } from "@prisma/client";
 import { Button } from "../ui/button";
-import { Check, Pen, Plus } from "lucide-react";
+import { Check, Edit, Pen, Plus } from "lucide-react";
 import TextInput from "../FormInputs/TextInput";
 
 import { createTask, updateTaskById } from "@/actions/tasks";
@@ -23,12 +23,14 @@ const TaskForm = ({
   moduleId,
   initialTitle,
   initialStatus,
+  isDefault=false,
   editingId,
 }: {
   moduleId: string;
   initialTitle?: string;
   initialStatus: TaskStatus;
   editingId?: string;
+  isDefault?:boolean
 }) => {
   const {
     register,
@@ -71,47 +73,53 @@ const TaskForm = ({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {editingId ? (
-          <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <Pen className="h-4 w-4 text-green-500" />
-          </button>
-        ) : (
-          <Button className="">
-            <Plus className="mr-2 h-4 w-4" />
-            Add New Task
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{editingId ? "Edit Task" : "Add New Task"}</DialogTitle>
-        </DialogHeader>
+    <div className="py-1">
+      <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              {editingId ? (
+                <Button variant={"ghost"} className="flex items-center w-full">
+                  <Edit className="h-4 w-4" />
+                  Edit
+                </Button>
+              ) : (
+                
+                <Button variant={isDefault ? "default" : "ghost"} className="">
+                  <Plus className="mr-2 h-4 w-4" />
+                {isDefault && <span>Add New Task</span>}
+                </Button>
+              
+              )}
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{editingId ? "Edit Task" : "Add New Task"}</DialogTitle>
+              </DialogHeader>
 
-        <form onSubmit={handleSubmit(saveModule)}>
-          <div className="grid grid-cols-12 gap-6 py-8">
-            <div className="col-span-full space-y-3">
-              <div className="grid gap-3">
-                <TextInput
-                  register={register}
-                  errors={errors}
-                  label=""
-                  name="title"
-                  icon={Check}
+              <form onSubmit={handleSubmit(saveModule)}>
+                <div className="grid grid-cols-12 gap-6 py-8">
+                  <div className="col-span-full space-y-3">
+                    <div className="grid gap-3">
+                      <TextInput
+                        register={register}
+                        errors={errors}
+                        label=""
+                        name="title"
+                        icon={Check}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <SubmitButton
+                  className="w-full"
+                  title={editingId ? "Update Task" : "Add Task"}
+                  loading={loading}
                 />
-              </div>
-            </div>
-          </div>
-
-          <SubmitButton
-            className="w-full"
-            title={editingId ? "Update Task" : "Add Task"}
-            loading={loading}
-          />
-        </form>
-      </DialogContent>
-    </Dialog>
+              </form>
+            </DialogContent>
+      </Dialog>
+    </div>
+    
   );
 };
 

@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Button } from "./ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -8,7 +9,6 @@ export default function BackBtn({ title = "Back" }: { title?: string }) {
   return (
     <Button
       onClick={() => router.back()}
-      asChild
       variant="outline"
       className="mb-4"
     >
