@@ -100,6 +100,7 @@ model User {
   deadline Int? 
   startDate DateTime @default(now())
   endDate DateTime?
+  isPublic Boolean @default(false)
   status ProjectStatus @default(ONGOING)
   // client Client @relation(fields: [clientId],references: [id])
   clientId String @db.ObjectId

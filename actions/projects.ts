@@ -66,6 +66,30 @@ export async function getRecentUserProjects(userId:string | undefined) {
   }
  }
 }
+export async function getUserPublicProjects(userId:string | undefined) {
+ if(userId){
+   try {
+    const projects = await db.project.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where:{
+          userId,
+          isPublic:true
+      },
+      include:{
+        user:true
+      }
+
+    });
+
+    return projects;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+ }
+}
 export async function getUserProjects(userId:string | undefined) {
  if(userId){
    try {
@@ -245,3 +269,25 @@ export async function deleteProject(id: string) {
   }
 }
 
+export async function updateProjectPublicity(id: string, isPublic: boolean) {
+  try {
+    const updatedProject = await db.project.update({
+      where: {
+        id,
+      },
+      data:{
+        isPublic
+      },
+    });
+    revalidatePath("/dashboard/projects");
+    return {
+      data:updatedProject,
+      ok:true
+    }
+  } catch (error) {
+    return {
+      data:null,
+      ok:true
+    }
+  }
+}

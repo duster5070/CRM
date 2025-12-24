@@ -107,6 +107,27 @@ export type ProjectData = {
   client: ClientData;
   user: User;
 };
+
+export type ProjectWithUser = {
+  id: string;
+  name: string | null;
+  slug: string;
+  notes: string | null;
+  description: string | null;
+  bannerImage: string | null;
+  gradient: string | null;
+  thumbnail: string | null;
+  budget: number | null;
+  deadline: number | null;
+  startDate: Date;
+  endDate: Date | null;
+  status: ProjectStatus;
+  clientId: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
+};
 export type ProjectWithPayments = {
   id: string;
   name: string | null;

@@ -13,6 +13,7 @@ import ActionColumn from "@/components/DataTableColumns/ActionColumn";
 import { Category, Project } from "@prisma/client";
 import Link from "next/link";
 import { ProjectDeadline } from "@/components/DataTableColumns/ProjectDeadline";
+import PublicityBtn from "@/components/DataTableComponents/PublicityBtn";
 
 export const columns: ColumnDef<Project>[] = [
   {
@@ -63,6 +64,16 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: "startDate",
     header: "Project Start Date",
     cell: ({ row }) => <DateColumn row={row} accessorKey="startDate" />,
+  },
+  {
+    accessorKey: "isPublic",
+    header: "Portfolio",
+    cell: ({ row }) => {
+      const project = row.original;
+      return (
+        <PublicityBtn id={project.id} status={project.isPublic}/>
+      );
+    },
   },
   {
     id: "view",
