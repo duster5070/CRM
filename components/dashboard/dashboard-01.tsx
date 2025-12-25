@@ -103,7 +103,6 @@ export function Dashboard01({
             </CardContent>
           </Card>
         )}
-
         {/* Recent Clients */}
         {clients.length > 0 && (
           <Card className="w-full">
