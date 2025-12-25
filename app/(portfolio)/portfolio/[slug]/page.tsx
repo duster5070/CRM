@@ -1,7 +1,9 @@
 import { getPortfolioByUserId } from "@/actions/portfolio";
-import { getUserPublicProjects } from "@/actions/projects";
+import {
+  getUserPublicFeaturedProjects,
+  getUserPublicOtherProjects,
+} from "@/actions/projects";
 import Portfolio from "@/components/PortfolioPage";
-import { getAuthUser } from "@/config/useAuth";
 import { notFound } from "next/navigation";
 import React from "react";
 
@@ -17,14 +19,21 @@ export default async function page({
   if (!id) {
     return notFound();
   }
-  const projects = (await getUserPublicProjects(id)) || [];
+  const featured = (await getUserPublicFeaturedProjects(id)) || [];
+  const otherProjects = (await getUserPublicOtherProjects(id)) || [];
   const profile = await getPortfolioByUserId(id);
   if (!profile) {
     return notFound();
   }
   return (
     <div>
-      <Portfolio profile={profile} projects={projects} />
+      {profile && profile.id && (
+        <Portfolio
+          profile={profile}
+          projects={featured}
+          otherProjects={otherProjects}
+        />
+      )}
     </div>
   );
 }
