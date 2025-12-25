@@ -3,9 +3,10 @@
 import axios from "axios";
 import { db } from "@/prisma/db";
 import { UserProps } from "@/types/types";
-import bcrypt from "bcrypt";
+import bcrypt, { compare } from "bcrypt";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@prisma/client";
+import { PasswordProps } from "@/components/Forms/ChangePasswordForm";
 export async function createUser(data: UserProps) {
   const { email,
     password,
@@ -150,6 +151,60 @@ export async function updateUserById(id: string, data: UserProps) {
   }
 
 
+}
+export async function updateUserPassword(
+  id: string,
+  data: PasswordProps
+) {
+  try {
+    const existingUser = await db.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser || !existingUser.password) {
+      return {
+        status: 404,
+        error: "User not found",
+        data: null,
+      };
+    }
+
+    const passwordMatch = await compare(
+      data.oldPassword,
+      existingUser.password
+    );
+
+    if (!passwordMatch) {
+      return {
+        status: 401,
+        error: "Old password is incorrect",
+        data: null,
+      };
+    }
+
+    const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+
+    const updatedUser = await db.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+
+    revalidatePath("/dashboard/clients");
+
+    return {
+      status: 200,
+      error: null,
+      data: updatedUser,
+    };
+  } catch (error) {
+    console.error("updateUserPassword error:", error);
+
+    return {
+      status: 500,
+      error: "Internal server error",
+      data: null,
+    };
+  }
 }
 
 

@@ -62,6 +62,9 @@ import LogoutBtn from "../global/LogoutBtn";
 import InviteMembersModal from "./InviteMember";
 import { ExistingUser } from "@/actions/users";
 
+import { DomainCard } from "./DomainCard";
+import PaymentDeleteButton from "./PaymentDeleteButton";
+
 export default function ProjectDetailClient({
   projectData,
   session,
@@ -551,9 +554,14 @@ export default function ProjectDetailClient({
                               <Badge variant="outline" className="">
                                 {payment.title}
                               </Badge>
-                              <Badge variant="outline" className="bg-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700">
+                              <div className="flex items-center ">
+                                 <Badge variant="outline" className="bg-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700">
                                 ${payment.amount.toLocaleString()}
                               </Badge>
+                             <PaymentDeleteButton paymentId={payment.id}/>
+
+                              </div>
+                             
                             </div>
                           ))
                         ) : (
@@ -774,6 +782,7 @@ export default function ProjectDetailClient({
               )}
             </CardContent>
           </Card>
+          <DomainCard projectData={projectData} />
         </div>
       </div>
     </div>

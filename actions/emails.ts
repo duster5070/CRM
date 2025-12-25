@@ -1,5 +1,5 @@
-import { GuestProject } from "./../node_modules/.prisma/client/index.d";
-("use server");
+
+"use server"
 
 import { InvoiceDetails } from "@/types/types";
 

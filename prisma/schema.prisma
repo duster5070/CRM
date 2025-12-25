@@ -76,6 +76,7 @@ model User {
   portfolioItems PortfolioItem[]
    modules  Module[]
   payments Payment[]
+  folders     Folder[]
   isVerfied     Boolean   @default(false)
   token         Int?
   createdAt     DateTime  @default(now())
@@ -117,6 +118,27 @@ model Subscriber {
  COMPLETE
  ONGOING
  }
+model Folder {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  files     File[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model File {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  type      String
+  size      Int
+  folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId  String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 
  model Project {
   id  String @id @default(auto()) @map("_id") @db.ObjectId
@@ -125,6 +147,8 @@ model Subscriber {
   notes String?
   description String?
   bannerImage String?
+  freeDomain   String? @default("https://test.vercel.app")
+  customDomain  String? @default("https://test.com")
   gradient String?
   thumbnail String?
   budget Int? @default(0)
