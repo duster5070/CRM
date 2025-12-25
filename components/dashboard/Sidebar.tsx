@@ -158,7 +158,7 @@ const SIDEBAR: Group[] = [
     title: "Settings",
     icon: Settings,
     items: [
-      { title: "Account Settings", href: "/dashboard/account-settings" },
+      { title: "Account Settings", href: "/dashboard/change-password" },
       { title: "Notifications", href: "/dashboard/notifications" },
       { title: "Integrations", href: "/dashboard/integration" },
     ],

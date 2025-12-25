@@ -5,6 +5,7 @@ import React from 'react'
 
 export default async  function page() {
   const user = await getAuthUser()
+  console.log(user)
   const projects = await getUserPublicProjects(user?.id)||[]
   return (
     <div>
