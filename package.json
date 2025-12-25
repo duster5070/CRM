@@ -57,6 +57,7 @@
     "html-react-parser": "^5.2.11",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.418.0",
+    "motion": "^12.23.26",
     "next": "15.0.4",
     "next-auth": "^4.24.7",
     "next-themes": "^0.3.0",

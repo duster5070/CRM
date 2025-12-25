@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
-import { ModuleProps, TaskProps } from "@/types/types";
+import { TaskProps } from "@/types/types";
 import { TaskStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -41,6 +41,7 @@ export async function getProjectModules(projectId: string | undefined) {
 
 export async function getModuleById(id: string) {
   try {
+    // eslint-disable-next-line @next/next/no-assign-module-variable
     const module = await db.module.findUnique({
       where: {
         id,
@@ -51,7 +52,6 @@ export async function getModuleById(id: string) {
     console.log(error);
   }
 }
-
 
 export async function updateTaskById(id: string, data: TaskProps) {
   try {
@@ -94,7 +94,10 @@ export async function deleteTask(id: string) {
       },
     });
 
-    console.log("SERVER: Task successfully deleted from DB:", deletedTask.title);
+    console.log(
+      "SERVER: Task successfully deleted from DB:",
+      deletedTask.title
+    );
 
     revalidatePath("/project/modules/[id]", "page");
 

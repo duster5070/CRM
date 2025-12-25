@@ -80,6 +80,37 @@ model User {
   token         Int?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  portfolioProfile     PortfolioProfile?
+  subscriber    Subscriber?
+}
+
+model PortfolioProfile {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String      @unique @db.ObjectId
+  user            User        @relation(fields: [userId],references: [id])
+  name            String
+  profileImage    String?
+  location        String
+  projectCount    Float
+  email           String
+  bookingLink     String
+  description     String
+  twitterUrl      String?
+  youtubeUrl      String?
+  linkedinUrl     String?
+  instagramUrl    String?
+  githubUrl       String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model Subscriber {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String      @unique @db.ObjectId
+  user            User        @relation(fields: [userId],references: [id])
+  email           String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
 
  enum ProjectStatus{
@@ -100,6 +131,7 @@ model User {
   deadline Int? 
   startDate DateTime @default(now())
   endDate DateTime?
+  isPublic Boolean @default(false)
   status ProjectStatus @default(ONGOING)
   // client Client @relation(fields: [clientId],references: [id])
   clientId String @db.ObjectId
@@ -134,10 +166,10 @@ model User {
    projectLink String
    guestName String
    projectName String 
- 
    projectOwner String
    user User @relation(fields: [guestId],references: [id])
   guestId String @db.ObjectId
+  ownerId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
  }
@@ -251,3 +283,5 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 }
+
+

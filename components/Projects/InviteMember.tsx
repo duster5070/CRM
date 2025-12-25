@@ -59,10 +59,10 @@ export default function InviteMembersModal({
   const removeSelected = (id: string) => {
     setSelected((prev) => prev.filter((m) => m.id !== id));
   };
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-if(!baseUrl){
-  throw new Error('NEXT_PUBLIC_BASE_URL is missing');
-}
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_BASE_URL is missing");
+  }
   const handleSubmit = async () => {
     try {
       console.log("Inviting members:", selected);
@@ -72,7 +72,8 @@ if(!baseUrl){
         projectName: projectData.name ?? "",
         memberName: projectData.client.name,
         loginLink: `${baseUrl}/login?callbackUrl=/project/${projectData.slug}`,
-        projectOwner: projectData.user.name
+        projectOwner: projectData.user.name,
+        projectOwnerId: projectData.userId,
       });
       console.log(res);
       toast.success("Email sent successfully");

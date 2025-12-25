@@ -107,6 +107,27 @@ export type ProjectData = {
   client: ClientData;
   user: User;
 };
+
+export type ProjectWithUser = {
+  id: string;
+  name: string | null;
+  slug: string;
+  notes: string | null;
+  description: string | null;
+  bannerImage: string | null;
+  gradient: string | null;
+  thumbnail: string | null;
+  budget: number | null;
+  deadline: number | null;
+  startDate: Date;
+  endDate: Date | null;
+  status: ProjectStatus;
+  clientId: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
+};
 export type ProjectWithPayments = {
   id: string;
   name: string | null;
@@ -118,7 +139,7 @@ export type ProjectWithPayments = {
 
   payments: Payment[];
 };
-export type ProjectWithPaymentsArray = ProjectWithPayments[]
+export type ProjectWithPaymentsArray = ProjectWithPayments[];
 
 export type moduleData = {
   id: string;
@@ -249,4 +270,20 @@ export type ClientData = {
   plain: string | null;
   companyName: string | null;
   companyDescription: string | null;
+};
+
+export type PortfolioProps = {
+  userId: string;
+  name: string;
+  profileImage: string;
+  location: string;
+  projectCount: number;
+  email: string;
+  bookingLink: string;
+  description: string;
+  twitterUrl: string;
+  youtubeUrl: string;
+  linkedinUrl: string;
+  instagramUrl: string;
+  githubUrl: string;
 };

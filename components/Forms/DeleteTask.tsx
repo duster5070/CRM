@@ -10,6 +10,7 @@ export function DeleteTask({ id }: { id: string }) {
       const res = await deleteTask(id);
       if (res.ok) {
         toast.success("Task Deleted Successfully!");
+        console.log(res.data);
       }
     } catch (error) {
       console.log(error);
