@@ -62,6 +62,8 @@ import LogoutBtn from "../global/LogoutBtn";
 import InviteMembersModal from "./InviteMember";
 import { ExistingUser } from "@/actions/users";
 
+import { DomainCard } from "./DomainCard";
+
 export default function ProjectDetailClient({
   projectData,
   session,
@@ -774,6 +776,7 @@ export default function ProjectDetailClient({
               )}
             </CardContent>
           </Card>
+          <DomainCard projectData={projectData} />
         </div>
       </div>
     </div>

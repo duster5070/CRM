@@ -94,6 +94,8 @@ model User {
   notes String?
   description String?
   bannerImage String?
+  freeDomain   String? @default("https://test.vercel.app")
+  customDomain  String? @default("https://test.com")
   gradient String?
   thumbnail String?
   budget Int? @default(0)

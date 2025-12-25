@@ -93,6 +93,8 @@ export type ProjectData = {
   budget: number | null;
   deadline: number | null;
   startDate: Date;
+  freeDomain:string|null;
+  customDomain:string|null;
   endDate: Date | null;
   status: ProjectStatus;
   clientId: string;
