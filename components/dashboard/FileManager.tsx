@@ -13,13 +13,15 @@ import {
   ChevronDown,
   Paperclip,
   Smile,
-  FolderPlus,
+ 
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
+import FolderForm from "../Forms/FolderForm"
+import { UserFolder } from "@/types/types"
 
 // --- Types ---
 interface Folder {
@@ -40,14 +42,7 @@ interface File {
 }
 
 // --- Mock Data ---
-const FOLDERS: Folder[] = [
-  { id: "reports-2022", name: "Raports 2022", items: 8, size: "2.4 GB" },
-  { id: "backups", name: "Backups", items: 8, size: "2.4 GB" },
-  { id: "browser", name: "Browser", items: 8, size: "2.4 GB" },
-  { id: "documents", name: "Documents", items: 8, size: "2.4 GB" },
-  { id: "notifications", name: "Notifications", items: 8, size: "2.4 GB" },
-  { id: "other", name: "Other files", items: 8, size: "2.4 GB" },
-]
+
 
 const FILES: File[] = Array.from({ length: 8 }).map((_, i) => ({
   id: `file-${i}`,
@@ -60,10 +55,12 @@ const FILES: File[] = Array.from({ length: 8 }).map((_, i) => ({
 }))
 
 // --- Main Component ---
-export function FileManager() {
+export function FileManager({ userId,userFolders }: { userId: string | undefined , userFolders: UserFolder[]}) {
   const searchParams = useSearchParams()
-  const currentFolderId = searchParams.get("folder") || "reports-2022"
-  const currentFolder = FOLDERS.find((f) => f.id === currentFolderId) || FOLDERS[0]
+  const currentFolderId = searchParams.get("fId")
+  const currentFolder = currentFolderId 
+    ? userFolders.find((f) => f.id === currentFolderId) 
+    : userFolders[0]
 
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
 
@@ -78,24 +75,17 @@ export function FileManager() {
       <aside className="w-56 border-r border-slate-100 flex flex-col">
         <div className="p-4 flex items-center justify-between">
           <h2 className="text-lg font-bold tracking-tight">Folders</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-          >
-            <FolderPlus className="w-4 h-4" />
-            <span className="sr-only">New Folder</span>
-          </Button>
+      <FolderForm userId={userId??""}  />
         </div>
         <div className="flex-1 overflow-y-auto px-2 pb-4">
           <div className="space-y-0.5">
-            {FOLDERS.map((folder) => (
+            {userFolders.map((folder) => (
               <Link
                 key={folder.id}
-                href={`?folder=${folder.id}`}
+                href={`/dashboard/file-manager?fId=${folder.id}`}
                 className={cn(
                   "flex items-center gap-2.5 p-2.5 rounded-lg transition-colors group",
-                  currentFolderId === folder.id
+                  currentFolder?.id === folder.id
                     ? "bg-slate-50 text-blue-600"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
                 )}
@@ -103,7 +93,7 @@ export function FileManager() {
                 <div
                   className={cn(
                     "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                    currentFolderId === folder.id ? "bg-amber-100" : "bg-amber-50 group-hover:bg-amber-100",
+                    currentFolder?.id === folder.id ? "bg-amber-100" : "bg-amber-50 group-hover:bg-amber-100",
                   )}
                 >
                   <span className="text-lg">📁</span>
@@ -114,7 +104,7 @@ export function FileManager() {
                     <MoreHorizontal className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                   <p className="text-xs text-slate-400">
-                    {folder.items} items • {folder.size}
+                    {folder.files.length} items • {250} MB
                   </p>
                 </div>
               </Link>
@@ -150,14 +140,14 @@ export function FileManager() {
 
         <div className="flex-1 overflow-y-auto p-6">
           <div className="max-w-4xl mx-auto space-y-6">
-            <h1 className="text-2xl font-bold">{currentFolder.name}</h1>
+            <h1 className="text-2xl font-bold">{currentFolder?.name}</h1>
 
             {/* Storage Summary Card */}
             <div className="bg-lime-50 rounded-2xl p-6 border border-lime-100/50 relative overflow-hidden">
               <div className="flex items-center justify-between relative z-10">
                 <div className="space-y-1">
                   <p className="text-slate-500 text-sm font-medium">
-                    Folders / <span className="text-slate-900 font-bold">{currentFolder.name}</span>
+                    Folders / <span className="text-slate-900 font-bold">{currentFolder?.name}</span>
                   </p>
                   <p className="text-xl font-bold">
                     <span className={isHighUsage ? "text-red-600" : "text-emerald-600"}>{usedGB} GB</span> of {totalGB}{" "}

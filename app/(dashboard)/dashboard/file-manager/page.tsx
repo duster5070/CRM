@@ -1,3 +1,4 @@
+import { getUserFolders } from "@/actions/filemanager";
 import { getDetailedUserProjects } from "@/actions/projects";
 import NotFound from "@/app/not-found";
 import { FileManager } from "@/components/dashboard/FileManager";
@@ -15,13 +16,13 @@ export default async function Page() {
     );
   }
 
-  // const userProjects = await getDetailedUserProjects(user.id);
+  const userFolders = await getUserFolders(user.id);
 
-  // if (!userProjects || userProjects.length === 0) {
-  //   return (
-  //    <NotFound/>
-  //   );
-  // }
+  if (!userFolders || userFolders.length === 0) {
+    return (
+     <NotFound/>
+    );
+  }
 
-  return <FileManager />;
+  return <FileManager userId={user?.id??""} userFolders={userFolders??[]} />;
 }

@@ -5,6 +5,7 @@ import {
   TaskStatus,
   Payment as IPayment,
   User,
+  File
 } from "@prisma/client";
 
 // export type ProjectStatus = "ONGOING" | "COMPLETE";
@@ -273,3 +274,27 @@ export type ClientData = {
   companyName: string | null;
   companyDescription: string | null;
 };
+
+export interface FolderProps{
+
+  name: string;
+ 
+  userId: string;
+
+}
+export interface FileProps{
+
+  name: string;
+ type: string;
+ size: number;
+ folderId: string;
+  userId: string;
+
+}
+export interface UserFolder {
+  id: string;
+  name: string;
+  userId: string;
+  files: File[];
+  createdAt: Date;
+}
