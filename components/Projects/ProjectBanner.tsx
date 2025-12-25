@@ -23,11 +23,13 @@ export default function ProjectBanner({
   name,
   editingId,
   bg,
+  isPrivate = true,
 }: {
   bannerImage: string | null;
   name: string | null;
-  editingId?: string | undefined;
+  editingId: string;
   bg: string | null;
+  isPrivate?: boolean;
 }) {
   const gradients = [
     "bg-gradient-to-r from-blue-500 to-purple-600",
@@ -133,47 +135,47 @@ export default function ProjectBanner({
       />
 
       <div className="absolute inset-0 flex justify-center items-center">
-        {editing ?         
-        <form className="max-w-[600px]" onSubmit={handleSubmit(updateProjectTitle)}>
-          <div className="flex w-full items-center gap-3">
-            <TextInput
-              register={register}
-              errors={errors}
-              label=""
-              name="name"
-              placeholder="Enter project title"
-            />
-            <SubmitButton
-              size={"sm"}
-              title="Update"
-              loading={loading}
-            />
-          </div>
-        </form> 
-        :
-        <h1 className="text-4xl font-bold text-white">{name}</h1>
-        }
-        {!editing &&  
+        {editing && isPrivate ? (
+          <form
+            className="max-w-[600px]"
+            onSubmit={handleSubmit(updateProjectTitle)}
+          >
+            <div className="flex w-full items-center gap-3">
+              <TextInput
+                register={register}
+                errors={errors}
+                label=""
+                name="name"
+                placeholder="Enter project title"
+              />
+              <SubmitButton size={"sm"} title="Update" loading={loading} />
+            </div>
+          </form>
+        ) : (
+          <h1 className="text-4xl font-bold text-white">{name}</h1>
+        )}
+        {!editing && isPrivate && (
           <Button
             onClick={() => setEditing(true)}
             variant="link"
             size="icon"
             className="group-hover:opacity-100 opacity-0 ml-4 transition-opacity"
           >
-          <Pen className="h-4 w-4 text-white" />
+            <Pen className="h-4 w-4 text-white" />
           </Button>
-        }
-
+        )}
       </div>
       <Sheet>
         <SheetTrigger asChild>
-          <Button
-            variant="secondary"
-            size="icon"
-            className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
+          {isPrivate && (
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
         </SheetTrigger>
         <SheetContent>
           <Tabs defaultValue="gradient" className="w-full">

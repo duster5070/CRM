@@ -72,19 +72,19 @@ export default function ProjectDetailClient({
 }: {
   projectData: ProjectData;
   session: Session | null;
-  existingUsers:ExistingUser[] ;
+  existingUsers: ExistingUser[];
 }) {
   // const [activeTab, setActiveTab] = useState("overview");
 
   const user = session?.user;
   let role = user?.role;
- if(user.id !== projectData.user.id) {
-  role = "Member"
- }
-  
+  if (user.id !== projectData.user.id) {
+    role = "Member";
+  }
+
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
-   const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // Helper function to safely parse notes JSON
   const parseNotes = (notes: string) => {
@@ -130,8 +130,9 @@ export default function ProjectDetailClient({
       const remainingDays = days % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${years !== 1 ? "s" : ""
-          } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""} remaining`;
+        return `${years} year${
+          years !== 1 ? "s" : ""
+        } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""} remaining`;
       } else if (years > 0) {
         return `${years} year${years !== 1 ? "s" : ""} remaining`;
       } else {
@@ -145,9 +146,11 @@ export default function ProjectDetailClient({
       const remainingDays = absDays % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${years !== 1 ? "s" : ""
-          } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""
-          } past deadline`;
+        return `${years} year${
+          years !== 1 ? "s" : ""
+        } and ${remainingDays} day${
+          remainingDays !== 1 ? "s" : ""
+        } past deadline`;
       } else if (years > 0) {
         return `${years} year${years !== 1 ? "s" : ""} past deadline`;
       } else {
@@ -231,7 +234,9 @@ export default function ProjectDetailClient({
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="dark:text-slate-100">Project Description</CardTitle>
+              <CardTitle className="dark:text-slate-100">
+                Project Description
+              </CardTitle>
               <Button
                 onClick={() => setIsEditing(!isEditing)}
                 variant="ghost"
@@ -251,7 +256,9 @@ export default function ProjectDetailClient({
                   initialDescription={projectData.description}
                 />
               ) : (
-                <p className="dark:text-slate-100">{projectData.description || "No description available."}</p>
+                <p className="dark:text-slate-100">
+                  {projectData.description || "No description available."}
+                </p>
               )}
             </CardContent>
           </Card>
@@ -447,7 +454,9 @@ export default function ProjectDetailClient({
                         </Avatar>
                         <div>
                           <div className="flex space-x-3">
-                            <p className="font-semibold dark:text-slate-100">{comment.userName}</p>
+                            <p className="font-semibold dark:text-slate-100">
+                              {comment.userName}
+                            </p>
                             <CommentForm
                               projectId={projectData.id}
                               userId={user.id}
@@ -457,14 +466,18 @@ export default function ProjectDetailClient({
                               initialContent={comment.content}
                             />
                           </div>
-                          <div className="prose dark:prose-invert">{parse(comment.content)}</div>
+                          <div className="prose dark:prose-invert">
+                            {parse(comment.content)}
+                          </div>
                         </div>
                       </div>
                     ))}
                   </CardContent>
                 ) : (
                   <CardFooter>
-                    <p className="dark:text-slate-100">No comments available.</p>
+                    <p className="dark:text-slate-100">
+                      No comments available.
+                    </p>
                   </CardFooter>
                 )}
               </Card>
@@ -479,12 +492,12 @@ export default function ProjectDetailClient({
                       <div className="flex items-center justify-between">
                         <h2>Payments</h2>
                         {role === "USER" && (
-                        <PaymentForm
-                          projectId={projectData.id}
-                          userId={projectData.userId}
-                          clientId={projectData.clientId}
-                          remainingAmount={remainingAmount}
-                        />
+                          <PaymentForm
+                            projectId={projectData.id}
+                            userId={projectData.userId}
+                            clientId={projectData.clientId}
+                            remainingAmount={remainingAmount}
+                          />
                         )}
                       </div>
                     </CardTitle>
@@ -492,8 +505,8 @@ export default function ProjectDetailClient({
                   <CardContent>
                     <Tabs
                       defaultValue="payments"
-                    // value={activeTab}
-                    // onValueChange={setActiveTab}
+                      // value={activeTab}
+                      // onValueChange={setActiveTab}
                     >
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -517,7 +530,10 @@ export default function ProjectDetailClient({
                                 </p>
                               </div>
                               <div>
-                                <h2 className="dark:text-slate-100"> {invoice.title}</h2>
+                                <h2 className="dark:text-slate-100">
+                                  {" "}
+                                  {invoice.title}
+                                </h2>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Badge variant="secondary">
@@ -555,13 +571,14 @@ export default function ProjectDetailClient({
                                 {payment.title}
                               </Badge>
                               <div className="flex items-center ">
-                                 <Badge variant="outline" className="bg-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700">
-                                ${payment.amount.toLocaleString()}
-                              </Badge>
-                             <PaymentDeleteButton paymentId={payment.id}/>
-
+                                <Badge
+                                  variant="outline"
+                                  className="bg-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700"
+                                >
+                                  ${payment.amount.toLocaleString()}
+                                </Badge>
+                                <PaymentDeleteButton paymentId={payment.id} />
                               </div>
-                             
                             </div>
                           ))
                         ) : (
@@ -591,20 +608,26 @@ export default function ProjectDetailClient({
           {/*Project Info Card*/}
           <Card>
             <CardHeader>
-              <CardTitle className="dark:text-slate-100">Project Info</CardTitle>
+              <CardTitle className="dark:text-slate-100">
+                Project Info
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between pb-3 border-b dark:border-slate-600">
                 <div className="flex items-center">
                   <DollarSign className="mr-2 h-4 w-4 text-green-500 dark:text-green-400" />
-                  <span className="font-semibold dark:text-slate-200">Budget:</span>
+                  <span className="font-semibold dark:text-slate-200">
+                    Budget:
+                  </span>
                   <span className="ml-2 dark:text-slate-200">
                     ${projectData.budget?.toLocaleString() || "N/A"}
                   </span>
                 </div>
                 <div className="flex items-center">
                   <DollarSign className="mr-2 h-4 w-4 text-green-500 dark:text-green-400" />
-                  <span className="font-semibold dark:text-slate-200">Total Paid:</span>
+                  <span className="font-semibold dark:text-slate-200">
+                    Total Paid:
+                  </span>
                   <span className="ml-2 dark:text-slate-200">
                     ${paidAmount?.toLocaleString() || "N/A"}
                   </span>
@@ -613,7 +636,9 @@ export default function ProjectDetailClient({
               <div className="space-y-2 border-b dark:border-slate-600 pb-3">
                 <div className="flex items-center">
                   <CalendarDays className="mr-2 h-4 w-4 text-blue-500 dark:text-blue-400" />
-                  <span className="font-semibold dark:text-slate-200">Timeline:</span>
+                  <span className="font-semibold dark:text-slate-200">
+                    Timeline:
+                  </span>
                 </div>
                 <div className="ml-6 space-y-1">
                   <div className="flex items-center justify-between">
@@ -630,12 +655,13 @@ export default function ProjectDetailClient({
                   </div>
                   {/* ============================= */}
                   <div
-                    className={`text-sm font-medium ${daysDifference !== null && daysDifference < 0
-                      ? "text-red-600 dark:text-red-400" // Past deadline - RED
-                      : daysDifference === 0
-                        ? "text-orange-600 dark:text-orange-400" // Today - ORANGE
-                        : "text-green-600 dark:text-green-400" // Future - GREEN
-                      }`}
+                    className={`text-sm font-medium ${
+                      daysDifference !== null && daysDifference < 0
+                        ? "text-red-600 dark:text-red-400" // Past deadline - RED
+                        : daysDifference === 0
+                          ? "text-orange-600 dark:text-orange-400" // Today - ORANGE
+                          : "text-green-600 dark:text-green-400" // Future - GREEN
+                    }`}
                   >
                     Status:{""}{" "}
                     {projectData.endDate && daysDifference !== null
@@ -649,7 +675,9 @@ export default function ProjectDetailClient({
                 <div>
                   <div className="flex items-center mb-2">
                     <Users className="mr-2 h-4 w-4 text-purple-500 dark:text-purple-400" />
-                    <span className="font-semibold dark:text-slate-200">Members:</span>
+                    <span className="font-semibold dark:text-slate-200">
+                      Members:
+                    </span>
                   </div>
                   <div className="flex -space-x-2">
                     {projectData.members.length > 0 ? (
@@ -664,31 +692,27 @@ export default function ProjectDetailClient({
                         </Avatar>
                       ))
                     ) : (
+                      <>
+                        <div>
+                          <Button
+                            onClick={() => setOpen(true)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Invite Member
+                          </Button>
+                        </div>
 
-
-
-                     <>
-     
-                       <div>
-                        <Button  onClick={() => setOpen(true)} variant="outline" size="sm">
-                          <Plus className="mr-2 h-4 w-4" />
-                          Invite Member
-                        </Button>
-                      </div>
-
-      <InviteMembersModal
-        projectData={projectData}
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        members={existingUsers.filter((member) => member.id !== user.id)}
-       
-      />
-    </>
-
-
-
-
-                     
+                        <InviteMembersModal
+                          projectData={projectData}
+                          isOpen={open}
+                          onClose={() => setOpen(false)}
+                          members={existingUsers.filter(
+                            (member) => member.id !== user.id
+                          )}
+                        />
+                      </>
                     )}
                   </div>
                 </div>
@@ -733,14 +757,18 @@ export default function ProjectDetailClient({
                   )}
                   {role === "USER" ? (
                     <div>
-                      <p className="font-semibold dark:text-slate-100">{projectData.client.name}</p>
+                      <p className="font-semibold dark:text-slate-100">
+                        {projectData.client.name}
+                      </p>
                       <p className="text-sm text-gray-500 dark:text-gray-300">
                         {projectData.client.companyName || "Individual Client"}
                       </p>
                     </div>
                   ) : (
                     <div>
-                      <p className="font-semibold dark:text-slate-100">{projectData.user.name}</p>
+                      <p className="font-semibold dark:text-slate-100">
+                        {projectData.user.name}
+                      </p>
                       <p className="text-sm text-gray-500 dark:text-gray-300">
                         {projectData.user.companyName || "Individual User"}
                       </p>

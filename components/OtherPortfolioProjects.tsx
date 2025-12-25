@@ -4,52 +4,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { ProjectWithUser } from "@/types/types";
 
-const reviews = [
-  {
-    name: "Jack",
-    username: "@jack",
-    body: "I've never seen anything like this before. It's amazing. I love it.",
-    img: "https://avatar.vercel.sh/jack",
-  },
-  {
-    name: "Jill",
-    username: "@jill",
-    body: "I don't know what to say. I'm speechless. This is amazing.",
-    img: "https://avatar.vercel.sh/jill",
-  },
-  {
-    name: "John",
-    username: "@john",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/john",
-  },
-  {
-    name: "Jane",
-    username: "@jane",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/jane",
-  },
-  {
-    name: "Jenny",
-    username: "@jenny",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/jenny",
-  },
-  {
-    name: "James",
-    username: "@james",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/james",
-  },
-];
-
-const firstRow = reviews.slice(0, reviews.length / 2);
-const secondRow = reviews.slice(reviews.length / 2);
-
-const Card = ({ img, name }: { img: string; name: string }) => {
+const Card = ({
+  img,
+  name,
+  slug,
+}: {
+  img: string;
+  name: string;
+  slug: string;
+}) => {
   return (
     <Link
-      href={"/"}
+      href={`/public/project/${slug}`}
       className={cn(
         "relative h-full w-64 cursor-pointer overflow-hidden rounded-xl border p-4",
         // light styles
@@ -85,6 +51,7 @@ export function OtherPortfolioProjects({
             key={project.id}
             img={project.thumbnail ?? ""}
             name={project.name ?? ""}
+            slug={project.slug}
           />
         ))}
       </Marquee>
