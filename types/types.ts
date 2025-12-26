@@ -283,7 +283,6 @@ export interface FolderProps{
 
 }
 export interface FileProps{
-
   name: string;
  type: string;
  size: number;
@@ -297,6 +296,7 @@ export interface UserFolder {
   userId: string;
   files: File[];
   createdAt: Date;
+  
 }
 
 export type PortfolioProps = {

@@ -132,8 +132,10 @@ model File {
   name      String
   type      String
   size      Int
+  url       String?  // Add this for the UploadThing URL (optional)
   folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId  String   @db.ObjectId
+  userId    String   @db.ObjectId  // Add this
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

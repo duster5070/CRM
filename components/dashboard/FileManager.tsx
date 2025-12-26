@@ -5,25 +5,25 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import {
   ArrowLeft,
-  Upload,
+
   Plus,
   MoreHorizontal,
   FileText,
   Grid,
   ChevronDown,
-  Paperclip,
-  Smile,
+
  
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Input } from "@/components/ui/input"
+
 import FolderForm from "../Forms/FolderForm"
 import { UserFolder } from "@/types/types"
+import MultipleFileUploader from "../FormInputs/MultipleFileUploader"
+import { useState } from "react"
 
-// --- Types ---
+
 interface Folder {
   id: string
   name: string
@@ -31,47 +31,63 @@ interface Folder {
   size: string
 }
 
-interface File {
+interface FileView {
   id: string
   name: string
-  type: "PDF" | "XLS"
+  type: "PDF" | "XLS" | "FILE"
   size: string
   created: string
   format: string
   modified: string
 }
 
-// --- Mock Data ---
 
 
-const FILES: File[] = Array.from({ length: 8 }).map((_, i) => ({
-  id: `file-${i}`,
-  name: "Contracts 320_2022.pdf",
-  type: i % 2 === 0 ? "PDF" : "XLS",
-  size: "120,5 MB",
-  created: "2 / 10 / 2022",
-  format: i % 2 === 0 ? "PDF" : "XLS",
-  modified: "11 / 10 / 2022 - 10:30",
-}))
 
-// --- Main Component ---
+
+type UserFolderWithSize = UserFolder & {
+  sizeMB: number
+}
+
+
 export function FileManager({ userId,userFolders }: { userId: string | undefined , userFolders: UserFolder[]}) {
+  const [open, setOpen] = useState(false);
   const searchParams = useSearchParams()
   const currentFolderId = searchParams.get("fId")
-  const currentFolder = currentFolderId 
-    ? userFolders.find((f) => f.id === currentFolderId) 
-    : userFolders[0]
 
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
+  const [selectedFile, setSelectedFile] = React.useState<FileView| null>(null)
 
-  const usedGB = 74 // Example: > 50% for testing
-  const totalGB = 128
-  const usagePercent = Math.round((usedGB / totalGB) * 100)
-  const isHighUsage = usagePercent > 50
 
+const userFoldersWithSize: UserFolderWithSize[] = React.useMemo(() => {
+  return userFolders.map(folder => {
+    const totalBytes = folder.files.reduce(
+      (acc, file) => acc + (Number(file.size) || 0),
+      0
+    )
+
+    return {
+      ...folder,
+      sizeMB: Number((totalBytes / 1024 / 1024).toFixed(2)),
+    }
+  })
+}, [userFolders])
+
+const totalMBUsed = userFoldersWithSize.reduce(
+  (acc, folder) => acc + folder.sizeMB,
+  0
+)
+
+const usedMB = Number(totalMBUsed.toFixed(2))
+const totalMB = 128 * 1024 
+const usagePercent = Math.round((usedMB / totalMB) * 100)
+const isHighUsage = usagePercent > 50
+
+const currentFolder = currentFolderId 
+  ? userFoldersWithSize.find((f) => f.id === currentFolderId) 
+  : userFoldersWithSize[0]
   return (
     <div className="flex h-screen bg-white font-sans text-slate-900">
-      {/* Left Sidebar - Folder List */}
+      
       <aside className="w-56 border-r border-slate-100 flex flex-col">
         <div className="p-4 flex items-center justify-between">
           <h2 className="text-lg font-bold tracking-tight">Folders</h2>
@@ -79,7 +95,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
         </div>
         <div className="flex-1 overflow-y-auto px-2 pb-4">
           <div className="space-y-0.5">
-            {userFolders.map((folder) => (
+            {userFoldersWithSize.map((folder) => (
               <Link
                 key={folder.id}
                 href={`/dashboard/file-manager?fId=${folder.id}`}
@@ -104,7 +120,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                     <MoreHorizontal className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                   <p className="text-xs text-slate-400">
-                    {folder.files.length} items • {250} MB
+                    {folder.files.length} items . {folder.sizeMB} MB
                   </p>
                 </div>
               </Link>
@@ -113,7 +129,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
         </div>
       </aside>
 
-      {/* Main Content Area */}
+     
       <main className="flex-1 flex flex-col min-w-0">
         <header className="p-4 flex items-center justify-between border-b border-slate-50">
           <div className="flex items-center gap-3">
@@ -124,10 +140,22 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
             <span className="text-xs font-medium text-slate-400">Back</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-full shadow-lg shadow-blue-100 h-9 text-xs">
-              <Upload className="w-3.5 h-3.5 mr-1.5" />
-              Upload
-            </Button>
+        <button
+  onClick={() => setOpen(true)}
+  disabled={!currentFolder || !userId}
+  className="rounded-full bg-blue-600 px-4 py-2 text-sm text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+>
+  Upload Files
+</button>
+
+     {currentFolder && userId && (
+  <MultipleFileUploader 
+    open={open} 
+    onClose={() => setOpen(false)} 
+    folderId={currentFolder.id} 
+    userId={userId} 
+  />
+)}
             <Button
               variant="outline"
               className="border-blue-600 text-blue-600 px-4 rounded-full hover:bg-blue-50 h-9 bg-transparent text-xs"
@@ -142,7 +170,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
           <div className="max-w-4xl mx-auto space-y-6">
             <h1 className="text-2xl font-bold">{currentFolder?.name}</h1>
 
-            {/* Storage Summary Card */}
+          
             <div className="bg-lime-50 rounded-2xl p-6 border border-lime-100/50 relative overflow-hidden">
               <div className="flex items-center justify-between relative z-10">
                 <div className="space-y-1">
@@ -150,7 +178,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                     Folders / <span className="text-slate-900 font-bold">{currentFolder?.name}</span>
                   </p>
                   <p className="text-xl font-bold">
-                    <span className={isHighUsage ? "text-red-600" : "text-emerald-600"}>{usedGB} GB</span> of {totalGB}{" "}
+                    <span className={isHighUsage ? "text-red-600" : "text-emerald-600"}>{currentFolder?.sizeMB}  MB</span> of {totalMB/1024}{" "}
                     GB used
                   </p>
                   <Button variant="link" className="text-blue-600 p-0 h-auto font-semibold text-sm">
@@ -158,7 +186,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                   </Button>
                 </div>
 
-                {/* Circular Progress Indicator */}
+          
                 <div className="relative w-20 h-20">
                   <svg className="w-full h-full transform -rotate-90">
                     <circle
@@ -191,7 +219,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
               </div>
             </div>
 
-            {/* Filter & View Controls */}
+         
             <div className="flex items-center justify-between">
               <div className="flex gap-3">
                 <Button
@@ -212,12 +240,20 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
               </Button>
             </div>
 
-            {/* File Grid */}
+           
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {FILES.map((file) => (
+              {currentFolder?.files.map((file) => (
                 <button
                   key={file.id}
-                  onClick={() => setSelectedFile(file)}
+                  onClick={() => setSelectedFile({
+    id: file.id,
+    name: file.name,
+    type: file.type.includes("pdf") ? "PDF" : "FILE",
+    size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+    created: new Date(file.createdAt).toLocaleDateString(),
+    format: file.type.split("/")[1]?.toUpperCase() ?? "FILE",
+    modified: new Date(file.updatedAt).toLocaleString(),
+  })}
                   className={cn(
                     "group relative p-4 rounded-2xl transition-all duration-200 text-left border",
                     selectedFile?.id === file.id
@@ -245,7 +281,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                       )}
                     >
                       <FileText className="w-7 h-7 mb-1" />
-                      <span className="text-[10px] font-black uppercase tracking-widest">{file.type}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest">{file.type.split(".")[1]}</span>
                     </div>
                   </div>
 
@@ -257,7 +293,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
         </div>
       </main>
 
-      {/* Document Details Sheet */}
+     
       <Sheet open={!!selectedFile} onOpenChange={() => setSelectedFile(null)}>
         <SheetContent className="w-full sm:max-w-sm p-0 flex flex-col border-l border-slate-100">
           <SheetHeader className="p-4 border-b border-slate-50 flex flex-row items-center justify-between">
@@ -272,7 +308,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
           </SheetHeader>
 
           <div className="flex-1 overflow-y-auto">
-            {/* File Preview */}
+          
             <div className="p-6 flex flex-col items-center border-b border-slate-50">
               <div
                 className={cn(
@@ -295,7 +331,7 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                   <span className="text-slate-900 font-bold text-right">{selectedFile?.size}</span>
 
                   <span className="text-slate-400 font-medium">Format</span>
-                  <span className="text-slate-900 font-bold text-right">{selectedFile?.format}</span>
+                  <span className="text-slate-900 font-bold text-right">{selectedFile?.format.split(".")[1]}</span>
 
                   <span className="text-slate-400 font-medium">Last Modified</span>
                   <span className="text-slate-900 font-bold text-right">{selectedFile?.modified}</span>
@@ -303,52 +339,12 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
               </div>
             </div>
 
-            {/* Internal Chat Section */}
-            <div className="p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold">Internal chat</h3>
-                <ChevronDown className="w-4 h-4 text-slate-400" />
-              </div>
-
-              <div className="space-y-4">
-                {[1, 2].map((i) => (
-                  <div key={i} className="flex gap-2.5">
-                    <Avatar className="w-8 h-8 shrink-0 ring-2 ring-white shadow-sm">
-                      <AvatarImage src="/diverse-woman-avatar.png" />
-                      <AvatarFallback>JM</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 space-y-0.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold">Jessica May</span>
-                        <span className="text-[9px] text-slate-300 font-medium uppercase">22/01/2022 - 11:27 AM</span>
-                      </div>
-                      <p className="text-xs text-slate-500 leading-relaxed">
-                        {i === 1
-                          ? "Sometimes that's just the way it has to be. Sure, there were probably other options, but he didn't let them enter his mind."
-                          : "Sometimes that's just the way it has to be"}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          
+          
           </div>
 
-          {/* Chat Input */}
-          <div className="p-4 border-t border-slate-50 bg-white">
-            <div className="relative">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300">
-                <Paperclip className="w-4 h-4 cursor-pointer hover:text-slate-500 transition-colors" />
-              </div>
-              <Input
-                placeholder="Add new comment"
-                className="bg-slate-50/50 border-slate-100 rounded-lg py-5 pl-10 pr-10 focus:ring-blue-100 placeholder:text-slate-400 text-xs"
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300">
-                <Smile className="w-4 h-4 cursor-pointer hover:text-slate-500 transition-colors" />
-              </div>
-            </div>
-          </div>
+      
+         
         </SheetContent>
       </Sheet>
     </div>
