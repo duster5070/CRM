@@ -26,25 +26,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
-        <PHProvider>
-          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+    <html lang="en">
+      <body className={inter.className}>
+        {/* ✅ SERVER ONLY — must be first */}
+        <NextSSRPlugin
+          routerConfig={extractRouterConfig(ourFileRouter)}
+        />
 
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Providers>
-              <Toaster position="top-center" reverseOrder={false} />
+        {/* ✅ Safe server component */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            {/* ✅ CLIENT ONLY — analytics go INSIDE */}
+            <PHProvider>
               <PostHogPageView />
               {children}
-              <Analytics />
-            </Providers>
-          </ThemeProvider>
-        </PHProvider>
+            </PHProvider>
+
+            <Toaster position="top-center" />
+            <Analytics />
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
