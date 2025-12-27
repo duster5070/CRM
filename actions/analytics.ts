@@ -42,12 +42,7 @@ export async function getDashboardOverview(userId: string) {
           href: "/dashboard/clients",
           icon: Handshake,
         },
-        {
-          title: "Clients",
-          total: clients.toString().padStart(2, "0"),
-          href: "/dashboard/clients",
-          icon: Handshake,
-        },
+      
       ];
 
       return analytics;
