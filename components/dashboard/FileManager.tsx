@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/sheet";
 
 import FolderForm from "../Forms/FolderForm";
-import { UserFolder } from "@/types/types";
+import FileForm from "../Forms/FileForm";
+import { UserFile, UserFolder } from "@/types/types";
 import MultipleFileUploader from "../FormInputs/MultipleFileUploader";
 import { useState } from "react";
 import { deleteFolder } from "@/actions/filemanager";
@@ -34,13 +35,6 @@ import {
   AlertDialogCancel,
 } from "@radix-ui/react-alert-dialog";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-
-interface Folder {
-  id: string;
-  name: string;
-  items: number;
-  size: string;
-}
 
 interface FileView {
   id: string;
@@ -70,6 +64,7 @@ export function FileManager({
   const [selectedFile, setSelectedFile] = React.useState<FileView | null>(null);
   const [folderToDelete, setFolderToDelete] = useState<UserFolder | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editingFile, setEditingFile] = useState<UserFile | null>(null);
 
   const userFoldersWithSize: UserFolderWithSize[] = React.useMemo(() => {
     return userFolders.map((folder) => {
@@ -99,8 +94,8 @@ export function FileManager({
     ? userFoldersWithSize.find((f) => f.id === currentFolderId)
     : userFoldersWithSize[0];
 
-const [createOpen, setCreateOpen] = useState(false)
-const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null);
 
   const handleEdit = (folder: UserFolder) => {
     setEditingFolder(folder);
@@ -132,14 +127,13 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
       <aside className="w-56 border-r border-slate-100 flex flex-col">
         <div className="p-4 flex items-center justify-between">
           <h2 className="text-lg font-bold tracking-tight">Folders</h2>
-         <Button
-  variant="ghost"
-  size="icon"
-  onClick={() => setCreateOpen(true)}
->
-  <FolderPlus className="w-4 h-4" />
-</Button>
-          {/* here take it to edite  */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setCreateOpen(true)}
+          >
+            <FolderPlus className="w-4 h-4" />
+          </Button>
         </div>
         <div className="flex-1 overflow-y-auto px-2 pb-4">
           <div className="space-y-0.5">
@@ -171,13 +165,13 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
                     </p>
 
                     <div className="flex items-center gap-1">
-                     <Edit
-  onClick={(e) => {
-    e.preventDefault()
-    setEditingFolder(folder)
-  }}
-  className="w-4 h-4 opacity-0 group-hover:opacity-100"
-/>
+                      <Edit
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setEditingFolder(folder);
+                        }}
+                        className="w-4 h-4 opacity-0 group-hover:opacity-100"
+                      />
                       <Delete
                         onClick={(e) => {
                           e.preventDefault();
@@ -194,40 +188,42 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
               </Link>
             ))}
 
-           <AlertDialog.Root
-  open={!!folderToDelete}
-  onOpenChange={() => setFolderToDelete(null)}
->
-  <AlertDialog.Portal>
-    <AlertDialog.Overlay className="fixed inset-0 bg-black/40" />
+            <AlertDialog.Root
+              open={!!folderToDelete}
+              onOpenChange={() => setFolderToDelete(null)}
+            >
+              <AlertDialog.Portal>
+                <AlertDialog.Overlay className="fixed inset-0 bg-black/40" />
 
-    <AlertDialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg">
-      <AlertDialog.Title className="text-lg font-bold">
-        Delete Folder
-      </AlertDialog.Title>
+                <AlertDialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg">
+                  <AlertDialog.Title className="text-lg font-bold">
+                    Delete Folder
+                  </AlertDialog.Title>
 
-      <AlertDialog.Description className="mt-2 text-sm text-slate-500">
-        Are you sure you want to delete{" "}
-        <span className="font-semibold">{folderToDelete?.name}</span>?
-        This action cannot be undone.
-      </AlertDialog.Description>
+                  <AlertDialog.Description className="mt-2 text-sm text-slate-500">
+                    Are you sure you want to delete{" "}
+                    <span className="font-semibold">
+                      {folderToDelete?.name}
+                    </span>
+                    ? This action cannot be undone.
+                  </AlertDialog.Description>
 
-      <div className="mt-6 flex justify-end gap-3">
-        <AlertDialogCancel className="rounded-md border px-4 py-2">
-          Cancel
-        </AlertDialogCancel>
+                  <div className="mt-6 flex justify-end gap-3">
+                    <AlertDialogCancel className="rounded-md border px-4 py-2">
+                      Cancel
+                    </AlertDialogCancel>
 
-        <AlertDialogAction
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className="rounded-md bg-red-600 px-4 py-2 text-white disabled:opacity-50"
-        >
-          {isDeleting ? "Deleting..." : "Delete"}
-        </AlertDialogAction>
-      </div>
-    </AlertDialog.Content>
-  </AlertDialog.Portal>
-</AlertDialog.Root>
+                    <AlertDialogAction
+                      onClick={handleDelete}
+                      disabled={isDeleting}
+                      className="rounded-md bg-red-600 px-4 py-2 text-white disabled:opacity-50"
+                    >
+                      {isDeleting ? "Deleting..." : "Delete"}
+                    </AlertDialogAction>
+                  </div>
+                </AlertDialog.Content>
+              </AlertDialog.Portal>
+            </AlertDialog.Root>
           </div>
         </div>
       </aside>
@@ -235,7 +231,6 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
       <main className="flex-1 flex flex-col min-w-0">
         <header className="p-4 flex items-center justify-between border-b border-slate-50">
           <div className="flex items-center gap-3">
-
             <Link href="/dashboard">
               <Button
                 variant="ghost"
@@ -246,7 +241,6 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
                 <span className="sr-only">Back</span>
               </Button>
             </Link>
-          
 
             <span className="text-xs font-medium text-slate-400">Back</span>
           </div>
@@ -402,7 +396,22 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
                         <div className="w-1.5 h-1.5 bg-white rounded-full" />
                       )}
                     </div>
-                    <MoreHorizontal className="w-4 h-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex items-center gap-1">
+                      <Edit
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingFile(file);
+                        }}
+                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      />
+                      <Delete
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingFile(file);
+                        }}
+                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-red-500 cursor-pointer"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex justify-center mb-4">
@@ -439,13 +448,25 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
                 {selectedFile?.name}
               </SheetTitle>
               <div className="flex gap-0.5">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 text-slate-400 hover:text-slate-900"
-                >
-                  <MoreHorizontal className="w-3.5 h-3.5" />
-                </Button>
+                <Edit
+                  onClick={() => {
+                    const file = currentFolder?.files.find(
+                      (f) => f.id === selectedFile?.id
+                    );
+                    if (file) setEditingFile(file);
+                  }}
+                  className="w-4 h-4 text-slate-400 hover:text-slate-900 cursor-pointer m-2"
+                />
+
+                <Delete
+                  onClick={() => {
+                    const file = currentFolder?.files.find(
+                      (f) => f.id === selectedFile?.id
+                    );
+                    if (file) setEditingFile(file);
+                  }}
+                  className="w-4 h-4 text-red-500 hover:text-red-600 cursor-pointer m-2"
+                />
               </div>
             </div>
           </SheetHeader>
@@ -466,7 +487,6 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
                 </span>
               </div>
 
-              {/* Information List */}
               <div className="w-full space-y-4">
                 <h3 className="text-base font-bold">Information</h3>
                 <div className="grid grid-cols-2 gap-y-3 text-xs">
@@ -497,21 +517,37 @@ const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null)
           </div>
         </SheetContent>
       </Sheet>
-      {/* Create Folder */}
-<FolderForm
-  userId={userId ?? ""}
-  open={createOpen}
-  onOpenChange={setCreateOpen}
-/>
 
-{/* Edit Folder */}
-<FolderForm
-  userId={userId ?? ""}
-  open={!!editingFolder}
-  onOpenChange={(open) => !open && setEditingFolder(null)}
-  editingId={editingFolder?.id}
-  initialContent={editingFolder?.name}
-/>
+      {/* Create Folder */}
+      <FolderForm
+        userId={userId ?? ""}
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+      />
+
+      {/* Edit Folder */}
+      <FolderForm
+        userId={userId ?? ""}
+        open={!!editingFolder}
+        onOpenChange={(open) => !open && setEditingFolder(null)}
+        editingId={editingFolder?.id}
+        initialContent={editingFolder?.name}
+      />
+
+      {/* Edit/Delete File */}
+      {editingFile && (
+        <FileForm
+          userId={userId ?? ""}
+          open={!!editingFile}
+          onOpenChange={(open) => !open && setEditingFile(null)}
+          fileId={editingFile.id}
+          initialName={editingFile.name}
+          onDeleted={() => {
+            setEditingFile(null);
+            setSelectedFile(null);
+          }}
+        />
+      )}
     </div>
   );
 }

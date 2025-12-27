@@ -71,19 +71,18 @@ export async function updateFolderById(id: string, data: FolderProps) {
     console.log(error);
   }
 }
-export async function updateFileById(id: string, data: FileProps) {
-  try {
-    const updatedFile = await db.file.update({
-      where: {
-        id,
-      },
-      data,
-    });
-    revalidatePath("/dashboard/file-manager");
-    return updatedFile;
-  } catch (error) {
-    console.log(error);
-  }
+export async function updateFileById(
+  id: string,
+  data: { name: string }
+) {
+
+  const updated = await db.file.update({
+    where: { id },
+    data: { name: data.name }, 
+  })
+
+  revalidatePath("/dashboard/file-manager")
+  return { ok: true, data: updated }
 }
 export async function getUserFolders(userId: string | undefined) {
   if (userId) {

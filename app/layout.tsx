@@ -26,32 +26,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {/* ✅ SERVER ONLY — must be first */}
-        <NextSSRPlugin
-          routerConfig={extractRouterConfig(ourFileRouter)}
-        />
+   <html lang="en" suppressHydrationWarning>
+  <body className={inter.className}>
+    <NextSSRPlugin
+      routerConfig={extractRouterConfig(ourFileRouter)}
+    />
 
-        {/* ✅ Safe server component */}
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Providers>
-            {/* ✅ CLIENT ONLY — analytics go INSIDE */}
-            <PHProvider>
-              <PostHogPageView />
-              {children}
-            </PHProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <Providers>
+        <PHProvider>
+          <PostHogPageView />
+          {children}
+        </PHProvider>
 
-            <Toaster position="top-center" />
-            <Analytics />
-          </Providers>
-        </ThemeProvider>
-      </body>
-    </html>
+        <Toaster position="top-center" />
+        <Analytics />
+      </Providers>
+    </ThemeProvider>
+  </body>
+</html>
+
   );
 }

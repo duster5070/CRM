@@ -296,9 +296,15 @@ export interface UserFolder {
   userId: string;
   files: File[];
   createdAt: Date;
-  
-}
 
+}
+export type UserFile = {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  createdAt: Date;
+};
 export type PortfolioProps = {
   userId: string;
   name: string;
