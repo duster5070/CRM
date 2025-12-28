@@ -13,6 +13,7 @@ import ClientInvititation, {
 import { ExistingUser } from "./users";
 import MemberInvitation from "@/components/Email-Templates/MemberInvitation";
 import { db } from "@/prisma/db";
+import { da } from "zod/v4/locales";
 export async function sendEmail(data: InvoiceDetails, invoiceLink: string) {
   try {
     if (!process.env.RESEND_API_KEY) {
@@ -128,6 +129,70 @@ export async function sendMemberInvitation({
     console.log("Invitations sent successfully:", data);
   } catch (error) {
     console.error("Failed to send invitations:", error);
+    throw error;
+  }
+}
+
+// New function for sending custom composed emails
+export type ComposedEmailData = {
+  from: string;
+  to: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  message: string;
+  htmlMessage?: string;
+  attachments?: Array<{
+    filename: string;
+    content: string;
+  }>;
+  broadcast?: boolean;
+};
+
+export async function sendComposedEmail(data: ComposedEmailData) {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is missing");
+  }
+
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    // If broadcast is enabled, send to all recipients individually
+    if (data.broadcast && data.to.length > 1) {
+      const batch = data.to.map((recipient) => ({
+        from: data.from ||"Project X <onboarding@resend.dev>",
+        to: recipient,
+        cc: data.cc,
+        bcc: data.bcc,
+        subject: data.subject,
+        html: data.htmlMessage || `<p>${data.message.replace(/\n/g, '<br>')}</p>`,
+      }));
+
+      const { data: batchData, error } = await resend.batch.send(batch);
+
+      if (error) {
+        console.error("Failed to send batch emails:", error);
+        throw error;
+      }
+
+      console.log("Batch emails sent successfully:", batchData);
+      return { success: true, data: batchData };
+    } else {
+      // Send single email to all recipients
+      const response = await resend.emails.send({
+        from: data.from ||"Project X <onboarding@resend.dev>",
+        to: data.to,  
+        cc: data.cc,
+        bcc: data.bcc,
+        subject: data.subject,
+        html: data.htmlMessage || `<p>${data.message.replace(/\n/g, '<br>')}</p>`,
+      });
+
+      console.log("Email sent successfully:", response);
+      return { success: true, data: response };
+    }
+  } catch (error) {
+    console.error("Failed to send email:", error);
     throw error;
   }
 }
