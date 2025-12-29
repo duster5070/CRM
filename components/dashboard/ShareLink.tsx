@@ -10,6 +10,7 @@ import { Check } from "lucide-react";
 import { Copy } from "lucide-react";
 import { Twitter } from "lucide-react";
 import { Linkedin } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
 interface ShareLinkProps {
   link: string
@@ -91,13 +92,8 @@ variant={"outline"}
 size={"sm"}
 className="flex items-center space-x-2"
 >
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"/>
-  <Linkedin className="h-4 w-4" />
-  <span>LinkedIn</span>
+<FaWhatsapp className="h-4 w-4" />
+  <span>WhatsApp</span>
 </Button>
 </div>
       </DialogContent>
