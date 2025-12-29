@@ -26,26 +26,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
-        <PHProvider>
-          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+   <html lang="en" suppressHydrationWarning>
+  <body className={inter.className}>
+    <NextSSRPlugin
+      routerConfig={extractRouterConfig(ourFileRouter)}
+    />
 
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Providers>
-              <Toaster position="top-center" reverseOrder={false} />
-              <PostHogPageView />
-              {children}
-              <Analytics />
-            </Providers>
-          </ThemeProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <Providers>
+        <PHProvider>
+          <PostHogPageView />
+          {children}
         </PHProvider>
-      </body>
-    </html>
+
+        <Toaster position="top-center" />
+        <Analytics />
+      </Providers>
+    </ThemeProvider>
+  </body>
+</html>
+
   );
 }

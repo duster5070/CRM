@@ -1,26 +1,30 @@
-"use client"
+"use client";
 import { ProjectWithUser } from "@/types/types";
 import { FollowerPointerCard } from "../ui/following-pointer";
 import { getNormalDate } from "@/lib/getNormalDate";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function PortfolioCard({project}:{project:ProjectWithUser}) {
+export default function PortfolioCard({
+  project,
+}: {
+  project: ProjectWithUser;
+}) {
   return (
     <div className="mx-auto w-80">
       <FollowerPointerCard
         title={
           <TitleComponent
             title={project.user.name}
-            avatar={project.user.image ??"/placeholder.svg"}
+            avatar={project.user.image ?? "/placeholder.svg"}
           />
         }
       >
         <div className="group relative h-full overflow-hidden rounded-2xl border border-zinc-100 bg-white transition duration-200 hover:shadow-xl">
           <div className="relative aspect-[16/10] w-full overflow-hidden rounded-tl-lg rounded-tr-lg bg-gray-100">
             <Image
-              src={project.thumbnail??"/placeholder.svg"}
-              alt={project.name??""}
+              src={project.thumbnail ?? "/placeholder.svg"}
+              alt={project.name ?? ""}
               width={800}
               height={800}
               objectFit="cover"
@@ -35,8 +39,13 @@ export default function PortfolioCard({project}:{project:ProjectWithUser}) {
               {project.description}
             </h2>
             <div className="mt-10 flex flex-row items-center justify-between">
-              <span className="text-sm text-gray-500">{getNormalDate(project.startDate)}</span>
-              <Link href={`/projects/${project.slug}`} className="relative z-10 block rounded-xl bg-black px-6 py-2 text-xs font-bold text-white">
+              <span className="text-sm text-gray-500">
+                {getNormalDate(project.startDate)}
+              </span>
+              <Link
+                href={`/public/project/${project.slug}`}
+                className="relative z-10 block rounded-xl bg-black px-6 py-2 text-xs font-bold text-white cursor-none hover:bg-black/80"
+              >
                 Read More
               </Link>
             </div>
@@ -46,7 +55,6 @@ export default function PortfolioCard({project}:{project:ProjectWithUser}) {
     </div>
   );
 }
-
 
 const TitleComponent = ({
   title,

@@ -1,147 +1,112 @@
 "use client"
+
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
 import {
   Dialog,
   DialogContent,
- 
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
+import { Check } from "lucide-react"
+import toast from "react-hot-toast"
 
-import {  FolderProps } from "@/types/types";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import SubmitButton from "../FormInputs/SubmitButton";
-import toast from "react-hot-toast";
+import TextInput from "../FormInputs/TextInput"
+import SubmitButton from "../FormInputs/SubmitButton"
+import { createFolder, updateFolderById } from "@/actions/filemanager"
+import { FolderProps } from "@/types/types"
 
-
-import { Button } from "../ui/button";
-import { Check, FolderPlus,  Pen } from "lucide-react";
-
-import TextInput from "../FormInputs/TextInput";
-
-
-import { createFolder, updateFolderById } from "@/actions/filemanager";
+interface FolderFormProps {
+  userId: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  editingId?: string
+  initialContent?: string
+}
 
 const FolderForm = ({
-
   userId,
- 
-
-  initialContent,
+  open,
+  onOpenChange,
   editingId,
-}: {
- 
-  userId: string;
- 
+  initialContent,
+}: FolderFormProps) => {
+  const isEdit = !!editingId
+  const [loading, setLoading] = useState(false)
 
-  initialContent?: string;
-  editingId?: string;
-}) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<FolderProps>({
-    defaultValues: {
-      name: initialContent || "",
-    },
-  });
+    defaultValues: { name: "" },
+  })
 
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+//  The core reason (short version)
 
-  function isRichTextEmpty(html?: string) {
-    if (!html) return true;
+// react-hook-form only applies defaultValues ONCE.
 
-    const text = html
-      .replace(/<(.|\n)*?>/g, "") // remove HTML tags
-      .replace(/&nbsp;/g, " ")
-      .trim();
+// When you switch from:
 
-    return text.length === 0;
-  }
+// editing Folder A → editing Folder B
+// the input will NOT update automatically.
 
-  async function saveFolder(data: FolderProps) {
-    data.userId = userId;
+// This useEffect is what forces the form to reflect the currently selected folder.
 
+
+  useEffect(() => {
+    reset({ name: initialContent ?? "" })
+  }, [initialContent, reset])
+
+  async function onSubmit(data: FolderProps) {
     try {
-      setLoading(true);
-      if (editingId) {
-        await updateFolderById(editingId, data);
-        setLoading(false);
-        setOpen(false);
-        // Toast
-        toast.success("Updated Successfully!");
+      setLoading(true)
+
+      if (isEdit && editingId) {
+        await updateFolderById(editingId, { ...data, userId })
+        toast.success("Folder updated")
       } else {
-        await createFolder(data);
-        setLoading(false);
-        setOpen(false);
-        // Toast
-        toast.success("Successfully Created!");
+        await createFolder({ ...data, userId })
+        toast.success("Folder created")
       }
-    } catch (error) {
-      console.log(error);
+
+      onOpenChange(false)
+    } catch (err) {
+      toast.error("Something went wrong")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {editingId ? (
-          <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <Pen className="h-4 w-4 text-green-500" />
-          </button>
-        ) : (
-            <Button
-          
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-          >
-            <FolderPlus className="w-4 h-4" />
-            <span className="sr-only">New Folder</span>
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {editingId ? "Edit Folder" : "Add New Folder"}
+            {isEdit ? "Edit Folder" : "Create Folder"}
           </DialogTitle>
-          {/* <DialogDescription>
-            Please write your Comment here, with respect
-          </DialogDescription> */}
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(saveFolder)}>
-          <div className="grid grid-cols-12 gap-6 py-8">
-            <div className="col-span-full space-y-3">
-              {/* <Tiptap value={content} onChange={setContent} /> */}
-              <div className="grid gap-3">
-                <TextInput
-                  register={register}
-                  errors={errors}
-                  label=""
-                  name="name"
-                  icon={Check}
-                />
-              </div>
-            </div>
-          </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <TextInput
+            placeholder="Folder name"
+            label=""
+            register={register}
+            errors={errors}
+            name="name"
+            icon={Check}
+          />
 
           <SubmitButton
             className="w-full"
-            title={editingId ? "Update Module" : "Add Module"}
+            title={isEdit ? "Update Folder" : "Create Folder"}
             loading={loading}
           />
         </form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default FolderForm   ;
+export default FolderForm

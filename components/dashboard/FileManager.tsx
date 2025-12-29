@@ -1,85 +1,143 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { useSearchParams } from "next/navigation"
+import * as React from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
-  Upload,
   Plus,
   MoreHorizontal,
   FileText,
   Grid,
   ChevronDown,
-  Paperclip,
-  Smile,
- 
-} from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Input } from "@/components/ui/input"
-import FolderForm from "../Forms/FolderForm"
-import { UserFolder } from "@/types/types"
+  Edit,
+  Delete,
+  FolderPlus,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
-// --- Types ---
-interface Folder {
-  id: string
-  name: string
-  items: number
-  size: string
+import FolderForm from "../Forms/FolderForm";
+import FileForm from "../Forms/FileForm";
+import { UserFile, UserFolder } from "@/types/types";
+import MultipleFileUploader from "../FormInputs/MultipleFileUploader";
+import { useState } from "react";
+import { deleteFolder } from "@/actions/filemanager";
+import toast from "react-hot-toast";
+import {
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@radix-ui/react-alert-dialog";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
+
+interface FileView {
+  id: string;
+  name: string;
+  type: "PDF" | "XLS" | "FILE";
+  size: string;
+  created: string;
+  format: string;
+  modified: string;
 }
 
-interface File {
-  id: string
-  name: string
-  type: "PDF" | "XLS"
-  size: string
-  created: string
-  format: string
-  modified: string
-}
+type UserFolderWithSize = UserFolder & {
+  sizeMB: number;
+};
 
-// --- Mock Data ---
+export function FileManager({
+  userId,
+  userFolders,
+}: {
+  userId: string | undefined;
+  userFolders: UserFolder[];
+}) {
+  const [open, setOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const currentFolderId = searchParams.get("fId");
 
+  const [selectedFile, setSelectedFile] = React.useState<FileView | null>(null);
+  const [folderToDelete, setFolderToDelete] = useState<UserFolder | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [editingFile, setEditingFile] = useState<UserFile | null>(null);
 
-const FILES: File[] = Array.from({ length: 8 }).map((_, i) => ({
-  id: `file-${i}`,
-  name: "Contracts 320_2022.pdf",
-  type: i % 2 === 0 ? "PDF" : "XLS",
-  size: "120,5 MB",
-  created: "2 / 10 / 2022",
-  format: i % 2 === 0 ? "PDF" : "XLS",
-  modified: "11 / 10 / 2022 - 10:30",
-}))
+  const userFoldersWithSize: UserFolderWithSize[] = React.useMemo(() => {
+    return userFolders.map((folder) => {
+      const totalBytes = folder.files.reduce(
+        (acc, file) => acc + (Number(file.size) || 0),
+        0
+      );
 
-// --- Main Component ---
-export function FileManager({ userId,userFolders }: { userId: string | undefined , userFolders: UserFolder[]}) {
-  const searchParams = useSearchParams()
-  const currentFolderId = searchParams.get("fId")
-  const currentFolder = currentFolderId 
-    ? userFolders.find((f) => f.id === currentFolderId) 
-    : userFolders[0]
+      return {
+        ...folder,
+        sizeMB: Number((totalBytes / 1024 / 1024).toFixed(2)),
+      };
+    });
+  }, [userFolders]);
 
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
+  const totalMBUsed = userFoldersWithSize.reduce(
+    (acc, folder) => acc + folder.sizeMB,
+    0
+  );
 
-  const usedGB = 74 // Example: > 50% for testing
-  const totalGB = 128
-  const usagePercent = Math.round((usedGB / totalGB) * 100)
-  const isHighUsage = usagePercent > 50
+  const usedMB = Number(totalMBUsed.toFixed(2));
+  const totalMB = 128 * 1024;
+  const usagePercent = Math.round((usedMB / totalMB) * 100);
+  const isHighUsage = usagePercent > 50;
+
+  const currentFolder = currentFolderId
+    ? userFoldersWithSize.find((f) => f.id === currentFolderId)
+    : userFoldersWithSize[0];
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editingFolder, setEditingFolder] = useState<UserFolder | null>(null);
+
+  const handleEdit = (folder: UserFolder) => {
+    setEditingFolder(folder);
+  };
+
+  const handleDelete = async () => {
+    if (!folderToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      const response = await deleteFolder(folderToDelete.id);
+
+      if (response.ok) {
+        toast.success("Folder deleted successfully");
+      } else {
+        toast.error("Error deleting folder");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsDeleting(false);
+      setFolderToDelete(null);
+    }
+  };
 
   return (
     <div className="flex h-screen bg-white font-sans text-slate-900">
-      {/* Left Sidebar - Folder List */}
       <aside className="w-56 border-r border-slate-100 flex flex-col">
         <div className="p-4 flex items-center justify-between">
           <h2 className="text-lg font-bold tracking-tight">Folders</h2>
-      <FolderForm userId={userId??""}  />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setCreateOpen(true)}
+          >
+            <FolderPlus className="w-4 h-4" />
+          </Button>
         </div>
         <div className="flex-1 overflow-y-auto px-2 pb-4">
           <div className="space-y-0.5">
-            {userFolders.map((folder) => (
+            {userFoldersWithSize.map((folder) => (
               <Link
                 key={folder.id}
                 href={`/dashboard/file-manager?fId=${folder.id}`}
@@ -87,54 +145,122 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                   "flex items-center gap-2.5 p-2.5 rounded-lg transition-colors group",
                   currentFolder?.id === folder.id
                     ? "bg-slate-50 text-blue-600"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
+                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
                 <div
                   className={cn(
                     "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                    currentFolder?.id === folder.id ? "bg-amber-100" : "bg-amber-50 group-hover:bg-amber-100",
+                    currentFolder?.id === folder.id
+                      ? "bg-amber-100"
+                      : "bg-amber-50 group-hover:bg-amber-100"
                   )}
                 >
                   <span className="text-lg">📁</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold text-sm truncate">{folder.name}</p>
-                    <MoreHorizontal className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <p className="font-semibold text-sm truncate">
+                      {folder.name}
+                    </p>
+
+                    <div className="flex items-center gap-1">
+                      <Edit
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setEditingFolder(folder);
+                        }}
+                        className="w-4 h-4 opacity-0 group-hover:opacity-100"
+                      />
+                      <Delete
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setFolderToDelete(folder);
+                        }}
+                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-red-500"
+                      />
+                    </div>
                   </div>
                   <p className="text-xs text-slate-400">
-                    {folder.files.length} items • {250} MB
+                    {folder.files.length} items . {folder.sizeMB} MB
                   </p>
                 </div>
               </Link>
             ))}
+
+            <AlertDialog.Root
+              open={!!folderToDelete}
+              onOpenChange={() => setFolderToDelete(null)}
+            >
+              <AlertDialog.Portal>
+                <AlertDialog.Overlay className="fixed inset-0 bg-black/40" />
+
+                <AlertDialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg">
+                  <AlertDialog.Title className="text-lg font-bold">
+                    Delete Folder
+                  </AlertDialog.Title>
+
+                  <AlertDialog.Description className="mt-2 text-sm text-slate-500">
+                    Are you sure you want to delete{" "}
+                    <span className="font-semibold">
+                      {folderToDelete?.name}
+                    </span>
+                    ? This action cannot be undone.
+                  </AlertDialog.Description>
+
+                  <div className="mt-6 flex justify-end gap-3">
+                    <AlertDialogCancel className="rounded-md border px-4 py-2">
+                      Cancel
+                    </AlertDialogCancel>
+
+                    <AlertDialogAction
+                      onClick={handleDelete}
+                      disabled={isDeleting}
+                      className="rounded-md bg-red-600 px-4 py-2 text-white disabled:opacity-50"
+                    >
+                      {isDeleting ? "Deleting..." : "Delete"}
+                    </AlertDialogAction>
+                  </div>
+                </AlertDialog.Content>
+              </AlertDialog.Portal>
+            </AlertDialog.Root>
           </div>
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0">
         <header className="p-4 flex items-center justify-between border-b border-slate-50">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="text-slate-400 w-8 h-8">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="sr-only">Back</span>
-            </Button>
+            <Link href="/dashboard">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-slate-400 w-8 h-8"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="sr-only">Back</span>
+              </Button>
+            </Link>
+
             <span className="text-xs font-medium text-slate-400">Back</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-full shadow-lg shadow-blue-100 h-9 text-xs">
-              <Upload className="w-3.5 h-3.5 mr-1.5" />
-              Upload
-            </Button>
-            <Button
-              variant="outline"
-              className="border-blue-600 text-blue-600 px-4 rounded-full hover:bg-blue-50 h-9 bg-transparent text-xs"
+            <button
+              onClick={() => setOpen(true)}
+              disabled={!currentFolder || !userId}
+              className="rounded-full bg-blue-600 px-4 py-2 text-sm text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              <Plus className="w-3.5 h-3.5 mr-1.5" />
-              Create
-            </Button>
+              Upload Files
+            </button>
+
+            {currentFolder && userId && (
+              <MultipleFileUploader
+                open={open}
+                onClose={() => setOpen(false)}
+                folderId={currentFolder.id}
+                userId={userId}
+              />
+            )}
           </div>
         </header>
 
@@ -142,23 +268,33 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
           <div className="max-w-4xl mx-auto space-y-6">
             <h1 className="text-2xl font-bold">{currentFolder?.name}</h1>
 
-            {/* Storage Summary Card */}
             <div className="bg-lime-50 rounded-2xl p-6 border border-lime-100/50 relative overflow-hidden">
               <div className="flex items-center justify-between relative z-10">
                 <div className="space-y-1">
                   <p className="text-slate-500 text-sm font-medium">
-                    Folders / <span className="text-slate-900 font-bold">{currentFolder?.name}</span>
+                    Folders /{" "}
+                    <span className="text-slate-900 font-bold">
+                      {currentFolder?.name}
+                    </span>
                   </p>
                   <p className="text-xl font-bold">
-                    <span className={isHighUsage ? "text-red-600" : "text-emerald-600"}>{usedGB} GB</span> of {totalGB}{" "}
-                    GB used
+                    <span
+                      className={
+                        isHighUsage ? "text-red-600" : "text-emerald-600"
+                      }
+                    >
+                      {currentFolder?.sizeMB} MB
+                    </span>{" "}
+                    of {totalMB / 1024} GB used
                   </p>
-                  <Button variant="link" className="text-blue-600 p-0 h-auto font-semibold text-sm">
+                  <Button
+                    variant="link"
+                    className="text-blue-600 p-0 h-auto font-semibold text-sm"
+                  >
                     View Details
                   </Button>
                 </div>
 
-                {/* Circular Progress Indicator */}
                 <div className="relative w-20 h-20">
                   <svg className="w-full h-full transform -rotate-90">
                     <circle
@@ -177,13 +313,23 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                       stroke="currentColor"
                       strokeWidth="6"
                       strokeDasharray={2 * Math.PI * 34}
-                      strokeDashoffset={2 * Math.PI * 34 * (1 - usagePercent / 100)}
+                      strokeDashoffset={
+                        2 * Math.PI * 34 * (1 - usagePercent / 100)
+                      }
                       fill="transparent"
-                      className={cn("transition-all duration-500", isHighUsage ? "text-red-500" : "text-emerald-500")}
+                      className={cn(
+                        "transition-all duration-500",
+                        isHighUsage ? "text-red-500" : "text-emerald-500"
+                      )}
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className={cn("text-base font-bold", isHighUsage ? "text-red-600" : "text-emerald-600")}>
+                    <span
+                      className={cn(
+                        "text-base font-bold",
+                        isHighUsage ? "text-red-600" : "text-emerald-600"
+                      )}
+                    >
                       {usagePercent}%
                     </span>
                   </div>
@@ -191,7 +337,6 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
               </div>
             </div>
 
-            {/* Filter & View Controls */}
             <div className="flex items-center justify-between">
               <div className="flex gap-3">
                 <Button
@@ -207,49 +352,87 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
                   Lastest <ChevronDown className="w-3 h-3 ml-1.5" />
                 </Button>
               </div>
-              <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-900 w-8 h-8">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-slate-400 hover:text-slate-900 w-8 h-8"
+              >
                 <Grid className="w-5 h-5" />
               </Button>
             </div>
 
-            {/* File Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {FILES.map((file) => (
+              {currentFolder?.files.map((file) => (
                 <button
                   key={file.id}
-                  onClick={() => setSelectedFile(file)}
+                  onClick={() =>
+                    setSelectedFile({
+                      id: file.id,
+                      name: file.name,
+                      type: file.type.includes("pdf") ? "PDF" : "FILE",
+                      size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+                      created: new Date(file.createdAt).toLocaleDateString(),
+                      format: file.type.split("/")[1]?.toUpperCase() ?? "FILE",
+                      modified: new Date(file.updatedAt).toLocaleString(),
+                    })
+                  }
                   className={cn(
                     "group relative p-4 rounded-2xl transition-all duration-200 text-left border",
                     selectedFile?.id === file.id
                       ? "bg-blue-50/50 border-blue-200 ring-1 ring-blue-200"
-                      : "bg-white border-slate-50 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100",
+                      : "bg-white border-slate-50 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100"
                   )}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div
                       className={cn(
                         "w-4 h-4 rounded border flex items-center justify-center transition-colors",
-                        selectedFile?.id === file.id ? "bg-blue-600 border-blue-600" : "border-slate-200",
+                        selectedFile?.id === file.id
+                          ? "bg-blue-600 border-blue-600"
+                          : "border-slate-200"
                       )}
                     >
-                      {selectedFile?.id === file.id && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                      {selectedFile?.id === file.id && (
+                        <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                      )}
                     </div>
-                    <MoreHorizontal className="w-4 h-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex items-center gap-1">
+                      <Edit
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingFile(file);
+                        }}
+                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      />
+                      <Delete
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingFile(file);
+                        }}
+                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-red-500 cursor-pointer"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex justify-center mb-4">
                     <div
                       className={cn(
                         "w-14 h-18 relative rounded-lg flex flex-col items-center justify-center",
-                        file.type === "PDF" ? "bg-rose-50 text-rose-500" : "bg-emerald-50 text-emerald-500",
+                        file.type === "PDF"
+                          ? "bg-rose-50 text-rose-500"
+                          : "bg-emerald-50 text-emerald-500"
                       )}
                     >
                       <FileText className="w-7 h-7 mb-1" />
-                      <span className="text-[10px] font-black uppercase tracking-widest">{file.type}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest">
+                        {file.type.split(".")[1]}
+                      </span>
                     </div>
                   </div>
 
-                  <p className="text-xs font-bold text-slate-900 text-center mb-1 truncate">{file.name}</p>
+                  <p className="text-xs font-bold text-slate-900 text-center mb-1 truncate">
+                    {file.name}
+                  </p>
                 </button>
               ))}
             </div>
@@ -257,100 +440,114 @@ export function FileManager({ userId,userFolders }: { userId: string | undefined
         </div>
       </main>
 
-      {/* Document Details Sheet */}
       <Sheet open={!!selectedFile} onOpenChange={() => setSelectedFile(null)}>
         <SheetContent className="w-full sm:max-w-sm p-0 flex flex-col border-l border-slate-100">
           <SheetHeader className="p-4 border-b border-slate-50 flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
-              <SheetTitle className="text-base font-bold truncate">{selectedFile?.name}</SheetTitle>
+              <SheetTitle className="text-base font-bold truncate">
+                {selectedFile?.name}
+              </SheetTitle>
               <div className="flex gap-0.5">
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-900">
-                  <MoreHorizontal className="w-3.5 h-3.5" />
-                </Button>
+                <Edit
+                  onClick={() => {
+                    const file = currentFolder?.files.find(
+                      (f) => f.id === selectedFile?.id
+                    );
+                    if (file) setEditingFile(file);
+                  }}
+                  className="w-4 h-4 text-slate-400 hover:text-slate-900 cursor-pointer m-2"
+                />
+
+                <Delete
+                  onClick={() => {
+                    const file = currentFolder?.files.find(
+                      (f) => f.id === selectedFile?.id
+                    );
+                    if (file) setEditingFile(file);
+                  }}
+                  className="w-4 h-4 text-red-500 hover:text-red-600 cursor-pointer m-2"
+                />
               </div>
             </div>
           </SheetHeader>
 
           <div className="flex-1 overflow-y-auto">
-            {/* File Preview */}
             <div className="p-6 flex flex-col items-center border-b border-slate-50">
               <div
                 className={cn(
                   "w-24 h-32 rounded-xl flex flex-col items-center justify-center mb-6 shadow-sm",
-                  selectedFile?.type === "PDF" ? "bg-rose-50 text-rose-500" : "bg-emerald-50 text-emerald-500",
+                  selectedFile?.type === "PDF"
+                    ? "bg-rose-50 text-rose-500"
+                    : "bg-emerald-50 text-emerald-500"
                 )}
               >
                 <FileText className="w-12 h-12 mb-1" />
-                <span className="text-base font-black uppercase tracking-tighter">{selectedFile?.type}</span>
+                <span className="text-base font-black uppercase tracking-tighter">
+                  {selectedFile?.type}
+                </span>
               </div>
 
-              {/* Information List */}
               <div className="w-full space-y-4">
                 <h3 className="text-base font-bold">Information</h3>
                 <div className="grid grid-cols-2 gap-y-3 text-xs">
                   <span className="text-slate-400 font-medium">Created</span>
-                  <span className="text-slate-900 font-bold text-right">{selectedFile?.created}</span>
+                  <span className="text-slate-900 font-bold text-right">
+                    {selectedFile?.created}
+                  </span>
 
                   <span className="text-slate-400 font-medium">Size</span>
-                  <span className="text-slate-900 font-bold text-right">{selectedFile?.size}</span>
+                  <span className="text-slate-900 font-bold text-right">
+                    {selectedFile?.size}
+                  </span>
 
                   <span className="text-slate-400 font-medium">Format</span>
-                  <span className="text-slate-900 font-bold text-right">{selectedFile?.format}</span>
+                  <span className="text-slate-900 font-bold text-right">
+                    {selectedFile?.format.split(".")[1]}
+                  </span>
 
-                  <span className="text-slate-400 font-medium">Last Modified</span>
-                  <span className="text-slate-900 font-bold text-right">{selectedFile?.modified}</span>
+                  <span className="text-slate-400 font-medium">
+                    Last Modified
+                  </span>
+                  <span className="text-slate-900 font-bold text-right">
+                    {selectedFile?.modified}
+                  </span>
                 </div>
-              </div>
-            </div>
-
-            {/* Internal Chat Section */}
-            <div className="p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold">Internal chat</h3>
-                <ChevronDown className="w-4 h-4 text-slate-400" />
-              </div>
-
-              <div className="space-y-4">
-                {[1, 2].map((i) => (
-                  <div key={i} className="flex gap-2.5">
-                    <Avatar className="w-8 h-8 shrink-0 ring-2 ring-white shadow-sm">
-                      <AvatarImage src="/diverse-woman-avatar.png" />
-                      <AvatarFallback>JM</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 space-y-0.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold">Jessica May</span>
-                        <span className="text-[9px] text-slate-300 font-medium uppercase">22/01/2022 - 11:27 AM</span>
-                      </div>
-                      <p className="text-xs text-slate-500 leading-relaxed">
-                        {i === 1
-                          ? "Sometimes that's just the way it has to be. Sure, there were probably other options, but he didn't let them enter his mind."
-                          : "Sometimes that's just the way it has to be"}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Chat Input */}
-          <div className="p-4 border-t border-slate-50 bg-white">
-            <div className="relative">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300">
-                <Paperclip className="w-4 h-4 cursor-pointer hover:text-slate-500 transition-colors" />
-              </div>
-              <Input
-                placeholder="Add new comment"
-                className="bg-slate-50/50 border-slate-100 rounded-lg py-5 pl-10 pr-10 focus:ring-blue-100 placeholder:text-slate-400 text-xs"
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300">
-                <Smile className="w-4 h-4 cursor-pointer hover:text-slate-500 transition-colors" />
               </div>
             </div>
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* Create Folder */}
+      <FolderForm
+        userId={userId ?? ""}
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+      />
+
+      {/* Edit Folder */}
+      <FolderForm
+        userId={userId ?? ""}
+        open={!!editingFolder}
+        onOpenChange={(open) => !open && setEditingFolder(null)}
+        editingId={editingFolder?.id}
+        initialContent={editingFolder?.name}
+      />
+
+      {/* Edit/Delete File */}
+      {editingFile && (
+        <FileForm
+          userId={userId ?? ""}
+          open={!!editingFile}
+          onOpenChange={(open) => !open && setEditingFile(null)}
+          fileId={editingFile.id}
+          initialName={editingFile.name}
+          onDeleted={() => {
+            setEditingFile(null);
+            setSelectedFile(null);
+          }}
+        />
+      )}
     </div>
-  )
+  );
 }

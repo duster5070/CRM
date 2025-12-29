@@ -17,15 +17,43 @@ export async function createFolder(data: FolderProps) {
     return { ok: false, error };
   }
 }
-export async function createFile(data: FileProps) {
+export async function createFile(data: {
+  name: string;
+  type: string;
+  size: number;
+  url?: string;
+  folderId: string;
+  userId: string;
+}) {
   try {
-    const newFile= await db.file.create({ data });
+    console.log("createFile received data:", data);
+
+    // Validate required fields
+    if (!data.name || !data.folderId || !data.userId) {
+      throw new Error("Missing required fields");
+    }
+
+    const newFile = await db.file.create({ 
+      data: {
+        name: data.name,
+        type: data.type,
+        size: data.size,
+        url: data.url, // Include if you have this field
+        folderId: data.folderId,
+        userId: data.userId,
+      }
+    });
    
-    revalidatePath("/project/file-manager");
-    return { ok: true, data: newFile }; // FIX: Return consistent object
+    console.log("File created:", newFile);
+    revalidatePath("/dashboard/file-manager");
+    
+    return { ok: true, data: newFile };
   } catch (error) {
-    console.log(error);
-    return { ok: false, error };
+    console.error("Error creating file:", error);
+    return { 
+      ok: false, 
+      error: error instanceof Error ? error.message : "Unknown error" 
+    };
   }
 }
 
@@ -43,19 +71,18 @@ export async function updateFolderById(id: string, data: FolderProps) {
     console.log(error);
   }
 }
-export async function updateFileById(id: string, data: FileProps) {
-  try {
-    const updatedFile = await db.file.update({
-      where: {
-        id,
-      },
-      data,
-    });
-    revalidatePath("/dashboard/file-manager");
-    return updatedFile;
-  } catch (error) {
-    console.log(error);
-  }
+export async function updateFileById(
+  id: string,
+  data: { name: string }
+) {
+
+  const updated = await db.file.update({
+    where: { id },
+    data: { name: data.name }, 
+  })
+
+  revalidatePath("/dashboard/file-manager")
+  return { ok: true, data: updated }
 }
 export async function getUserFolders(userId: string | undefined) {
   if (userId) {

@@ -15,9 +15,9 @@ export type SelectOptionProps = {
   value: string;
 };
 export type SubscriberProps = {
-  email: string,
-  userId: string
-}
+  email: string;
+  userId: string;
+};
 export default function SubscribeForm({
   userId,
 }: {
@@ -34,9 +34,14 @@ export default function SubscribeForm({
     data.userId = userId ?? "";
     try {
       setLoading(true);
-      await createSubscription({ ...data });
+      const res = await createSubscription({ ...data });
       setLoading(false);
-      toast.success("Free Domain Updated!");
+      if (res?.status === 201) {
+        toast.success("Subscribed successfully!");
+        reset();
+      } else {
+        toast.error(res?.error ?? "Something went wrong");
+      }
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -53,7 +58,13 @@ export default function SubscribeForm({
           icon={Mail}
           placeholder="johndoe@gmail.com"
         />
-        <SubmitButton className="rounded-r-lg bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 font-semibold" size={"sm"} title="Subscribe" buttonIcon={Mail} loading={loading} />
+        <SubmitButton
+          className="rounded-r-lg bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 font-semibold"
+          size={"sm"}
+          title="Subscribe"
+          buttonIcon={Mail}
+          loading={loading}
+        />
       </div>
     </form>
   );

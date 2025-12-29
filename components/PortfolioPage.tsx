@@ -16,6 +16,7 @@ import { ProjectWithUser } from "@/types/types";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import SubscribeForm from "./Forms/SubscribeForm";
+import { OtherPortfolioProjects } from "./OtherPortfolioProjects";
 
 type ProjectCardProps = {
   title: string;
@@ -49,12 +50,14 @@ const ProjectCard = ({ project }: { project: Project }) => (
 export default function Portfolio({
   projects,
   profile,
+  otherProjects,
 }: {
   projects: ProjectWithUser[];
   profile: PortfolioProfile;
+  otherProjects: ProjectWithUser[];
 }) {
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 py-12">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-1/3">
@@ -106,7 +109,7 @@ export default function Portfolio({
                 Subscribe
               </button>
             </div> */}
-<SubscribeForm userId={profile.userId} />
+            <SubscribeForm userId={profile.userId} />
             <div className="flex justify-center space-x-4">
               <Link href={profile.linkedinUrl ?? ""}>
                 <Linkedin className="w-6 h-6 text-gray-500" />
@@ -126,7 +129,7 @@ export default function Portfolio({
             </div>
           </div>
           <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {projects.slice(0, 4).map((project, index) => (
+            {projects.map((project, index) => (
               // <ProjectCard
               //     key={index}
               //     project={project}
@@ -135,6 +138,9 @@ export default function Portfolio({
             ))}
           </div>
         </div>
+      </div>
+      <div className="py-16">
+        <OtherPortfolioProjects otherProjects={otherProjects} />
       </div>
     </div>
   );

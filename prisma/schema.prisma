@@ -82,13 +82,13 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   portfolioProfile     PortfolioProfile?
-  subscriber    Subscriber?
+  subscribers    Subscriber[]
 }
 
 model PortfolioProfile {
   id              String      @id @default(auto()) @map("_id") @db.ObjectId
   userId          String      @unique @db.ObjectId
-  user            User        @relation(fields: [userId],references: [id])
+  user            User        @relation(fields: [userId],references: [id], onDelete: Cascade)
   name            String
   profileImage    String?
   location        String
@@ -107,8 +107,8 @@ model PortfolioProfile {
 
 model Subscriber {
   id              String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String      @unique @db.ObjectId
-  user            User        @relation(fields: [userId],references: [id])
+  userId          String      @db.ObjectId
+  user            User        @relation(fields: [userId],references: [id], onDelete: Cascade)
   email           String
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -132,8 +132,10 @@ model File {
   name      String
   type      String
   size      Int
+  url       String?  // Add this for the UploadThing URL (optional)
   folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId  String   @db.ObjectId
+  userId    String   @db.ObjectId  // Add this
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -157,9 +159,9 @@ model File {
   endDate DateTime?
   isPublic Boolean @default(false)
   status ProjectStatus @default(ONGOING)
-  // client Client @relation(fields: [clientId],references: [id])
+  // client Client @relation(fields: [clientId],references: [id], onDelete: Cascade)
   clientId String @db.ObjectId
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   userId String @db.ObjectId
   modules  Module[]
   comments  ProjectComment[]
@@ -176,11 +178,11 @@ model File {
  model ProjectComment{
    id  String @id @default(auto()) @map("_id") @db.ObjectId
    content String
-   project Project @relation(fields: [projectId],references: [id])
+   project Project @relation(fields: [projectId],references: [id], onDelete: Cascade)
    projectId String @db.ObjectId
    userName String
    userRole UserRole
-   user User @relation(fields: [userId],references: [id])
+   user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   userId String @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -191,7 +193,7 @@ model File {
    guestName String
    projectName String 
    projectOwner String
-   user User @relation(fields: [guestId],references: [id])
+   user User @relation(fields: [guestId],references: [id], onDelete: Cascade)
   guestId String @db.ObjectId
   ownerId String?
   createdAt DateTime @default(now())
@@ -201,8 +203,8 @@ model File {
  model Module{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
-  project Project @relation(fields: [projectId],references: [id])
-  user User @relation(fields: [userId],references: [id])
+  project Project @relation(fields: [projectId],references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   userName String 
   userId   String   @db.ObjectId
   projectId String @db.ObjectId
@@ -222,7 +224,7 @@ enum TaskStatus {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String
   status TaskStatus @default(TODO)
-  module Module @relation(fields: [moduleId],references: [id])
+  module Module @relation(fields: [moduleId],references: [id], onDelete: Cascade)
   moduleId String @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -233,7 +235,7 @@ enum TaskStatus {
   name String
   email String
   role String
-  project Project @relation(fields: [projectId],references: [id])
+  project Project @relation(fields: [projectId],references: [id], onDelete: Cascade)
   projectId String @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -245,9 +247,9 @@ model Invoice{
   amount Float
   status String
   duedate DateTime
-  project Project @relation(fields: [projectId],references: [id])
+  project Project @relation(fields: [projectId],references: [id], onDelete: Cascade)
   projectId String @db.ObjectId
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   userId String @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -258,9 +260,9 @@ model Invoice{
 //   quotationNumber String @unique
 //   amount Float
 //   validUntil DateTime
-//   project Project @relation(fields: [projectId],references: [id])
+//   project Project @relation(fields: [projectId],references: [id], onDelete: Cascade)
 //   projectId String @db.ObjectId
-//   user User @relation(fields: [userId],references: [id])
+//   user User @relation(fields: [userId],references: [id], onDelete: Cascade)
 //   userId String @db.ObjectId
 //   createdAt DateTime @default(now())
 //   updatedAt DateTime @updatedAt
@@ -274,9 +276,9 @@ model Payment {
   invoiceNumber String   @unique
   method        String
 
-  user          User     @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   projectId     String   @db.ObjectId
-  project       Project  @relation(fields: [projectId], references: [id])
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   userId        String   @db.ObjectId
   clientId      String   @db.ObjectId
@@ -292,7 +294,7 @@ model PortfolioItem{
   description String
   imageUrl String?
   projectUrl String?
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   userId String @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

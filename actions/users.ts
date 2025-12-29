@@ -132,6 +132,26 @@ export async function getExistingUsers() {
   }
 }
 
+export async function getAllUsers() {
+  try {
+    const users = await db.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    return users;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
 export async function updateUserById(id: string, data: UserProps) {
   try {
     const updatedUser = await db.user.update({
