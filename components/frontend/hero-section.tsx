@@ -6,7 +6,9 @@ import { motion } from 'framer-motion';
 import ParticleAssemble from "../ui/FramerShatter";
 import { ArrowRight } from "lucide-react";
 
-export default function HeroSection() {
+import { Session } from "next-auth";
+
+export default function HeroSection({ session }: { session: Session | null }) {
 
 
   return (
@@ -60,7 +62,7 @@ export default function HeroSection() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <svg  
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               width="112"
               height="112"
@@ -126,7 +128,7 @@ export default function HeroSection() {
             size="lg"
             className="rounded-full h-12 px-6 text-base"
           >
-            <Link href="/register">
+            <Link href={session ? "/dashboard" : "/register"}>
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

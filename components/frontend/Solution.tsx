@@ -105,7 +105,7 @@ export default function Solution() {
       {/* Container to limit sticky behavior */}
       <div className="relative">
         {/* Tab Navigation - Sticky at top */}
-        <div className="pt-6 pb-[48.5rem] mb-[50px] sticky top-[10vh] bottom-[100vh] z-20">
+        <div className="pt-6 pb-[48.5rem] mb-[50px] sticky top-32 z-20">
           <div className="flex flex-wrap justify-center gap-3">
             {tabs.map((tab, index) => (
               <Link
