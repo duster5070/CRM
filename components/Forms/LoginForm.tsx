@@ -134,7 +134,7 @@ export default function LoginForm() {
           </div>
         </div>
       </div>
-      <div className="hidden bg-muted lg:block relative">
+            <div className="hidden bg-muted lg:block relative">
         <CustomCarousel />
       </div>
     </div>

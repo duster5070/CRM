@@ -37,6 +37,10 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --pika-primary: #262D3F;
+    --pika-secondary: #01579B;
+    --pika-background: #F6FAFD;
+    --pika-navBackground: rgba(245, 245, 245, 0.30);
   }
 
   .dark {

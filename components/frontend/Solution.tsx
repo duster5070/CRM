@@ -1,0 +1,137 @@
+'use client';
+
+import React, { useEffect, useRef, useState } from 'react';
+import StickyScreens from '@/components/ui/StickyScreens';
+import { motion, useScroll } from 'framer-motion'
+import Lenis from 'lenis'
+import Link from 'next/link';
+
+interface TabItem {
+  id: string;
+  name: string;
+  src: string;
+  href: string;
+}
+
+const tabs: TabItem[] = [
+  { id: 'projectList', name: 'Project List', src: '/Project List.svg', href: 'projectList' },
+  { id: 'projectOverview', name: 'Project Overview', src: '/Project Overview.svg', href: 'projectOverview' },
+  { id: 'projectModules', name: 'Project Modules', src: '/Project Modules.svg', href: 'projectModules' },
+  { id: 'portfolio', name: 'Portfolio', src: '/Portfolio.svg', href: 'portfolio' },
+  { id: 'paymentList', name: 'Payment List', src: '/Payment List.svg', href: 'paymentList' },
+  { id: 'clientList', name: 'Client List', src: '/Client List.svg', href: 'clientList' },
+];
+
+export default function Solution() {
+  const container = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+  const [activeSection, setActiveSection] = useState("projectList");
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ['start start', 'end end']
+  });
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on('change', (latest) => {
+      const sectionSize = 1 / tabs.length;
+      const clampedProgress = Math.max(0, Math.min(1, latest));
+      let sectionIndex = Math.floor((clampedProgress + sectionSize / 2) / sectionSize);
+      sectionIndex = Math.max(0, Math.min(sectionIndex, tabs.length - 1));
+      const newActiveId = tabs[sectionIndex].id;
+      setActiveSection(prev => prev !== newActiveId ? newActiveId : prev);
+    });
+
+    return () => unsubscribe();
+  }, [scrollYProgress]);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      autoRaf: true,
+    });
+    lenisRef.current = lenis;
+    lenis.on('scroll', (e) => {
+      console.log(e);
+    });
+    return () => {
+      lenis.destroy();
+    };
+  }, [])
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    const element = document.getElementById(href);
+    if (!element || !container.current) {
+      console.log('Element or container not found', { href, element, container: container.current });
+      return;
+    }
+    setActiveSection(href);
+
+    const tabIndex = tabs.findIndex(tab => tab.id === href);
+    if (tabIndex === -1) {
+      console.log('Tab index not found', { href });
+      return;
+    }
+
+    const containerRect = container.current.getBoundingClientRect();
+    const containerTop = containerRect.top + window.pageYOffset;
+    const targetY = containerTop + (tabIndex * window.innerHeight) - (window.innerHeight * 0.2);
+
+    console.log('Scrolling to', { href, tabIndex, targetY, containerTop });
+
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(targetY, {
+        duration: 1.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    } else {
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  return (
+    <section id="features" className="py-20">
+      <div className="container mx-auto text-center flex flex-col items-center">
+        <h2 className="text-6xl mb-8">one solution</h2>
+        <img src="Logo-bigger.svg" alt="Logo" />
+        <p className="text-4xl pt-7 mb-16">The All-in-One Client & Project Platform</p>
+      </div>
+
+      {/* Container to limit sticky behavior */}
+      <div className="relative">
+        {/* Tab Navigation - Sticky at top */}
+        <div className="pt-6 pb-[48.5rem] mb-[50px] sticky top-[10vh] bottom-[100vh] z-20">
+          <div className="flex flex-wrap justify-center gap-3">
+            {tabs.map((tab, index) => (
+              <Link
+                key={tab.id}
+                href={`#${tab.id}`}
+                onClick={(e) => handleClick(e, tab.id)}
+                className={`px-6 py-3 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${activeSection === tab.id
+                  ? 'bg-[var(--pika-secondary)] text-white shadow-lg'
+                  : 'bg-white text-[var(--pika-secondary)] border border-gray-300 hover:border-[var(--pika-secondary)] hover:bg-gray-50'
+                  }`}
+              >
+                {tab.name}
+              </Link>
+            ))}
+          </div>
+          <div className='h-[100vh] absolute'></div>
+        </div>
+
+        {/* Stacked Screenshots */}
+        <div className="relative mt-[-40%]" ref={container}>
+          {tabs.map((tab, index) => {
+            const targetScale = 1 - ((tabs.length - index) * 0.05)
+            return <StickyScreens key={index} i={index} {...tab} range={[index * 0.16666666667, 1]} target={targetScale} progress={scrollYProgress} />
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
