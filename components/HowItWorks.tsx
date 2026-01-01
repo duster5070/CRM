@@ -1,171 +1,90 @@
-"use client";
-import React, { ButtonHTMLAttributes, ReactNode, useState } from "react";
-import SectionHeading from "./global/SectionHeading";
-import FeaturesCard from "./FeaturesCard";
-import { Mail, Minus, Plus, ShieldCheck } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
+'use client';
+
+import { CreditCard } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import StackedCard, { StepCard } from "./ui/StackedCards";
+
+const initialSteps: StepCard[] = [
+  { id: 'step1', number: 'One', title: 'Create Your Project', buttonText: 'Add Project' },
+  { id: 'step2', number: 'Two', title: 'Invite Your Team', buttonText: 'Invite Member' },
+  { id: 'step3', number: 'Three', title: 'Add Your Clients', buttonText: 'Add Client' },
+];
 
 export default function HowItWorks() {
-  const cons = [
-    "Manually create invoices",
-    "Or pay up to $2 per invoice",
-    "Waste hours in customer support",
-    "Can’t update details once sent (VAT, Tax ID)",
-    "Can't make invoices for previous purchases",
-  ];
-  const pros = [
-    "Self-serve invoices",
-    "One-time payment for unlimited invoices",
-    "No more customer support",
-    "Editable invoices to stay compliant",
-    "Invoices for any payment, even past ones",
-  ];
-  const buttons = [
-    {
-      step: 1,
-      title: "1.Connect Stripe accounts",
-      content: <StepOne />,
-      media: {
-        type: "image",
-        media: "/feature1.png",
-      },
-    },
-    {
-      step: 2,
-      title: "2.Get your ZenVoice link",
-      content: <StepTwo />,
-      media: {
-        type: "image",
-        media: "/feature2.png",
-      },
-    },
-    {
-      step: 3,
-      title: "3.Customers generate invoices",
-      content: <StepThree />,
-      media: {
-        type: "video",
-        media: "/feature3.mp4",
-      },
-    },
-  ];
-  const [activeBtn, setActiveBtn] = useState(buttons[0]);
-  const mediaType = activeBtn.media.type;
+  const [steps, setSteps] = useState<StepCard[]>(initialSteps);
+  const [isDragging, setIsDragging] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const handleDragEnd = useCallback(() => {
+    setSteps((prevSteps) => {
+      const newSteps = [...prevSteps];
+      const firstCard = newSteps.shift();
+      if (firstCard) {
+        newSteps.push(firstCard);
+      }
+
+      return newSteps;
+    });
+  }, []);
+
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleDragStop = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    if (!isDragging) {
+      intervalRef.current = setInterval(() => {
+        handleDragEnd();
+      }, 2000);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isDragging, handleDragEnd]);
   return (
-    <div className="text-center dark:text-slate-800">
-      <div className="pb-6">
-        <SectionHeading title="How it works" />
-      </div>
-      <div className="py-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="pr-8 space-y-4 flex flex-col">
-          {buttons.map((btn, i) => {
-            const isLast = i === buttons.length - 1;
-            console.log(i, buttons.length);
-            const isActive = activeBtn.step === btn.step;
-            const Component = btn.content;
-            return (
-              <Button
-                className={cn("border-b pb-3", isLast && "border-0")}
-                key={btn.step}
-                onClick={() => setActiveBtn(btn)}
-              >
-                <div className="flex items-center justify-between text-xl">
-                  <h2 className={cn("", isActive && "text-green-600")}>
-                    {btn.title}
-                  </h2>
-                  {isActive ? (
-                    <Minus className="w-5 h-5" />
-                  ) : (
-                    <Plus className="w-5 h-5" />
-                  )}
-                </div>
-                {isActive && btn.content}
-              </Button>
-            );
-          })}
+    <section id="howItWorks" className="py-20 bg-[var(--pika-background)]">
+      <div className="container mx-auto text-center mb-16">
+        <h2 className="text-[105px] text-primary text-center px-4 font-bold">
+          How It Works
+        </h2>
+        <h3 className="text-[60px] text-primary">
+          Get Started in <span className="text-[var(--pika-secondary)]">3</span> Simple Steps
+        </h3>
+        <div className="flex items-center justify-center gap-4 py-2">
+          <p className="text-lg text-gray-500">No credit card required</p>
+          <CreditCard className="w-10 h-10 text-gray-500" />
+          <p className="text-lg text-gray-500">Setup in 5 minutes</p>
         </div>
-        <div className="">
-          {mediaType === "image" ? (
-            <Image
-              className=""
-              width={1080}
-              height={951}
-              alt=""
-              src={activeBtn.media.media}
+      </div>
+
+      <div className="relative flex items-center justify-center min-h-[700px]">
+        <div className="relative" style={{ width: '490px', height: '636px' }}>
+
+          {steps.map((step, index) => (
+            <StackedCard
+              key={step.id}
+              index={index}
+              step={step}
+              onDragEnd={() => {
+                handleDragEnd();
+                handleDragStop();
+              }}
+              onDragStart={handleDragStart}
+              isDraggable={index === 0}
             />
-          ) : (
-            <video src={activeBtn.media.media} loop autoPlay muted></video>
-          )}
+          ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-function Button({
-  children,
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { children: ReactNode }) {
-  return (
-    <button className="text-left" {...props}>
-      {children}
-    </button>
-  );
-}
-
-function StepOne() {
-  return (
-    <div className="py-4">
-      <p>
-        Add one or multiple Stripe accounts to ZenVoice. It takes less than a
-        minute. No coding required.
-      </p>
-      <div className="flex items-center font-semibold pt-3">
-        <ShieldCheck className="w-5 h-5 mr-2" />
-        <p>Secured with restricted API keys</p>
-      </div>
-    </div>
-  );
-}
-function StepTwo() {
-  return (
-    <div className="py-4">
-      <p>
-        Your customers can retrieve any successful payments made on all your
-        Stripe accounts.
-      </p>
-      <div className="space-y-1 py-2">
-        <div className="flex items-center font-semibold ">
-          <Mail className="w-5 h-5 mr-2" />
-          <p>Send by Email</p>
-        </div>
-        <div className="flex items-center font-semibold ">
-          <ShieldCheck className="w-5 h-5 mr-2" />
-          <p>Show on Dashboard</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-function StepThree() {
-  return (
-    <div className="py-4">
-      <p>
-        Once customers find a successful payment, they receive a secure link to
-        generate, edit, and download invoices. They can add their VAT number,
-        company details, fix typo.
-      </p>
-      <div className="space-y-1 py-2">
-        <div className="flex items-center font-semibold">
-          <ShieldCheck className="w-5 h-5 mr-2" />
-          <p>Protected Data</p>
-        </div>
-        <div className="flex items-center font-semibold ">
-          <ShieldCheck className="w-5 h-5 mr-2" />
-          <p>Editable Invoices</p>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }
