@@ -97,7 +97,7 @@ export default function PaymentsPage({
           </button>
         </div>
 
-        <ul className="space-y-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+        <ul className="p-1 space-y-4 overflow-y-auto max-h-[calc(100vh-80px)]">
           {userProjects.map((project) => {
             const active = project.id === selectedProject?.id;
 

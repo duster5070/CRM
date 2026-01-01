@@ -123,7 +123,7 @@ export function FileManager({
   };
 
   return (
-    <div className="flex h-screen bg-white font-sans text-slate-900">
+    <div className="flex h-screen dark:bg-[#1b1b1b] dark:text-white bg-white font-sans text-slate-900">
       <aside className="w-56 border-r border-slate-100 flex flex-col">
         <div className="p-4 flex items-center justify-between">
           <h2 className="text-lg font-bold tracking-tight">Folders</h2>
@@ -144,7 +144,7 @@ export function FileManager({
                 className={cn(
                   "flex items-center gap-2.5 p-2.5 rounded-lg transition-colors group",
                   currentFolder?.id === folder.id
-                    ? "bg-slate-50 text-blue-600"
+                    ? "bg-slate-50 text-black dark:text-black"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
@@ -152,8 +152,8 @@ export function FileManager({
                   className={cn(
                     "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
                     currentFolder?.id === folder.id
-                      ? "bg-amber-100"
-                      : "bg-amber-50 group-hover:bg-amber-100"
+                      ? "bg-amber-100 dark:bg-amber-500"
+                      : "bg-amber-50 group-hover:bg-amber-100 dark:bg-amber-500"
                   )}
                 >
                   <span className="text-lg">📁</span>
@@ -181,7 +181,7 @@ export function FileManager({
                       />
                     </div>
                   </div>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-slate-400 dark:text-slate-900">
                     {folder.files.length} items . {folder.sizeMB} MB
                   </p>
                 </div>
@@ -235,14 +235,14 @@ export function FileManager({
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-slate-400 w-8 h-8"
+                className="text-slate-400 w-8 h-8 dark:text-slate-100"
               >
-                <ArrowLeft className="w-4 h-4" />
-                <span className="sr-only">Back</span>
+                <ArrowLeft className="w-4 h-4 " />
+                <span className="sr-only text-black dark:text-slate-100">Back</span>
               </Button>
             </Link>
 
-            <span className="text-xs font-medium text-slate-400">Back</span>
+            <span className="text-xs font-medium text-slate-400 dark:text-slate-100">Back</span>
           </div>
           <div className="flex items-center gap-2">
             <button
