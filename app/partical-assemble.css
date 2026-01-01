@@ -1,0 +1,42 @@
+/* components/particle-assemble.css */
+.particle-container {
+  position: relative;
+}
+
+.particles-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: rgb(96, 165, 250);
+  opacity: var(--opacity);
+  left: 0;
+  top: 0;
+  transform: translate(
+    calc(var(--final-x) + var(--spread-x)),
+    calc(var(--final-y) + var(--spread-y))
+  );
+  animation: assemble var(--duration) ease-out var(--delay) forwards;
+  will-change: transform;
+}
+
+@keyframes assemble {
+  to {
+    transform: translate(var(--final-x), var(--final-y));
+  }
+}
+
+.content-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

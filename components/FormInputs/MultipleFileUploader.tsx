@@ -73,6 +73,7 @@ export default function MultipleFileUploader({ open, onClose, folderId, userId }
                         url: file.url,
                         folderId,
                         userId,
+                        key: file.key,
                       })
                     }
                   )

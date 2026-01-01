@@ -280,6 +280,7 @@ export interface FolderProps{
   name: string;
  
   userId: string;
+  
 
 }
 export interface FileProps{

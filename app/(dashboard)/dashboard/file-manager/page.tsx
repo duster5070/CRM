@@ -18,11 +18,7 @@ export default async function Page() {
 
   const userFolders = await getUserFolders(user.id);
 
-  // if (!userFolders || userFolders.length === 0) {
-  //   return (
-  //    <NotFound/>
-  //   );
-  // }
+
 
   return <FileManager userId={user?.id??""} userFolders={userFolders??[]} />;
 }

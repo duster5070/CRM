@@ -58,7 +58,9 @@ export const ourFileRouter = {
     "application/gzip": { maxFileSize: "1MB", maxFileCount: 4 },
     "application/zip": { maxFileSize: "1MB", maxFileCount: 4 },
   }).onUploadComplete(async ({ metadata, file }) => {
-    console.log("file url", file.url);
+    console.log("file ", file);
+    console.log("file url ", file.url);
+    console.log("metadata", metadata);
     return { uploadedBy: "JB" };
   }),
   mailAttachments: f({
