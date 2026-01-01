@@ -10,6 +10,7 @@ import Providers from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
 import dynamic from "next/dynamic";
 import { PHProvider } from "@/components/posthog-provider";
+import { Suspense } from "react";
 
 const inter = Rethink_Sans({ subsets: ["latin"], display: "swap" });
 
@@ -40,7 +41,9 @@ export default function RootLayout({
     >
       <Providers>
         <PHProvider>
+          <Suspense>
           <PostHogPageView />
+          </Suspense>
           {children}
         </PHProvider>
 

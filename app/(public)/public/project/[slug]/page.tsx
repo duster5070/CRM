@@ -4,10 +4,11 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 export default async function ProjectDetailPage({
-  params: { slug },
+  params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const {slug} = await params
   const projectData = await getProjectDetailsBySlug(slug);
 
   if (!projectData) {

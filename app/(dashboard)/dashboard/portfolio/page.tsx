@@ -33,10 +33,7 @@ async function page() {
             </Link>
           </Button>
           <ShareLink link={link}/>
-          <Button  variant={"outline"}>
-            <Copy className="mr-2 h-4 w-4"/>
-            Share
-            </Button>
+          
         </div>
       </div>
       <div className="py-6">
