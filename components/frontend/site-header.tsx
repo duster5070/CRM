@@ -10,7 +10,6 @@ import { Session } from "next-auth";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { getInitials } from "@/lib/generateInitials";
-import { useTheme } from "next-themes";
 
 const navItems = [
   { id: "home", label: "Home", href: "#home" },
@@ -22,11 +21,8 @@ const navItems = [
 export default function SiteHeader({ session }: { session: Session | null }) {
   const [activeSection, setActiveSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const observers: IntersectionObserver[] = [];
     navItems.forEach(({ id }) => {
       const element = document.getElementById(id);
@@ -72,12 +68,12 @@ export default function SiteHeader({ session }: { session: Session | null }) {
   };
 
   return (
-    <nav className="sticky top-5 z-50 bg-glass backdrop-blur-md text-white p-4 rounded-full mx-4 sm:mx-8 md:mx-[10rem] px-4 sm:px-6 md:px-[3.75rem] py-1 border border-gray-300">
+    <nav className="sticky top-5 z-50 bg-glass backdrop-blur-md text-white p-4 rounded-full mx-4 md:mx-8 md:mx-[10rem] px-4 sm:px-6 md:px-[3.75rem] py-1 border border-gray-300">
       <div className="flex justify-between items-center py-2 sm:py-4">
         <div className="flex items-center space-x-4">
           <Logo />
         </div>
-        <ul className="hidden md:flex space-x-4 lg:space-x-[51px] cursor-pointer text-lg lg:text-2xl font-semibold">
+        <ul className="hidden lg:flex space-x-4 md:space-x-[51px] cursor-pointer text-lg lg:text-2xl font-semibold">
           {navItems.map(({ id, label, href }) => (
             <li key={id}>
               <Link
@@ -99,7 +95,7 @@ export default function SiteHeader({ session }: { session: Session | null }) {
             <Button
               asChild
               variant={"ghost"}
-              className="flex items-center space-x-2 py-2 sm:py-[32px] rounded-full"
+              className="hidden lg:flex items-center space-x-2 py-2 sm:py-[32px] rounded-full"
             >
               <Link
                 href="/dashboard"
@@ -118,15 +114,27 @@ export default function SiteHeader({ session }: { session: Session | null }) {
               </Link>
             </Button>
             <button
-              className="md:hidden p-2"
+              className="lg:hidden p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 flex items-center justify-center"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMobileMenuOpen ? (
+                <X size={24} />
+              ) : (
+                <Avatar>
+                  <AvatarImage
+                    src={session?.user?.image ?? ""}
+                    alt={session?.user?.name ?? ""}
+                  />
+                  <AvatarFallback>
+                    {getInitials(session?.user?.name)}
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </button>
           </>
         ) : (
           <>
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-4">
               <Button
                 asChild
                 variant="default"
@@ -143,7 +151,7 @@ export default function SiteHeader({ session }: { session: Session | null }) {
               </Button>
             </div>
             <button
-              className="md:hidden p-2"
+              className="lg:hidden p-2 text-primary rounded-full hover:bg-blue10 transition-colors duration-200 flex items-center justify-center"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -152,7 +160,32 @@ export default function SiteHeader({ session }: { session: Session | null }) {
         )}
       </div>
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-background border border-gray-300 rounded-b-3xl mt-2 p-4">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-background border border-gray-300 rounded-b-3xl mt-2 p-4">
+          {session ? (
+            <div className="mb-4 pb-4 border-b border-gray-300">
+              <Button
+                asChild
+                variant={"ghost"}
+                className="w-full flex items-center justify-start space-x-2 py-3"
+              >
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Avatar>
+                    <AvatarImage
+                      src={session?.user?.image ?? ""}
+                      alt={session?.user?.name ?? ""}
+                    />
+                    <AvatarFallback>
+                      {getInitials(session?.user?.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="ml-3 text-primary">Dashboard</span>
+                </Link>
+              </Button>
+            </div>
+          ) : null}
           <ul className="flex flex-col space-y-4 text-lg font-semibold">
             {navItems.map(({ id, label, href }) => (
               <li key={id}>

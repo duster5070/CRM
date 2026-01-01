@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const carouselItems = [
@@ -23,9 +23,9 @@ const carouselItems = [
 export default function CustomCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
-  };
+  }, []);
 
   const prevSlide = () => {
     setCurrentSlide(
@@ -36,17 +36,16 @@ export default function CustomCarousel() {
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [nextSlide]);
 
   return (
-    <div className="relative w-full h-screen bg-purple-900 overflow-hidden">
+    <div className="relative w-full h-full bg-purple-900 overflow-hidden">
       <div className="absolute inset-0">
         {carouselItems.map((item, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
           >
             <img
               src={item.image}
@@ -66,9 +65,8 @@ export default function CustomCarousel() {
           {carouselItems.map((_, index) => (
             <button
               key={index}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentSlide ? "bg-white w-4" : "bg-white/50"
-              }`}
+              className={`w-2 h-2 rounded-full transition-all ${index === currentSlide ? "bg-white w-4" : "bg-white/50"
+                }`}
               onClick={() => setCurrentSlide(index)}
             />
           ))}
