@@ -1,163 +1,139 @@
 "use client";
-
-import React, { useState, useMemo } from "react";
+import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+
+import { LoginProps } from "@/types/types";
+import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import toast from "react-hot-toast";
-
-import { Mail, Lock, Loader2 } from "lucide-react";
-import { FaGithub, FaGoogle } from "react-icons/fa";
-
 import { Button } from "../ui/button";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 import TextInput from "../FormInputs/TextInput";
 import PasswordInput from "../FormInputs/PasswordInput";
 import SubmitButton from "../FormInputs/SubmitButton";
 import Logo from "../global/Logo";
 import CustomCarousel from "../frontend/custom-carousel";
-
-import { LoginProps } from "@/types/types";
-
 export default function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
   const [loading, setLoading] = useState(false);
-  const [passErr, setPassErr] = useState("");
-
   const {
     handleSubmit,
     register,
     formState: { errors },
     reset,
   } = useForm<LoginProps>();
-
-  /**
-   * ✅ SAFE callbackUrl
-   * - must exist
-   * - must NOT point to /login
-   */
-  const callbackUrl = useMemo(() => {
-    const raw = searchParams.get("callbackUrl");
-    if (!raw) return "/dashboard";
-    if (raw.includes("/login")) return "/dashboard";
-    return raw;
-  }, [searchParams]);
-
+  const params = useSearchParams();
+  const returnUrl = params.get("callbackUrl") || "/dashboard";
+  const [passErr, setPassErr] = useState("");
+  const router = useRouter();
   async function onSubmit(data: LoginProps) {
-    if (loading) return;
-
     try {
       setLoading(true);
       setPassErr("");
-
-      const result = await signIn("credentials", {
+      console.log("Attempting to sign in with credentials:", data);
+      const loginData = await signIn("credentials", {
         ...data,
         redirect: false,
       });
-
-      if (!result || result.error) {
-        setPassErr("Invalid email or password");
-        toast.error("Invalid credentials");
-        return;
+      console.log("SignIn response:", loginData);
+      if (loginData?.error) {
+        setLoading(false);
+        toast.error("Sign-in error: Check your credentials");
+        setPassErr("Wrong Credentials, Check again");
+        // setShowNotification(true);
+      } else {
+        // Sign-in was successful
+        // setShowNotification(false);
+        reset();
+        setLoading(false);
+        toast.success("Login Successful");
+        setPassErr("");
+        router.push(returnUrl);
       }
-
-      reset();
-      toast.success("Login successful");
-      router.replace(callbackUrl);
-    } catch (err) {
-      console.error("Login error:", err);
-      toast.error("Unexpected error. Try again.");
-    } finally {
+    } catch (error) {
       setLoading(false);
+      console.error("Network Error:", error);
+      // toast.error("Its seems something is wrong with your Network");
     }
   }
-
   return (
-    <div className="w-full lg:grid h-screen lg:min-h-[600px] lg:grid-cols-2 relative">
+    <div className="w-full lg:grid h-screen lg:min-h-[600px] lg:grid-cols-2 relative ">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6 mt-10 md:mt-0">
           <div className="absolute left-1/3 top-14 md:top-5 md:left-5">
             <Logo />
           </div>
-
           <div className="grid gap-2 text-center mt-10 md:mt-0">
             <h1 className="text-3xl font-bold">Login to your Account</h1>
           </div>
+          <div className="">
+            <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+              <TextInput
+                register={register}
+                errors={errors}
+                label="Email Address"
+                name="email"
+                icon={Mail}
+                placeholder="email"
+              />
+              <PasswordInput
+                register={register}
+                errors={errors}
+                label="Password"
+                name="password"
+                icon={Lock}
+                placeholder="password"
+                forgotPasswordLink="/forgot-password"
+              />
+              {passErr && <p className="text-red-500 text-xs">{passErr}</p>}
+              <div>
+                <SubmitButton
+                  title="Sign In"
+                  loadingTitle="Loading Please wait.."
+                  loading={loading}
+                  className="w-full"
+                  loaderIcon={Loader2}
+                  showIcon={false}
+                />
+              </div>
+            </form>
+            <div className="flex items-center py-4 justify-center space-x-1 text-slate-900">
+              <div className="h-[1px] w-full bg-slate-200"></div>
+              <div className="uppercase">Or</div>
+              <div className="h-[1px] w-full bg-slate-200"></div>
+            </div>
 
-          <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-            <TextInput
-              register={register}
-              errors={errors}
-              label="Email Address"
-              name="email"
-              icon={Mail}
-              placeholder="email"
-            />
-
-            <PasswordInput
-              register={register}
-              errors={errors}
-              label="Password"
-              name="password"
-              icon={Lock}
-              placeholder="password"
-              forgotPasswordLink="/forgot-password"
-            />
-
-            {passErr && <p className="text-red-500 text-xs">{passErr}</p>}
-
-            <SubmitButton
-              title="Sign In"
-              loadingTitle="Signing in..."
-              loading={loading}
-              className="w-full"
-              loaderIcon={Loader2}
-              showIcon={false}
-            />
-          </form>
-
-          <div className="flex items-center py-4 justify-center space-x-1">
-            <div className="h-[1px] w-full bg-slate-200" />
-            <span className="uppercase text-sm">Or</span>
-            <div className="h-[1px] w-full bg-slate-200" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Button
+                onClick={() => signIn("google", { callbackUrl: returnUrl })}
+                variant={"outline"}
+                className="w-full"
+              >
+                <FaGoogle className="mr-2 w-6 h-6 text-red-500" />
+                Login with Google
+              </Button>
+              <Button
+                onClick={() => signIn("github", { callbackUrl: returnUrl })}
+                variant={"outline"}
+                className="w-full"
+              >
+                <FaGithub className="mr-2 w-6 h-6 text-slate-900 dark:text-white" />
+                Login with Github
+              </Button>
+            </div>
+            <p className="mt-6 text-center text-sm text-gray-500">
+              Not a Registered ?{" "}
+              <Link
+                href="/register"
+                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              >
+                Create Account
+              </Link>
+            </p>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => signIn("google", { callbackUrl })}
-            >
-              <FaGoogle className="mr-2 w-5 h-5 text-red-500" />
-              Google
-            </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => signIn("github", { callbackUrl })}
-            >
-              <FaGithub className="mr-2 w-5 h-5" />
-              GitHub
-            </Button>
-          </div>
-
-          <p className="mt-6 text-center text-sm text-gray-500">
-            Not registered?{" "}
-            <Link
-              href="/register"
-              className="font-semibold text-indigo-600 hover:text-indigo-500"
-            >
-              Create Account
-            </Link>
-          </p>
         </div>
       </div>
-
       <div className="hidden bg-muted lg:block relative">
         <CustomCarousel />
       </div>

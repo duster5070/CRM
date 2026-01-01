@@ -5,6 +5,7 @@ import { db } from "@/prisma/db";
 import { FileProps, FolderProps, TaskProps, UserFolder } from "@/types/types";
 import { TaskStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { UTApi } from "uploadthing/server";
 
 export async function createFolder(data: FolderProps) {
   try {
@@ -21,15 +22,16 @@ export async function createFile(data: {
   name: string;
   type: string;
   size: number;
-  url?: string;
+  url: string;
   folderId: string;
   userId: string;
+  key: string;
 }) {
   try {
     console.log("createFile received data:", data);
 
     // Validate required fields
-    if (!data.name || !data.folderId || !data.userId) {
+    if (!data.name || !data.folderId || !data.userId ) {
       throw new Error("Missing required fields");
     }
 
@@ -38,7 +40,8 @@ export async function createFile(data: {
         name: data.name,
         type: data.type,
         size: data.size,
-        url: data.url, // Include if you have this field
+        url: data.url,
+        key: data.key, // Include if you have this field
         folderId: data.folderId,
         userId: data.userId,
       }
@@ -108,23 +111,31 @@ export async function getUserFolders(userId: string | undefined) {
 
 
 
-
-
-
 export async function deleteFolder(id: string) {
   try {
-    // This will log in your development terminal
-  
     console.log("SERVER: Targeted folder ID:", id);
 
-    const deletedFolder = await db.folder.delete({
-      where: {
-        id,
-      },
+   
+    const files = await db.file.findMany({
+      where: { folderId: id },
+    });
+
+   
+    if (files.length > 0) {
+      await utapi.deleteFiles(files.map((file) => file.key));
+    }
+
+  
+    await db.file.deleteMany({
+      where: { folderId: id },
     });
 
 
+    const deletedFolder = await db.folder.delete({
+      where: { id },
+    });
 
+ 
     revalidatePath("/project/file-manager");
 
     return {
@@ -132,25 +143,37 @@ export async function deleteFolder(id: string) {
       data: deletedFolder,
     };
   } catch (error) {
-    console.log("SERVER: Error during deletion:", error);
+    console.error("SERVER: Error during folder deletion:", error);
     return {
       ok: false,
       data: null,
     };
   }
 }
+
+
+
+const utapi = new UTApi(); // Initialize UploadThing API client
 export async function deleteFile(id: string) {
   try {
-    // This will log in your development terminal
-  
     console.log("SERVER: Targeted file ID:", id);
 
-    const deletedFile = await db.file.delete({
-      where: {
-        id,
-      },
+  
+    const file = await db.file.findUnique({
+      where: { id },
     });
 
+    if (!file) {
+      throw new Error("File not found");
+    }
+
+  
+    await utapi.deleteFiles(file.key);
+
+  
+    const deletedFile = await db.file.delete({
+      where: { id },
+    });
 
 
     revalidatePath("/project/file-manager");
@@ -160,7 +183,7 @@ export async function deleteFile(id: string) {
       data: deletedFile,
     };
   } catch (error) {
-    console.log("SERVER: Error during deletion:", error);
+    console.error("SERVER: Error during deletion:", error);
     return {
       ok: false,
       data: null,
