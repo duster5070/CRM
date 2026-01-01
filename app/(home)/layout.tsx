@@ -11,7 +11,7 @@ export default async function HomeLayout({
 }) {
   const session = await getServerSession(authOptions);
   return (
-    <div className="bg-white antialiased min-h-screen w-full">
+    <div className="bg-background antialiased min-h-screen w-full">
       <SiteHeader session={session} />
       <main className="w-full">
         {children}

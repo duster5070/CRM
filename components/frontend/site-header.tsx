@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 
 import Logo from "../global/Logo";
 import { Session } from "next-auth";
@@ -20,6 +21,7 @@ const navItems = [
 
 export default function SiteHeader({ session }: { session: Session | null }) {
   const [activeSection, setActiveSection] = useState("home");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -30,13 +32,14 @@ export default function SiteHeader({ session }: { session: Session | null }) {
       const element = document.getElementById(id);
       if (!element) return;
 
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(id);
-          }
-        });
-      },
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(id);
+            }
+          });
+        },
         {
           rootMargin: "-50% 0px -50% 0px",
           threshold: 0,
@@ -63,24 +66,28 @@ export default function SiteHeader({ session }: { session: Session | null }) {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   };
 
   return (
-    <nav className="sticky top-5 z-50 bg-[var(--pika-navBackground)] backdrop-blur-md text-white p-4 rounded-full mx-[10rem] px-[3.75rem] py-1 border border-gray-300">
-      <div className="flex  justify-between items-center py-[16px]">
+    <nav className="sticky top-5 z-50 bg-glass backdrop-blur-md text-white p-4 rounded-full mx-4 sm:mx-8 md:mx-[10rem] px-4 sm:px-6 md:px-[3.75rem] py-1 border border-gray-300">
+      <div className="flex justify-between items-center py-2 sm:py-4">
         <div className="flex items-center space-x-4">
-          <Logo variant={mounted && resolvedTheme === "dark" ? "dark" : "light"} />
+          <Logo />
         </div>
-        <ul className="flex space-x-[51px] cursor-pointer text-2xl font-semibold">
+        <ul className="hidden md:flex space-x-4 lg:space-x-[51px] cursor-pointer text-lg lg:text-2xl font-semibold">
           {navItems.map(({ id, label, href }) => (
             <li key={id}>
               <Link
                 href={href}
                 onClick={(e) => handleClick(e, href)}
-                className={activeSection === id ? "text-[var(--pika-secondary)] underline font-bold" : "text-[var(--pika-primary)]"}
+                className={
+                  activeSection === id
+                    ? "text-secondaryBlue underline font-bold"
+                    : "text-primary"
+                }
               >
                 {label}
               </Link>
@@ -88,32 +95,99 @@ export default function SiteHeader({ session }: { session: Session | null }) {
           ))}
         </ul>
         {session ? (
-          <Button asChild variant={'ghost'} className="flex items-center space-x-2 py-[32px] rounded-full">
-            <Link href="/dashboard">
-              <Avatar>
-                <AvatarImage
-                  src={session?.user?.image ?? ""}
-                  alt={session?.user?.name ?? ""}
-                />
-                <AvatarFallback>
-                  {getInitials(session?.user?.name)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="ml-3 text-[var(--pika-primary)]">Dashboard</span>
-            </Link>
-          </Button>
+          <>
+            <Button
+              asChild
+              variant={"ghost"}
+              className="flex items-center space-x-2 py-2 sm:py-[32px] rounded-full"
+            >
+              <Link
+                href="/dashboard"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Avatar>
+                  <AvatarImage
+                    src={session?.user?.image ?? ""}
+                    alt={session?.user?.name ?? ""}
+                  />
+                  <AvatarFallback>
+                    {getInitials(session?.user?.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="ml-3 text-primary">Dashboard</span>
+              </Link>
+            </Button>
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </>
         ) : (
-          <div className="hidden md:flex items-center space-x-4">
-            <Button asChild variant="default" className="py-[16px] px-[16px] text-lg">
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button asChild variant="outline" className="text-[var(--pika-primary)]">
-              <Link href="/register">Signup</Link>
-            </Button>
-          </div>
+          <>
+            <div className="hidden md:flex items-center space-x-4">
+              <Button
+                asChild
+                variant="default"
+                className="py-2 sm:py-[16px] px-4 sm:px-[16px] text-base sm:text-lg"
+              >
+                <Link href="/login">Log in</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="text-primary py-2 sm:py-3 px-4 sm:px-6"
+              >
+                <Link href="/register">Signup</Link>
+              </Button>
+            </div>
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </>
         )}
       </div>
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-background border border-gray-300 rounded-b-3xl mt-2 p-4">
+          <ul className="flex flex-col space-y-4 text-lg font-semibold">
+            {navItems.map(({ id, label, href }) => (
+              <li key={id}>
+                <Link
+                  href={href}
+                  onClick={(e) => {
+                    handleClick(e, href);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`block py-2 ${activeSection === id ? "text-secondaryBlue underline font-bold" : "text-primary"}`}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {!session && (
+            <div className="flex flex-col space-y-2 mt-4">
+              <Button asChild variant="default" className="w-full py-3 text-lg">
+                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  Log in
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="w-full text-primary">
+                <Link
+                  href="/register"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Signup
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
-
   );
 }

@@ -1,10 +1,11 @@
 'use client';
-import Link from "next/link";
-import React from "react";
+
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import React from "react";
 
-export default function Logo({
+export default function LogoBig({
   size = "md",
 }: {
   size?: "sm" | "md" | "lg";
@@ -22,9 +23,9 @@ export default function Logo({
     return (
       <Link href={"/#home"} className="flex items-center space-x-2">
           <img
-            src="/Logo.svg"
+            src="/Logo-bigger.svg"
             alt="CRM Logo"
-            className="h-8 inline-block mr-2"
+            className="inline-block mr-2"
           />
       </Link>
     );
@@ -32,9 +33,9 @@ export default function Logo({
     return (
       <Link href={"/#home"} className="flex items-center space-x-2">
           <img
-            src="/Logo-Dark.svg"
+            src="/Logo-bigger-Dark.svg"
             alt="CRM Logo"
-            className="h-8 inline-block mr-2"
+            className="inline-block mr-2"
           />
       </Link>
     );

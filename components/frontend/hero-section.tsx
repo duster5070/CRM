@@ -1,23 +1,20 @@
-'use client'
+"use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import ParticleAssemble from "../ui/FramerShatter";
 import { ArrowRight } from "lucide-react";
 
 import { Session } from "next-auth";
 
 export default function HeroSection({ session }: { session: Session | null }) {
-
-
   return (
     <section
       id="home"
       className="py-20 text-center"
       style={{
-        background:
-          'linear-gradient(to top, rgba(246, 250, 253, 0.8), transparent), url("/Background pattern.svg")',
+        background:'url("/Background pattern.svg")',
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -31,7 +28,7 @@ export default function HeroSection({ session }: { session: Session | null }) {
           duration={0.6}
           delay={20}
         >
-          <span className="text-[var(--pika-secondary)] border rounded-full bg-[var(--pika-background)] px-4 py-2 inline-flex items-center gap-2">
+          <span className="text-secondaryBlue border rounded-full bg-blue10 px-4 py-2 inline-flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -55,12 +52,13 @@ export default function HeroSection({ session }: { session: Session | null }) {
         </ParticleAssemble>
       </div>
       <div className="container mx-auto text-center w-full">
-        <h1 className="text-[6rem] mb-4 w-[60rem] text-primary mx-auto relative">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] mb-4 w-full max-w-4xl text-primary mx-auto relative">
           Chaos to Clarity in One Click
           <motion.div
-            initial={{ x: '100%', opacity: 0 }}
+            initial={{ x: "100%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
+            className="hidden md:block"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -118,11 +116,11 @@ export default function HeroSection({ session }: { session: Session | null }) {
             </svg>
           </motion.div>
         </h1>
-        <p className="text-primary mx-auto w-[488px] text-[16px] mt-8 mb-12">
+        <p className="text-primary mx-auto w-full max-w-md text-base sm:text-lg mt-8 mb-12">
           Empower your team with tools to organize tasks, track progress, and
           collaborate seamlessly--all in one intuitive platform
         </p>
-        <div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button
             asChild
             size="lg"
@@ -133,25 +131,22 @@ export default function HeroSection({ session }: { session: Session | null }) {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <button className="bg-transparent border border-primary text-primary px-[40px] py-[14px] rounded-full ml-4 hover:bg-[var(--pika-background)] hover:text-[var(--pika-secondary)] transition">
+          <button className="bg-transparent border border-primary text-primary px-6 sm:px-10 py-3 rounded-full hover:bg-blue10 transition">
             Explore Features
           </button>
         </div>
         <motion.div
-          initial={{ y: '100%', opacity: 0 }}
+          initial={{ y: "100%", opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-
           <img
             src="/screen-shot-1.svg"
             alt="screen shot"
-            className="mx-auto mt-16"
+            className="mx-auto mt-16 w-full max-w-4xl h-auto"
           />
         </motion.div>
       </div>
     </section>
-
   );
 }
-
