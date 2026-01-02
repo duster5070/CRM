@@ -104,7 +104,7 @@ export default function TaskBoard({
     >
       <div className="mb-6 flex items-center justify-between flex-wrap">
         <div className="">
-          <h1 className="text-3xl font-bold mb-2">{activeModule.name}</h1>
+          <h1 className="text-3xl font-bold mb-2 dark:text-white">{activeModule.name}</h1>
           <div className="flex items-center">
             <Progress value={percentageCompletion} className="w-64 mr-4" />
             <span className="text-sm text-gray-500">

@@ -99,7 +99,7 @@ const ModuleForm = ({
             <Pen className="h-4 w-4 text-green-500" />
           </button>
         ) : (
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full dark:bg-gray-900">
             <Plus className="mr-2 h-4 w-4" />
             Add New Module
           </Button>

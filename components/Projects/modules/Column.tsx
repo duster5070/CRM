@@ -24,15 +24,15 @@ export default function Column({
     id: status,
   });
   return (
-    <div className="rounded-tl-lg rounded-tr-lg  border overflow-hidden">
+    <div className="rounded-tl-lg rounded-tr-lg  border overflow-hidden bg-background text-black">
       <div
         className={cn(
           "flex flex-row items-center justify-between space-y-0  px-3 ",
           status === "TODO"
-            ? "bg-orange-50"
+            ? "bg-orange-50 dark:bg-orange-300"
             : status === "INPROGRESS"
-            ? "bg-blue-50"
-            : "bg-green-50"
+            ? "bg-blue-50 dark:bg-blue-300"
+            : "bg-green-50 dark:bg-green-300"
         )}
       >
         <h2 className="text-sm font-bold">

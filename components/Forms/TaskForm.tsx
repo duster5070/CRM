@@ -83,8 +83,8 @@ const TaskForm = ({
                 </Button>
               ) : (
                 
-                <Button variant={isDefault ? "default" : "ghost"} className="">
-                  <Plus className="mr-2 h-4 w-4" />
+                <Button variant={isDefault ? "default" : "ghost"} className="bg-background text-primary rounded-md w-8 h-8">
+                  <Plus className=" h-4 w-4" />
                 {isDefault && <span>Add New Task</span>}
                 </Button>
               

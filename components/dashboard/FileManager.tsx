@@ -123,7 +123,7 @@ export function FileManager({
   };
 
   return (
-    <div className="flex h-screen dark:bg-[#1b1b1b] dark:text-white bg-white font-sans text-slate-900">
+    <div className="flex h-screen dark:bg-gray-900 dark:text-white bg-white font-sans text-slate-900">
       <aside className="w-56 border-r border-slate-100 flex flex-col">
         <div className="p-4 flex items-center justify-between">
           <h2 className="text-lg font-bold tracking-tight">Folders</h2>
@@ -285,7 +285,9 @@ export function FileManager({
                     >
                       {currentFolder?.sizeMB} MB
                     </span>{" "}
-                    of {totalMB / 1024} GB used
+                    <span className="dark:text-black">
+                      of {totalMB / 1024} GB used
+                    </span>
                   </p>
                   <Button
                     variant="link"
@@ -380,7 +382,7 @@ export function FileManager({
                     "group relative p-4 rounded-2xl transition-all duration-200 text-left border",
                     selectedFile?.id === file.id
                       ? "bg-blue-50/50 border-blue-200 ring-1 ring-blue-200"
-                      : "bg-white border-slate-50 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100"
+                      : "bg-white border-slate-50 hover:border-slate-200 hover:shadow-md hover:shadow-slate-100"
                   )}
                 >
                   <div className="flex justify-between items-start mb-3">

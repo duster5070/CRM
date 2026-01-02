@@ -10,7 +10,7 @@ export default function BackBtn({ title = "Back" }: { title?: string }) {
     <Button
       onClick={() => router.back()}
       variant="outline"
-      className="mb-4"
+      className="mb-4 "
     >
       <ChevronLeft className="mr-2 h-4 w-4" />
       {title}

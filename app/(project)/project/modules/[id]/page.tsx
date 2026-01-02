@@ -49,8 +49,8 @@ export default async function Page({
     percentageCompletion = (completedTasks/allTasks)*100
   }
   return (
-    <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-8">
-      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow min-h-96">
+    <div className="bg-gradient-to-b from-gray-900 to-gray-500 p-8">
+      <div className="max-w-7xl mx-auto bg-white dark:bg-gradient-to-br from-gray-600 to-gray-900 rounded-xl shadow min-h-96">
          <div className="flex items-center p-4 justify-between">
                 <BackBtn title="Back to Project"/>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
@@ -66,10 +66,11 @@ export default async function Page({
                 <Link
                   href={`/project/modules/${module.id}?projectId=${module.projectId}`}
                   key={module.id}
-                  className={`p-2 mb-2 cursor-pointer rounded-lg flex items-center ${
+                  className={`p-2 mb-2 cursor-pointer rounded-lg flex items-center
+                      ${
                     activeModule?.id === module.id
-                      ? "bg-blue-100"
-                      : "hover:bg-gray-100"
+                      ? "bg-blue-100 dark:bg-gray-600"
+                      : "hover:bg-gray-100 dark:hover:bg-gray-900"
                   }`}
                 >
                     { activeModule?.id === module.id?
@@ -86,7 +87,7 @@ export default async function Page({
               userName={user.name}
             />
           </div>
-          <div className="col-span-full lg:col-span-9 bg-gray-100 px-8 py-4">
+          <div className="col-span-full lg:col-span-9 dark:bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg bg-gray-100 px-8 py-4 dark:bg-gray-900">
             <div className="flex-1 p-8">
               {activeModule && (
                 <>
