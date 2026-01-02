@@ -93,41 +93,41 @@ export default function SiteHeader({ session }: { session: Session | null }) {
             </li>
           ))}
         </ul>
+        <div className="flex gap-5 items-center">
+
+          {/* Theme Toggle - Large Screens Only */}
+          <button
+            className="hidden lg:flex p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 items-center justify-center"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label="Toggle theme"
+          >
+            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </button>
         {session ? (
           <>
-            <div className="hidden lg:flex items-center space-x-4">
-              {/* Theme Toggle - Large Screens Only */}
-              <button
-                className="p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 items-center justify-center"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                aria-label="Toggle theme"
+            <Button
+              asChild
+              variant={"ghost"}
+              className="hidden lg:flex items-center space-x-2 py-2 sm:py-[32px] rounded-full"
+            >
+              <Link
+                href="/dashboard"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </button>
-              <Button
-                asChild
-                variant={"ghost"}
-                className="items-center space-x-2 py-2 sm:py-[32px] rounded-full"
-              >
-                <Link
-                  href="/dashboard"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Avatar>
-                    <AvatarImage
-                      src={session?.user?.image ?? ""}
-                      alt={session?.user?.name ?? ""}
-                    />
-                    <AvatarFallback>
-                      {getInitials(session?.user?.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="ml-3 text-primary">Dashboard</span>
-                </Link>
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
+                <Avatar>
+                  <AvatarImage
+                    src={session?.user?.image ?? ""}
+                    alt={session?.user?.name ?? ""}
+                  />
+                  <AvatarFallback>
+                    {getInitials(session?.user?.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="ml-3 text-primary">Dashboard</span>
+              </Link>
+            </Button>
+            <div className="lg:hidden flex items-center gap-2">
               {/* Theme Toggle - Medium and Small Screens */}
               <button
                 className="p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 flex items-center justify-center relative"
@@ -160,15 +160,6 @@ export default function SiteHeader({ session }: { session: Session | null }) {
         ) : (
           <>
             <div className="hidden lg:flex items-center space-x-4">
-              {/* Theme Toggle - Large Screens Only */}
-              <button
-                className="p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 items-center justify-center"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                aria-label="Toggle theme"
-              >
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </button>
               <Button
                 asChild
                 variant="default"
@@ -203,6 +194,7 @@ export default function SiteHeader({ session }: { session: Session | null }) {
             </div>
           </>
         )}
+        </div>
       </div>
       {isMobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 right-0 bg-background border border-gray-300 rounded-b-3xl mt-2 p-4">

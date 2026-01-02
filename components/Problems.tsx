@@ -40,9 +40,9 @@ export default function Problems() {
   return (
     <section
       id="problems"
-      className="py-12 sm:py-16 md:py-24 bg-background overflow-hidden"
+      className="py-12 sm:py-16 md:py-20 lg:py-24 bg-background overflow-hidden"
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2 md:px-4 lg:px-6">
         {/* Mobile Layout - Simplified List */}
         <div className="md:hidden">
           <h2 className="text-3xl sm:text-4xl text-primary text-center mb-6 font-bold">
@@ -79,7 +79,8 @@ export default function Problems() {
               </>
             ) : (
               <>
-                Show {problemData.length - topProblems.length} More Problems <ChevronDown size={18} />
+                Show {problemData.length - topProblems.length} More Problems{" "}
+                <ChevronDown size={18} />
               </>
             )}
           </button>
@@ -105,11 +106,11 @@ export default function Problems() {
 
         {/* Desktop Layout - Original Complex Grid */}
         <div className="hidden md:block relative">
-          <div className="relative grid grid-cols-[0.5fr_repeat(7,1fr)_0.5fr] lg:grid-cols-[0.5fr_repeat(7,1fr)_0.5fr]">
+          <div className="relative grid grid-cols-[0.3fr_repeat(7,1fr)_0.3fr] md:grid-cols-[0.5fr_repeat(7,1fr)_0.5fr] lg:grid-cols-[0.5fr_repeat(7,1fr)_0.5fr]">
             {Array.from({ length: 9 }).map((_, i) => (
               <div
                 key={`r0-${i}`}
-                className={`border-b border-gray-200 min-h-[100px] ${i !== 8 ? "border-r" : ""}`}
+                className={`border-b border-gray-200 min-h-[80px] md:min-h-[100px] ${i !== 8 ? "border-r" : ""}`}
               />
             ))}
 
@@ -125,7 +126,7 @@ export default function Problems() {
               title={problemData[7].title}
             />
             <div className="col-span-5 row-span-2 flex items-center justify-center border-b border-r border-gray-200 bg-background relative z-0">
-              <h2 className="text-6xl md:text-8xl lg:text-[6.5rem] text-primary text-center px-4">
+              <h2 className="text-4xl md:text-6xl lg:text-8xl xl:text-[6.5rem] text-primary text-center px-2 md:px-4">
                 A lot of Problems
               </h2>
             </div>
@@ -155,7 +156,7 @@ export default function Problems() {
             {Array.from({ length: 9 }).map((_, i) => (
               <div
                 key={`r5-${i}`}
-                className={`min-h-[100px] ${i !== 8 ? "border-r border-gray-200" : ""}`}
+                className={`min-h-[80px] md:min-h-[100px] ${i !== 8 ? "border-r border-gray-200" : ""}`}
               />
             ))}
           </div>
@@ -211,16 +212,16 @@ function ProblemCell({
 
   return (
     <div
-      className={`group relative flex flex-col items-center justify-center p-6 border-b border-gray-200 min-h-[200px] bg-background transition-all duration-300 hover:z-20 ${!noBorderRight ? "border-r" : ""}`}
+      className={`group relative flex flex-col items-center justify-center p-3 md:p-6 border-b border-gray-200 min-h-[150px] md:min-h-[200px] bg-background transition-all duration-300 hover:z-20 ${!noBorderRight ? "border-r" : ""}`}
     >
       <div className="absolute inset-0 bg-background opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-1" />
 
       <div className="absolute inset-[-1px] border-2 border-transparent group-hover:border-secondaryBlue transition-colors duration-300 pointer-events-none z-10" />
 
-      <div className="mb-4 text-gray-400 group-hover:text-secondaryBlue transition-colors relative z-0">
-        <Icon size={40} strokeWidth={1.2} />
+      <div className="mb-2 md:mb-4 text-gray-400 group-hover:text-secondaryBlue transition-colors relative z-0">
+        <Icon size={36} strokeWidth={1.2} />
       </div>
-      <p className="text-base font-medium text-gray-500 text-center leading-tight transition-colors group-hover:text-secondaryBlue relative z-0">
+      <p className="text-sm md:text-base font-medium text-gray-500 text-center leading-tight transition-colors group-hover:text-secondaryBlue relative z-0 px-1">
         {title}
       </p>
     </div>
