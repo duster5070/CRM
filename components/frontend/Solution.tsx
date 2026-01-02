@@ -145,9 +145,9 @@ export default function Solution() {
       {/* Container to limit sticky behavior */}
       <div className="relative">
         {/* Tab Navigation - Sticky at top */}
-        <div className="pt-6 pb-0 sm:pb-[15rem] lg:pb-[48.5rem] mb-[50px] sticky sm:top-[5rem] lg:top-[7rem] z-20">
+        <div className="pt-6 pb-0 lg:pb-[48.5rem] md:pb-[22rem] lg:mb-[50px] md:mb-[125px] lg:top-[4.5rem] md:top-[5.5rem] sticky z-20"> {/* top done large and mid*/}
           <div className="flex flex-wrap justify-center gap-3">
-            {tabs.map((tab, index) => (
+            {tabs.map((tab) => (
               <Link
                 key={tab.id}
                 href={`#${tab.id}`}
@@ -162,11 +162,10 @@ export default function Solution() {
               </Link>
             ))}
           </div>
-          <div className="h-[100vh] absolute"></div>
         </div>
 
         {/* Stacked Screenshots */}
-        <div className="relative lg:mt-[-40%] sm:mt-[-1%] mt-[-10%]" ref={container}>
+        <div className="relative hidden lg:mt-[-44%] md:mt-[-48%] md:flex md:flex-col md:justify-start md:gap-[17rem]" ref={container}>
           {tabs.map((tab, index) => {
             const targetScale = 1 - (tabs.length - index) * 0.05;
             return (
@@ -174,7 +173,7 @@ export default function Solution() {
                 key={index}
                 i={index}
                 {...tab}
-                range={[index * 0.16666666667, 1]}
+                range={[index * (1 / tabs.length), 1]}
                 target={targetScale}
                 progress={scrollYProgress}
               />

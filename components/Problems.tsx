@@ -44,7 +44,7 @@ export default function Problems() {
     >
       <div className="container mx-auto px-2 md:px-4 lg:px-6">
         {/* Mobile Layout - Simplified List */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <h2 className="text-3xl sm:text-4xl text-primary text-center mb-6 font-bold">
             A lot of Problems
           </h2>
@@ -105,7 +105,7 @@ export default function Problems() {
         </div>
 
         {/* Desktop Layout - Original Complex Grid */}
-        <div className="hidden md:block relative">
+        <div className="hidden lg:block relative">
           <div className="relative grid grid-cols-[0.3fr_repeat(7,1fr)_0.3fr] md:grid-cols-[0.5fr_repeat(7,1fr)_0.5fr] lg:grid-cols-[0.5fr_repeat(7,1fr)_0.5fr]">
             {Array.from({ length: 9 }).map((_, i) => (
               <div
@@ -186,7 +186,7 @@ function ProblemCell({
 
   if (isMobile && isCompact) {
     return (
-      <div className="group relative flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 transition-all duration-300 hover:border-secondaryBlue hover:shadow-sm active:scale-[0.98]">
+      <div className="group relative flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 transition-all duration-300 hover:border-secondaryBlue hover:shadow-sm active:scale-[0.98]">
         <div className="flex-shrink-0 text-gray-400 group-hover:text-secondaryBlue transition-colors">
           <Icon size={24} strokeWidth={1.2} />
         </div>

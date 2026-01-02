@@ -71,8 +71,8 @@ export default function SiteHeader({ session }: { session: Session | null }) {
   };
 
   return (
-    <nav className="sticky top-5 z-50 bg-glass backdrop-blur-md text-white p-4 rounded-full mx-4 md:mx-8 lg:mx-[10rem] px-4 sm:px-6 md:px-[3.75rem] py-1 border border-gray-300">
-      <div className="flex justify-between items-center py-2 sm:py-4">
+    <nav className="sticky top-5 z-50 bg-glass backdrop-blur-md text-white rounded-full mx-4 md:mx-8 lg:mx-[18rem] px-4 sm:px-6 md:px-[2rem] border border-gray-300">
+      <div className="flex justify-between items-center  sm:py-3">
         <div className="flex items-center space-x-4">
           <Logo />
         </div>
