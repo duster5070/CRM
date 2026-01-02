@@ -67,13 +67,13 @@ export default function HowItWorks() {
     };
   }, [isDragging, handleDragEnd]);
   return (
-    <section id="howItWorks" className="py-20 bg-[var(--pika-background)]">
-      <div className="container mx-auto text-center mb-16">
+    <section id="howItWorks" className="py-20 bg-background">
+      <div className="container mx-auto text-center mb-4 sm:mb-8 md:mb-12 lg:mb-16">
         <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[105px] text-primary text-center px-4 font-bold">
           How It Works
         </h2>
         <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-[60px] text-primary">
-          Get Started in <span className="text-[var(--pika-secondary)]">3</span>{" "}
+          Get Started in <span className="text-secondaryBlue">3</span>{" "}
           Simple Steps
         </h3>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 py-2">
@@ -83,7 +83,7 @@ export default function HowItWorks() {
         </div>
       </div>
 
-      <div className="relative flex items-center justify-center min-h-[700px]">
+      <div className="relative flex items-center justify-center min-h-[400px] sm:min-h-[500px] md:min-h-[600px] lg:min-h-[700px]">
         <div className="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:w-[490px] h-auto lg:h-[636px]">
           {steps.map((step, index) => (
             <StackedCard
