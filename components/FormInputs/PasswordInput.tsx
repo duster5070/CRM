@@ -40,7 +40,7 @@ export default function PasswordInput({
         <div className="flex items-center justify-between w-full">
           <label
             htmlFor="password"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 text-primary"
           >
             {label}
           </label>
