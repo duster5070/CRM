@@ -159,7 +159,7 @@ export default function ProjectBanner({
             onClick={() => setEditing(true)}
             variant="link"
             size="icon"
-            className="group-hover:opacity-100 opacity-0 ml-4 transition-opacity"
+            className="group-hover:opacity-100 opacity-0  transition-opacity"
           >
             <Pen className="h-4 w-4 text-white" />
           </Button>
