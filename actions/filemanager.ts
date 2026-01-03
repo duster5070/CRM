@@ -1,5 +1,4 @@
-import { File } from "./../node_modules/.prisma/client/index.d";
-("use server");
+"use server";
 
 import { db } from "@/prisma/db";
 import { FileProps, FolderProps, TaskProps, UserFolder } from "@/types/types";
