@@ -10,10 +10,10 @@ import { revalidatePath } from "next/cache";
 export async function createPayment(data: PaymentProps) {
   try {
     const payment = await db.payment.create({
-    data: {
-      ...data,
-      invoiceNumber: generateInvoiceNumber(),
-    }
+      data: {
+        ...data,
+        invoiceNumber: generateInvoiceNumber(),
+      },
     });
 
     revalidatePath("/dashboard/projects");
@@ -24,45 +24,45 @@ export async function createPayment(data: PaymentProps) {
   }
 }
 
-export async function getInvoiceById(id:string) {
+export async function getInvoiceById(id: string) {
   try {
     const payment = await db.payment.findUnique({
-    where:{id}
+      where: { id },
     });
 
-    if(!payment){
+    if (!payment) {
       return null;
     }
 
     const client = await db.user.findUnique({
-    where:{
-      id:payment?.clientId,
-      role: "CLIENT"
-    },
-    select:{
-          name:true,
-          phone:true,
-          email:true,
-          companyName:true,
-          companyDescription:true
-      }
+      where: {
+        id: payment?.clientId,
+        role: "CLIENT",
+      },
+      select: {
+        name: true,
+        phone: true,
+        email: true,
+        companyName: true,
+        companyDescription: true,
+      },
     });
     const user = await db.user.findUnique({
-    where:{
-      id:payment?.userId,
-      role: "USER"
-    },
-    select:{
-          name:true,
-          phone:true,
-          email:true,
-          companyName:true,
-          companyDescription:true,
-          userLogo:true
-      }
+      where: {
+        id: payment?.userId,
+        role: "USER",
+      },
+      select: {
+        name: true,
+        phone: true,
+        email: true,
+        companyName: true,
+        companyDescription: true,
+        userLogo: true,
+      },
     });
     return {
-      invoice:payment,
+      invoice: payment,
       user,
       client,
     } as InvoiceDetails;
@@ -71,7 +71,6 @@ export async function getInvoiceById(id:string) {
     return null;
   }
 }
-
 
 // READ ALL
 export async function getAllPayments() {
@@ -102,10 +101,7 @@ export async function getPaymentById(id: string) {
 }
 
 // UPDATE
-export async function updatePaymentById(
-  id: string,
-  data: Prisma.PaymentUncheckedUpdateInput
-) {
+export async function updatePaymentById(id: string, data: Prisma.PaymentUncheckedUpdateInput) {
   try {
     const updatedPayment = await db.payment.update({
       where: { id },

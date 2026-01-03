@@ -10,12 +10,7 @@ type CustomButtonProps = {
   className?: string;
 };
 
-export default function CustomButton({
-  title,
-  icon,
-  href,
-  className,
-}: CustomButtonProps) {
+export default function CustomButton({ title, icon, href, className }: CustomButtonProps) {
   const Icon = icon;
   return (
     <>

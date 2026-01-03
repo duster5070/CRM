@@ -8,7 +8,8 @@ import { revalidatePath } from "next/cache";
 import { UserRole } from "@prisma/client";
 import { PasswordProps } from "@/components/Forms/ChangePasswordForm";
 export async function createUser(data: UserProps) {
-  const { email,
+  const {
+    email,
     password,
     firstName,
     lastName,
@@ -20,7 +21,7 @@ export async function createUser(data: UserProps) {
     location,
     userId,
     companyName,
-    companyDescription
+    companyDescription,
   } = data;
   try {
     // Hash the PAASWORD
@@ -53,7 +54,7 @@ export async function createUser(data: UserProps) {
         location,
         userId,
         companyName,
-        companyDescription
+        companyDescription,
       },
     });
     revalidatePath("/dashboard/clients");
@@ -75,8 +76,6 @@ export async function createUser(data: UserProps) {
 }
 export type KitResponseData = { fkUsers: number; hsaUsers: number };
 
-
-
 export async function deleteUser(id: string) {
   try {
     const deletedUser = await db.user.delete({
@@ -94,7 +93,6 @@ export async function deleteUser(id: string) {
   }
 }
 
-
 export async function getUserById(id: string) {
   try {
     const user = await db.user.findUnique({
@@ -108,11 +106,10 @@ export async function getUserById(id: string) {
   }
 }
 export type ExistingUser = {
-  
   id: string;
   name: string;
   email: string;
-}
+};
 export async function getExistingUsers() {
   try {
     const users = await db.user.findMany({
@@ -123,7 +120,6 @@ export async function getExistingUsers() {
         id: true,
         name: true,
         email: true,
-      
       },
     });
     return users;
@@ -142,7 +138,7 @@ export async function getAllUsers() {
         image: true,
       },
       orderBy: {
-        name: 'asc',
+        name: "asc",
       },
     });
     return users;
@@ -169,13 +165,8 @@ export async function updateUserById(id: string, data: UserProps) {
   } catch (error) {
     console.log(error);
   }
-
-
 }
-export async function updateUserPassword(
-  id: string,
-  data: PasswordProps
-) {
+export async function updateUserPassword(id: string, data: PasswordProps) {
   try {
     const existingUser = await db.user.findUnique({
       where: { id },
@@ -189,10 +180,7 @@ export async function updateUserPassword(
       };
     }
 
-    const passwordMatch = await compare(
-      data.oldPassword,
-      existingUser.password
-    );
+    const passwordMatch = await compare(data.oldPassword, existingUser.password);
 
     if (!passwordMatch) {
       return {
@@ -226,7 +214,3 @@ export async function updateUserPassword(
     };
   }
 }
-
-
-
-

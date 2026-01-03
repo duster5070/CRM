@@ -58,13 +58,13 @@ export default function LoginForm() {
     }
   }
   return (
-    <div className="w-full lg:grid h-screen lg:min-h-[600px] lg:grid-cols-2 relative">
+    <div className="relative h-screen w-full lg:grid lg:min-h-[600px] lg:grid-cols-2">
       <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6 mt-10 md:mt-0">
-          <div className="absolute left-1/2 -translate-x-1/2 top-14 md:top-5 lg:left-5 lg:translate-x-0">
+        <div className="mx-auto mt-10 grid w-[350px] gap-6 md:mt-0">
+          <div className="absolute left-1/2 top-14 -translate-x-1/2 md:top-5 lg:left-5 lg:translate-x-0">
             <Logo />
           </div>
-          <div className="grid gap-2 text-center mt-10 md:mt-16">
+          <div className="mt-10 grid gap-2 text-center md:mt-16">
             <h1 className="text-3xl font-bold">Login to your Account</h1>
           </div>
           <div className="">
@@ -86,7 +86,7 @@ export default function LoginForm() {
                 placeholder="password"
                 forgotPasswordLink="/forgot-password"
               />
-              {passErr && <p className="text-red-500 text-xs">{passErr}</p>}
+              {passErr && <p className="text-xs text-red-500">{passErr}</p>}
               <div>
                 <SubmitButton
                   title="Sign In"
@@ -98,19 +98,19 @@ export default function LoginForm() {
                 />
               </div>
             </form>
-            <div className="flex items-center py-4 justify-center space-x-1 text-slate-900">
+            <div className="flex items-center justify-center space-x-1 py-4 text-slate-900">
               <div className="h-[1px] w-full bg-slate-200"></div>
               <div className="uppercase">Or</div>
               <div className="h-[1px] w-full bg-slate-200"></div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <Button
                 onClick={() => signIn("google", { callbackUrl: returnUrl })}
                 variant={"outline"}
                 className="w-full"
               >
-                <FaGoogle className="mr-2 w-6 h-6 text-red-500" />
+                <FaGoogle className="mr-2 h-6 w-6 text-red-500" />
                 Login with Google
               </Button>
               <Button
@@ -118,7 +118,7 @@ export default function LoginForm() {
                 variant={"outline"}
                 className="w-full"
               >
-                <FaGithub className="mr-2 w-6 h-6 text-slate-900 dark:text-white" />
+                <FaGithub className="mr-2 h-6 w-6 text-slate-900 dark:text-white" />
                 Login with Github
               </Button>
             </div>
@@ -134,7 +134,7 @@ export default function LoginForm() {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block relative">
+      <div className="relative hidden lg:block">
         <CustomCarousel />
       </div>
     </div>

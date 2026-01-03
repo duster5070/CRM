@@ -11,7 +11,7 @@ import { set } from "date-fns";
 
 const Editor = dynamic(() => import("../Editor/advanced-editor"), {
   ssr: false,
-  loading: () => <div className="border p-4 rounded-xl animate-pulse h-64 bg-muted" />,
+  loading: () => <div className="h-64 animate-pulse rounded-xl border bg-muted p-4" />,
 });
 
 export type SelectOptionProps = {
@@ -21,7 +21,7 @@ export type SelectOptionProps = {
 export default function NotesForm({
   editingId,
   initialNotes,
-  isEditable
+  isEditable,
 }: {
   editingId?: string | undefined;
   initialNotes?: string | undefined | null;
@@ -57,7 +57,7 @@ export default function NotesForm({
   return (
     <form className="" onSubmit={handleSubmit(updateDescription)}>
       <div className="grid gap-3">
-        <Editor  isEditable={isEditable} initialValue={content} onChange={setContent} />
+        <Editor isEditable={isEditable} initialValue={content} onChange={setContent} />
         {isEditable && <SubmitButton size={"sm"} title="Update" loading={loading} />}
       </div>
     </form>

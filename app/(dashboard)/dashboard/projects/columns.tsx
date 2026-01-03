@@ -21,8 +21,7 @@ export const columns: ColumnDef<Project>[] = [
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -70,9 +69,7 @@ export const columns: ColumnDef<Project>[] = [
     header: "Portfolio",
     cell: ({ row }) => {
       const project = row.original;
-      return (
-        <PublicityBtn id={project.id} status={project.isPublic}/>
-      );
+      return <PublicityBtn id={project.id} status={project.isPublic} />;
     },
   },
   {

@@ -84,10 +84,7 @@ export const authOptions: NextAuthOptions = {
           //Check if Password is correct
           if (existingUser && existingUser.password) {
             // if user exists and password exists
-            passwordMatch = await compare(
-              credentials.password,
-              existingUser.password
-            );
+            passwordMatch = await compare(credentials.password, existingUser.password);
           }
           if (!passwordMatch) {
             // console.log("Password incorrect");

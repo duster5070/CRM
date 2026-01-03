@@ -9,7 +9,7 @@ const StarRating: React.FC<StarRatingProps> = ({ count }) => {
   return (
     <div className="flex items-center gap-2">
       {Array.from({ length: count }, (_, index) => (
-        <FaStar className="text-orange-400 w-5 h-5" key={index} />
+        <FaStar className="h-5 w-5 text-orange-400" key={index} />
       ))}
     </div>
   );

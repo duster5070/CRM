@@ -1,78 +1,86 @@
-"use client"
+"use client";
 
-import { InvoiceDetails } from '@/types/types'
-import React from 'react'
+import { InvoiceDetails } from "@/types/types";
+import React from "react";
 import { getInvoiceById } from "@/actions/payments";
 import { Button } from "@/components/ui/button";
 import { getNormalDate } from "@/lib/getNormalDate";
 import { ChevronLeft, CloudDownload, Mail, Printer } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { useReactToPrint } from "react-to-print"; 
+import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
-import { sendEmail } from '@/actions/emails';
-import toast from 'react-hot-toast';
+import { sendEmail } from "@/actions/emails";
+import toast from "react-hot-toast";
 
-
-
-export const Invoice = ({invoiceDetails,project,role}:{invoiceDetails:InvoiceDetails,project:string,role:string}) => {
+export const Invoice = ({
+  invoiceDetails,
+  project,
+  role,
+}: {
+  invoiceDetails: InvoiceDetails;
+  project: string;
+  role: string;
+}) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
-
-
   const [loading, setLoading] = React.useState(false);
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
-    if (!baseUrl) {
-      throw new Error("NEXT_PUBLIC_APP_URL is not defined");
-    }
-    const invoiceLink = `${baseUrl}/project/invoice/${invoiceDetails?.invoice.id}?project=${project}`
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_APP_URL is not defined");
+  }
+  const invoiceLink = `${baseUrl}/project/invoice/${invoiceDetails?.invoice.id}?project=${project}`;
   const handleSendEmail = async () => {
-   
     setLoading(true);
-    try{
-      console.log("start sending email"+invoiceDetails);
-  const res =  await sendEmail(invoiceDetails,invoiceLink);
- 
+    try {
+      console.log("start sending email" + invoiceDetails);
+      const res = await sendEmail(invoiceDetails, invoiceLink);
 
-setLoading(false);
-toast.success("Email sent successfully");
-
-    }
-    catch(error){
+      setLoading(false);
+      toast.success("Email sent successfully");
+    } catch (error) {
       console.error(error);
       setLoading(false);
       toast.error("Something went wrong");
     }
-  }
+  };
 
   return (
-      <div className="max-w-2xl mx-auto p-8" >
-      <div className="flex justify-between items-center py-3">
+    <div className="mx-auto max-w-2xl p-8">
+      <div className="flex items-center justify-between py-3">
         <Button variant="outline" className="mb-4" asChild>
           <Link href={`/project/${project}`} className="flex items-center">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Project
           </Link>
         </Button>
-        <div className=" flex justify-end gap-x-2">
-
+        <div className="flex justify-end gap-x-2">
           {role === "USER" && (
-            <button disabled={loading} onClick={() => handleSendEmail()} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-           {!loading &&  <Mail className="shrink-0 size-4" />}
-            {loading ? "Sending..." : "Send to Client"}
-          </button>
+            <button
+              disabled={loading}
+              onClick={() => handleSendEmail()}
+              className="shadow-2xs focus:outline-hidden inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-transparent dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+            >
+              {!loading && <Mail className="size-4 shrink-0" />}
+              {loading ? "Sending..." : "Send to Client"}
+            </button>
           )}
-      
-          
-          <button onClick={reactToPrintFn} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-            <Printer className="shrink-0 size-4" />
+
+          <button
+            onClick={reactToPrintFn}
+            className="focus:outline-hidden inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+          >
+            <Printer className="size-4 shrink-0" />
             Print
           </button>
         </div>
       </div>
-      <div ref={contentRef} className="relative flex flex-col bg-white shadow-lg rounded-xl pointer-events-auto dark:bg-neutral-800">
-        <div className="relative overflow-hidden min-h-32 bg-gray-900 text-center rounded-t-xl dark:bg-neutral-950">
+      <div
+        ref={contentRef}
+        className="pointer-events-auto relative flex flex-col rounded-xl bg-white shadow-lg dark:bg-neutral-800"
+      >
+        <div className="relative min-h-32 overflow-hidden rounded-t-xl bg-gray-900 text-center dark:bg-neutral-950">
           <figure className="absolute inset-x-0 bottom-0 -mb-px">
             <svg
               preserveAspectRatio="none"
@@ -100,11 +108,11 @@ toast.success("Email sent successfully");
           <img
             src={invoiceDetails?.user?.userLogo ?? "/placeholder.svg"}
             alt=""
-            className="mx-auto flex justify-center items-center size-[62px] rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400"
+            className="shadow-2xs mx-auto flex size-[62px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400"
           />
         </div>
 
-        <div className="p-4 sm:p-7 overflow-y-auto">
+        <div className="overflow-y-auto p-4 sm:p-7">
           <div className="flex items-center justify-between">
             <div className="">
               <h3
@@ -119,7 +127,7 @@ toast.success("Email sent successfully");
               <p className="text-sm text-gray-500 dark:text-neutral-500">
                 {invoiceDetails?.user?.email}
               </p>
-              <p className="text-sm font-medium dark:text-neutral-500 pt-3">
+              <p className="pt-3 text-sm font-medium dark:text-neutral-500">
                 Invoice Date:{" "}
                 <span className="text-muted-foreground">
                   {getNormalDate(invoiceDetails?.invoice.date ?? new Date())}
@@ -139,7 +147,7 @@ toast.success("Email sent successfully");
               <p className="text-sm text-gray-500 dark:text-neutral-500">
                 {invoiceDetails?.client?.email}
               </p>
-              <p className="text-sm font-medium dark:text-neutral-500 pt-3">
+              <p className="pt-3 text-sm font-medium dark:text-neutral-500">
                 Invoice #{" "}
                 <span className="text-muted-foreground">
                   {invoiceDetails?.invoice.invoiceNumber}
@@ -148,7 +156,7 @@ toast.success("Email sent successfully");
             </div>
           </div>
 
-          <div className="mt-5 sm:mt-10 grid grid-cols-2 sm:grid-cols-3 gap-5">
+          <div className="mt-5 grid grid-cols-2 gap-5 sm:mt-10 sm:grid-cols-3">
             <div>
               <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
                 Amount paid:
@@ -186,25 +194,24 @@ toast.success("Email sent successfully");
             </h4>
 
             <ul className="mt-3 flex flex-col">
-              <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm border border-gray-200 text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:border-neutral-700 dark:text-neutral-200">
-                <div className="flex items-center justify-between w-full">
+              <li className="-mt-px inline-flex items-center gap-x-2 border border-gray-200 px-4 py-3 text-sm text-gray-800 first:mt-0 first:rounded-t-lg last:rounded-b-lg dark:border-neutral-700 dark:text-neutral-200">
+                <div className="flex w-full items-center justify-between">
                   <span>{invoiceDetails?.invoice.title}</span>
                   <span>
                     {(
-                      invoiceDetails!.invoice.amount -
-                      invoiceDetails!.invoice.tax
+                      invoiceDetails!.invoice.amount - invoiceDetails!.invoice.tax
                     ).toLocaleString()}
                   </span>
                 </div>
               </li>
-              <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm border border-gray-200 text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:border-neutral-700 dark:text-neutral-200">
-                <div className="flex items-center justify-between w-full">
+              <li className="-mt-px inline-flex items-center gap-x-2 border border-gray-200 px-4 py-3 text-sm text-gray-800 first:mt-0 first:rounded-t-lg last:rounded-b-lg dark:border-neutral-700 dark:text-neutral-200">
+                <div className="flex w-full items-center justify-between">
                   <span>Tax fee</span>
                   <span>{invoiceDetails!.invoice.tax.toLocaleString()}</span>
                 </div>
               </li>
-              <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-semibold bg-gray-50 border border-gray-200 text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
-                <div className="flex items-center justify-between w-full">
+              <li className="-mt-px inline-flex items-center gap-x-2 border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-800 first:mt-0 first:rounded-t-lg last:rounded-b-lg dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                <div className="flex w-full items-center justify-between">
                   <span>Total Amount paid</span>
                   <span>{invoiceDetails!.invoice.amount.toLocaleString()}</span>
                 </div>
@@ -216,14 +223,14 @@ toast.success("Email sent successfully");
             <p className="text-sm text-gray-500 dark:text-neutral-500">
               If you have any questions, please contact us at{" "}
               <a
-                className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500"
+                className="focus:outline-hidden inline-flex items-center gap-x-1.5 font-medium text-blue-600 decoration-2 hover:underline focus:underline dark:text-blue-500"
                 href={`mailto:${invoiceDetails?.user?.email}`}
               >
                 {invoiceDetails?.user?.email}
               </a>{" "}
               or call at{" "}
               <a
-                className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500"
+                className="focus:outline-hidden inline-flex items-center gap-x-1.5 font-medium text-blue-600 decoration-2 hover:underline focus:underline dark:text-blue-500"
                 href={`tel:${invoiceDetails?.user?.phone}`}
               >
                 {invoiceDetails?.user?.phone}
@@ -233,5 +240,5 @@ toast.success("Email sent successfully");
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

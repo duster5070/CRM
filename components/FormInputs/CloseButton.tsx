@@ -11,13 +11,7 @@ export default function CloseButton({
 }) {
   return (
     <Button type="button" variant="outline" asChild>
-      <Link
-        href={
-          parent === "" ? `/dashboard${href}` : `/dashboard/${parent}${href}`
-        }
-      >
-        Close
-      </Link>
+      <Link href={parent === "" ? `/dashboard${href}` : `/dashboard/${parent}${href}`}>Close</Link>
     </Button>
   );
 }

@@ -1,8 +1,5 @@
 "use client";
-import {
-  MagnifyingGlassCircleIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,16 +21,16 @@ export default function SearchBarV1() {
         transition={{ duration: 0.5, delay: 0.4 }}
         className="flex justify-center"
       >
-        <div className="relative max-w-xl w-full">
+        <div className="relative w-full max-w-xl">
           <input
             type="text"
             placeholder="Search for doctors..."
-            className="w-full px-6 py-4 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg"
+            className="w-full rounded-full px-6 py-4 text-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             onChange={(e) => setQuery(e.target.value)}
             value={query}
           />
-          <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition duration-300">
-            <Search className="w-6 h-6" />
+          <button className="absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full bg-blue-500 p-3 text-white transition duration-300 hover:bg-blue-600">
+            <Search className="h-6 w-6" />
           </button>
         </div>
       </motion.div>

@@ -1,22 +1,9 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { GuestProject } from "@prisma/client";
 
 export default function GuestProjects({
@@ -42,9 +29,7 @@ export default function GuestProjects({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                {isOwner ? "Member Name" : "Project Details"}
-              </TableHead>
+              <TableHead>{isOwner ? "Member Name" : "Project Details"}</TableHead>
               <TableHead className="text-right">Project Link</TableHead>
             </TableRow>
           </TableHeader>

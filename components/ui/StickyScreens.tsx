@@ -24,21 +24,13 @@ export default function StickyScreens({
   return (
     <div
       id={id}
-      className="container mx-auto px-4 lg:h-[100vh] md:h-auto flex items-center justify-center sticky lg:top-[20vh] md:top-[25vh]" /* top done large and mid*/
+      className="container sticky mx-auto flex items-center justify-center px-4 md:top-[25vh] md:h-auto lg:top-[20vh] lg:h-[100vh]" /* top done large and mid*/
     >
       <div
-        className={clsx(
-          "relative overflow-hidden",
-          "lg:top-[calc(-10%+var(--offset))]"
-        )}
+        className={clsx("relative overflow-hidden", "lg:top-[calc(-10%+var(--offset))]")}
         style={{ "--offset": `${offset}px` } as React.CSSProperties}
       >
-        <motion.img
-          src={src}
-          alt={name}
-          className="w-full h-auto"
-          style={{ scale }}
-        />
+        <motion.img src={src} alt={name} className="h-auto w-full" style={{ scale }} />
       </div>
     </div>
   );

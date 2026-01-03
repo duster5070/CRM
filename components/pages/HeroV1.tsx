@@ -21,16 +21,14 @@ export default function HeroV1() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex(
-        (prevIndex) => (prevIndex + 1) % backgroundImages.length
-      );
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
     }, 5000); // Change image every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="relative bg-gradient-to-br from-green-900 to-green-700 text-white overflow-hidden">
+    <div className="relative overflow-hidden bg-gradient-to-br from-green-900 to-green-700 text-white">
       <AnimatePresence mode="wait">
         <motion.div
           key={backgroundImages[currentImageIndex]}
@@ -50,21 +48,21 @@ export default function HeroV1() {
           />
         </motion.div>
       </AnimatePresence>
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:px-6 md:py-32 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight md:text-6xl">
             From Uganda's Finest Farms
             <br />
             <span className="text-green-300">To the World's Tables</span>
           </h1>
-          <p className="text-xl md:text-2xl text-green-100 max-w-3xl mx-auto">
-            Agrikkom connects global markets with premium Ugandan produce,
-            ensuring freshness, quality, and sustainability in every export.
+          <p className="mx-auto max-w-3xl text-xl text-green-100 md:text-2xl">
+            Agrikkom connects global markets with premium Ugandan produce, ensuring freshness,
+            quality, and sustainability in every export.
           </p>
         </motion.div>
 
@@ -72,18 +70,18 @@ export default function HeroV1() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16"
+          className="mb-16 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0"
         >
           <Link
             href="/products"
-            className="bg-lime-500 hover:bg-lime-400 text-white font-bold py-3 px-8 rounded-full inline-flex items-center transition duration-300"
+            className="inline-flex items-center rounded-full bg-lime-500 px-8 py-3 font-bold text-white transition duration-300 hover:bg-lime-400"
           >
             Explore Our Products
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
           <a
             href="/contact"
-            className="bg-transparent border-2 border-green-300 text-green-300 hover:bg-green-300 hover:text-green-900 font-bold py-3 px-8 rounded-full transition duration-300"
+            className="rounded-full border-2 border-green-300 bg-transparent px-8 py-3 font-bold text-green-300 transition duration-300 hover:bg-green-300 hover:text-green-900"
           >
             Get in Touch
           </a>
@@ -93,28 +91,22 @@ export default function HeroV1() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center"
+          className="grid grid-cols-1 gap-8 text-center md:grid-cols-3"
         >
-          <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-6">
-            <Leaf className="w-12 h-12 text-green-300 mb-4 mx-auto" />
-            <h3 className="text-xl font-semibold mb-2">100+ Varieties</h3>
-            <p className="text-green-100">
-              Diverse range of fresh fruits and vegetables
-            </p>
+          <div className="rounded-xl bg-white bg-opacity-10 p-6 backdrop-blur-lg backdrop-filter">
+            <Leaf className="mx-auto mb-4 h-12 w-12 text-green-300" />
+            <h3 className="mb-2 text-xl font-semibold">100+ Varieties</h3>
+            <p className="text-green-100">Diverse range of fresh fruits and vegetables</p>
           </div>
-          <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-6">
-            <Globe className="w-12 h-12 text-green-300 mb-4 mx-auto" />
-            <h3 className="text-xl font-semibold mb-2">Global Reach</h3>
-            <p className="text-green-100">
-              Exporting to 30+ countries worldwide
-            </p>
+          <div className="rounded-xl bg-white bg-opacity-10 p-6 backdrop-blur-lg backdrop-filter">
+            <Globe className="mx-auto mb-4 h-12 w-12 text-green-300" />
+            <h3 className="mb-2 text-xl font-semibold">Global Reach</h3>
+            <p className="text-green-100">Exporting to 30+ countries worldwide</p>
           </div>
-          <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-6">
-            <Award className="w-12 h-12 text-green-300 mb-4 mx-auto" />
-            <h3 className="text-xl font-semibold mb-2">Certified Quality</h3>
-            <p className="text-green-100">
-              Meeting international standards for excellence
-            </p>
+          <div className="rounded-xl bg-white bg-opacity-10 p-6 backdrop-blur-lg backdrop-filter">
+            <Award className="mx-auto mb-4 h-12 w-12 text-green-300" />
+            <h3 className="mb-2 text-xl font-semibold">Certified Quality</h3>
+            <p className="text-green-100">Meeting international standards for excellence</p>
           </div>
         </motion.div>
       </div>

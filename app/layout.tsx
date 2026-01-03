@@ -21,38 +21,31 @@ export const metadata: Metadata = {
 
 const PostHogPageView = dynamic(() => import("@/components/PostHogPageView"));
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-   <html lang="en" suppressHydrationWarning>
-  <body className={inter.className}>
-    <NextSSRPlugin
-      routerConfig={extractRouterConfig(ourFileRouter)}
-    />
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
 
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <Providers>
-        <PHProvider>
-          <Suspense>
-          <PostHogPageView />
-          </Suspense>
-          {children}
-        </PHProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            <PHProvider>
+              <Suspense>
+                <PostHogPageView />
+              </Suspense>
+              {children}
+            </PHProvider>
 
-        <Toaster position="top-center" />
-        <Analytics />
-      </Providers>
-    </ThemeProvider>
-  </body>
-</html>
-
+            <Toaster position="top-center" />
+            <Analytics />
+          </Providers>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

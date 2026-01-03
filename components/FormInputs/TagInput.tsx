@@ -108,7 +108,7 @@ const TagInput: React.FC<TagInputProps> = ({
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
           disabled={disabled}
-          className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          className="flex-1 rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
           aria-label="Tag input"
           aria-invalid={!!error}
           aria-describedby={error ? "tag-input-error" : undefined}
@@ -117,7 +117,7 @@ const TagInput: React.FC<TagInputProps> = ({
           type="button"
           onClick={addTag}
           disabled={disabled || !inputValue.trim()}
-          className="p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
           aria-label="Add tag"
         >
           <Plus size={20} />
@@ -134,7 +134,7 @@ const TagInput: React.FC<TagInputProps> = ({
         {tags.map((tag, index) => (
           <div
             key={index}
-            className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 rounded-full"
+            className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm"
             role="listitem"
           >
             <span>{tag}</span>
@@ -142,7 +142,7 @@ const TagInput: React.FC<TagInputProps> = ({
               type="button"
               onClick={() => removeTag(tag)}
               disabled={disabled}
-              className="p-1 rounded-full hover:bg-gray-200 focus:outline-none disabled:cursor-not-allowed"
+              className="rounded-full p-1 hover:bg-gray-200 focus:outline-none disabled:cursor-not-allowed"
               aria-label={`Remove ${tag} tag`}
             >
               <X size={14} />

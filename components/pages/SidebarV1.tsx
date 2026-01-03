@@ -18,13 +18,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 export default function SidebarV1() {
@@ -86,7 +80,7 @@ export default function SidebarV1() {
                   href={item.href}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                    isActive && " bg-muted  text-primary"
+                    isActive && "bg-muted text-primary",
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -102,7 +96,7 @@ export default function SidebarV1() {
             <Link
               href="/"
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
               )}
             >
               <ExternalLink className="h-4 w-4" />
@@ -115,8 +109,7 @@ export default function SidebarV1() {
             <CardHeader className="p-2 pt-0 md:p-4">
               <CardTitle>Upgrade to Pro</CardTitle>
               <CardDescription>
-                Unlock all features and get unlimited access to our support
-                team.
+                Unlock all features and get unlimited access to our support team.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-2 pt-0 md:p-4 md:pt-0">

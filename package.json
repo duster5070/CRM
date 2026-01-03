@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
@@ -95,6 +96,8 @@
     "eslint": "^8",
     "eslint-config-next": "15.0.4",
     "postcss": "^8",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^5.17.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

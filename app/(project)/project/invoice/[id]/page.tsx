@@ -17,9 +17,9 @@ export default async function Page({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { id } = await params;
-  const { project } = await searchParams; 
+  const { project } = await searchParams;
   const user = await getAuthUser();
-  const role = user?.role
+  const role = user?.role;
 
   if (!id) {
     notFound();
@@ -31,13 +31,5 @@ export default async function Page({
     notFound();
   }
 
-  return (
-    <Invoice
-      role={role??""}
-      invoiceDetails={invoiceDetails}
-      project={project as string}
-    />
-  );
+  return <Invoice role={role ?? ""} invoiceDetails={invoiceDetails} project={project as string} />;
 }
-
-

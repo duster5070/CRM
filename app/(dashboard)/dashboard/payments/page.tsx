@@ -17,10 +17,8 @@ export default async function Page() {
   const userProjects = await getDetailedUserProjects(user.id);
 
   if (!userProjects || userProjects.length === 0) {
-    return (
-     <NotFound/>
-    );
+    return <NotFound />;
   }
 
-  return <PaymentsPage userProjects={userProjects??[]} />;
+  return <PaymentsPage userProjects={userProjects ?? []} />;
 }

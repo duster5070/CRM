@@ -21,12 +21,7 @@ type Props = {
   projectData: ProjectData;
 };
 
-export default function InviteMembersModal({
-  isOpen,
-  onClose,
-  members,
-  projectData,
-}: Props) {
+export default function InviteMembersModal({ isOpen, onClose, members, projectData }: Props) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Member[]>([]);
 
@@ -45,14 +40,14 @@ export default function InviteMembersModal({
       : members.filter(
           (m) =>
             m.name.toLowerCase().includes(query.toLowerCase()) ||
-            m.email.toLowerCase().includes(query.toLowerCase())
+            m.email.toLowerCase().includes(query.toLowerCase()),
         );
 
   const toggleMember = (member: Member) => {
     setSelected((prev) =>
       prev.find((m) => m.id === member.id)
         ? prev.filter((m) => m.id !== member.id)
-        : [...prev, member]
+        : [...prev, member],
     );
   };
 
@@ -134,9 +129,7 @@ export default function InviteMembersModal({
           )}
 
           {query.trim().length > 0 && filtered.length === 0 && (
-            <li className="py-6 text-center text-sm text-gray-500">
-              No members found
-            </li>
+            <li className="py-6 text-center text-sm text-gray-500">No members found</li>
           )}
 
           {filtered.map((member) => {

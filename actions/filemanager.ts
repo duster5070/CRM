@@ -1,5 +1,5 @@
-import { File } from './../node_modules/.prisma/client/index.d';
-"use server";
+import { File } from "./../node_modules/.prisma/client/index.d";
+("use server");
 
 import { db } from "@/prisma/db";
 import { FileProps, FolderProps, TaskProps, UserFolder } from "@/types/types";
@@ -31,11 +31,11 @@ export async function createFile(data: {
     console.log("createFile received data:", data);
 
     // Validate required fields
-    if (!data.name || !data.folderId || !data.userId ) {
+    if (!data.name || !data.folderId || !data.userId) {
       throw new Error("Missing required fields");
     }
 
-    const newFile = await db.file.create({ 
+    const newFile = await db.file.create({
       data: {
         name: data.name,
         type: data.type,
@@ -44,18 +44,18 @@ export async function createFile(data: {
         key: data.key, // Include if you have this field
         folderId: data.folderId,
         userId: data.userId,
-      }
+      },
     });
-   
+
     console.log("File created:", newFile);
     revalidatePath("/dashboard/file-manager");
-    
+
     return { ok: true, data: newFile };
   } catch (error) {
     console.error("Error creating file:", error);
-    return { 
-      ok: false, 
-      error: error instanceof Error ? error.message : "Unknown error" 
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -74,18 +74,14 @@ export async function updateFolderById(id: string, data: FolderProps) {
     console.log(error);
   }
 }
-export async function updateFileById(
-  id: string,
-  data: { name: string }
-) {
-
+export async function updateFileById(id: string, data: { name: string }) {
   const updated = await db.file.update({
     where: { id },
-    data: { name: data.name }, 
-  })
+    data: { name: data.name },
+  });
 
-  revalidatePath("/dashboard/file-manager")
-  return { ok: true, data: updated }
+  revalidatePath("/dashboard/file-manager");
+  return { ok: true, data: updated };
 }
 export async function getUserFolders(userId: string | undefined) {
   if (userId) {
@@ -98,7 +94,7 @@ export async function getUserFolders(userId: string | undefined) {
           userId,
         },
         include: {
-        files: true,
+          files: true,
         },
       });
       return folders as UserFolder[];
@@ -109,33 +105,26 @@ export async function getUserFolders(userId: string | undefined) {
   }
 }
 
-
-
 export async function deleteFolder(id: string) {
   try {
     console.log("SERVER: Targeted folder ID:", id);
 
-   
     const files = await db.file.findMany({
       where: { folderId: id },
     });
 
-   
     if (files.length > 0) {
       await utapi.deleteFiles(files.map((file) => file.key));
     }
 
-  
     await db.file.deleteMany({
       where: { folderId: id },
     });
-
 
     const deletedFolder = await db.folder.delete({
       where: { id },
     });
 
- 
     revalidatePath("/project/file-manager");
 
     return {
@@ -151,14 +140,11 @@ export async function deleteFolder(id: string) {
   }
 }
 
-
-
 const utapi = new UTApi(); // Initialize UploadThing API client
 export async function deleteFile(id: string) {
   try {
     console.log("SERVER: Targeted file ID:", id);
 
-  
     const file = await db.file.findUnique({
       where: { id },
     });
@@ -167,14 +153,11 @@ export async function deleteFile(id: string) {
       throw new Error("File not found");
     }
 
-  
     await utapi.deleteFiles(file.key);
 
-  
     const deletedFile = await db.file.delete({
       where: { id },
     });
-
 
     revalidatePath("/project/file-manager");
 

@@ -27,20 +27,14 @@ import { updateTaskStatus } from "@/actions/tasks";
 import TaskForm from "@/components/Forms/TaskForm";
 import { Progress } from "@/components/ui/progress";
 import DraggableItem from "./DraggableItem";
- 
-export default function TaskBoard({
-  activeModule,
-}: {
-  activeModule: moduleData;
-}) {
+
+export default function TaskBoard({ activeModule }: { activeModule: moduleData }) {
   function calculatePercentageCompletion(tasks: Task[]): number {
     const allTasks = tasks.length;
-    const completedTasks = tasks.filter(
-      (task) => task.status === "COMPLETED"
-    ).length;
+    const completedTasks = tasks.filter((task) => task.status === "COMPLETED").length;
     return allTasks === 0 ? 0 : Math.round((completedTasks / allTasks) * 100);
   }
- 
+
   const [activeId, setActiveId] = useState<string | null>(null);
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -48,18 +42,18 @@ export default function TaskBoard({
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
-    useSensor(TouchSensor)
+    useSensor(TouchSensor),
   );
- 
+
   const [module, setModule] = useState<moduleData>(activeModule);
   const percentageCompletion = calculatePercentageCompletion(module.tasks);
- useEffect(() => {
-  setModule(activeModule);
- }, [activeModule]);
+  useEffect(() => {
+    setModule(activeModule);
+  }, [activeModule]);
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
- 
+
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -68,13 +62,13 @@ export default function TaskBoard({
       const overContainer = over.id as TaskStatus;
       if (activeTask && activeTask.status !== overContainer) {
         const updatedTasks = module.tasks.map((task) =>
-          task.id === activeTask.id ? { ...task, status: overContainer } : task
+          task.id === activeTask.id ? { ...task, status: overContainer } : task,
         );
         setModule((prevModule) => ({
           ...prevModule,
           tasks: updatedTasks,
         }));
- 
+
         try {
           // Update the database
           await updateTaskStatus(active.id as string, overContainer);
@@ -90,11 +84,9 @@ export default function TaskBoard({
     }
     setActiveId(null);
   };
- 
-  const activeTask = activeId
-    ? module.tasks.find((task) => task.id === activeId)
-    : null;
- 
+
+  const activeTask = activeId ? module.tasks.find((task) => task.id === activeId) : null;
+
   return (
     <DndContext
       sensors={sensors}
@@ -102,29 +94,21 @@ export default function TaskBoard({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="mb-6 flex items-center justify-between flex-wrap">
+      <div className="mb-6 flex flex-wrap items-center justify-between">
         <div className="">
-          <h1 className="text-3xl font-bold mb-2 dark:text-white">{activeModule.name}</h1>
+          <h1 className="mb-2 text-3xl font-bold dark:text-white">{activeModule.name}</h1>
           <div className="flex items-center">
-            <Progress value={percentageCompletion} className="w-64 mr-4" />
-            <span className="text-sm text-gray-500">
-              {percentageCompletion}% complete
-            </span>
+            <Progress value={percentageCompletion} className="mr-4 w-64" />
+            <span className="text-sm text-gray-500">{percentageCompletion}% complete</span>
           </div>
         </div>
         <div className="">
-          {activeModule.tasks.length > 0 && (
-            <p>({activeModule.tasks.length} Tasks)</p>
-          )}
- 
-          <TaskForm
-            moduleId={activeModule.id}
-            initialStatus="TODO"
-            isDefault={true}
-          />
+          {activeModule.tasks.length > 0 && <p>({activeModule.tasks.length} Tasks)</p>}
+
+          <TaskForm moduleId={activeModule.id} initialStatus="TODO" isDefault={true} />
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {(["TODO", "INPROGRESS", "COMPLETED"] as const).map((status) => (
           <Column
             key={status}

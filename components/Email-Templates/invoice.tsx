@@ -10,8 +10,8 @@ import {
   Section,
   Tailwind,
   Text,
-} from '@react-email/components';
-import emailTailwindConfig from '../../email-tailwind.config';
+} from "@react-email/components";
+import emailTailwindConfig from "../../email-tailwind.config";
 
 export interface InvoiceLinkProps {
   invoiceLink?: string;
@@ -22,43 +22,37 @@ export interface InvoiceLinkProps {
 
 const baseUrl = process.env.NEXTAUTH_URL;
 
-export const InvoiceLink = ({
-  invoiceLink,
-  previewText,
-  title,
-  userName,
-}: InvoiceLinkProps) => (
+export const InvoiceLink = ({ invoiceLink, previewText, title, userName }: InvoiceLinkProps) => (
   <Html>
     <Head />
     <Tailwind config={emailTailwindConfig}>
-      <Body className="bg-white font-raycast">
+      <Body className="font-raycast bg-white">
         <Preview>{previewText}</Preview>
 
-        <Container className="mx-auto my-0 pt-5 px-[25px] pb-12 bg-[url('/static/raycast-bg.png')] [background-position:bottom] [background-repeat:no-repeat]">
-          <Heading className="text-[28px] font-bold mt-12">
-            {title}
-          </Heading>
+        <Container className="mx-auto my-0 bg-[url('/static/raycast-bg.png')] px-[25px] pb-12 pt-5 [background-position:bottom] [background-repeat:no-repeat]">
+          <Heading className="mt-12 text-[28px] font-bold">{title}</Heading>
 
-          <Section className="my-6 mx-0">
-            <Text className="text-base leading-6.5">
+          <Section className="mx-0 my-6">
+            <Text className="leading-6.5 text-base">
               Hope you’re having a great day! Your invoice is ready.
             </Text>
 
-            <Text className="text-base leading-6.5">
+            <Text className="leading-6.5 text-base">
               <Link className="text-[#FF6363]" href={invoiceLink}>
                 👉 View your invoice 👈
               </Link>
             </Text>
           </Section>
 
-          <Text className="text-base leading-6.5">
-            Best regards,<br />
+          <Text className="leading-6.5 text-base">
+            Best regards,
+            <br />
             {userName}
           </Text>
 
-          <Hr className="border-[#dddddd] mt-12" />
+          <Hr className="mt-12 border-[#dddddd]" />
 
-          <Text className="text-[#8898aa] text-xs leading-6 ml-1">
+          <Text className="ml-1 text-xs leading-6 text-[#8898aa]">
             If you have any questions, feel free to reply to this email.
           </Text>
         </Container>

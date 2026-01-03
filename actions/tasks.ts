@@ -94,10 +94,7 @@ export async function deleteTask(id: string) {
       },
     });
 
-    console.log(
-      "SERVER: Task successfully deleted from DB:",
-      deletedTask.title
-    );
+    console.log("SERVER: Task successfully deleted from DB:", deletedTask.title);
 
     revalidatePath("/project/modules/[id]", "page");
 

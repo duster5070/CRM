@@ -27,7 +27,7 @@ const onUpload = (file: File) => {
         } else if (res.status === 401) {
           resolve(file);
           throw new Error(
-            "`BLOB_READ_WRITE_TOKEN` environment variable not found, reading image locally instead."
+            "`BLOB_READ_WRITE_TOKEN` environment variable not found, reading image locally instead.",
           );
           // Unknown error
         } else {
@@ -38,7 +38,7 @@ const onUpload = (file: File) => {
         loading: "Uploading image...",
         success: "Image uploaded successfully.",
         error: (e: any) => e.message,
-      }
+      },
     );
   });
 };

@@ -30,11 +30,7 @@ import {
 import { Category } from "@prisma/client";
 import { getNormalDate } from "@/lib/getNormalDate";
 
-export default function CustomDataTable({
-  categories,
-}: {
-  categories: Category[];
-}) {
+export default function CustomDataTable({ categories }: { categories: Category[] }) {
   console.log(categories);
   return (
     <Card>
@@ -68,9 +64,7 @@ export default function CustomDataTable({
                       width="64"
                     />
                   </TableCell>
-                  <TableCell className="font-medium">
-                    {category.title}
-                  </TableCell>
+                  <TableCell className="font-medium">{category.title}</TableCell>
                   {/* <TableCell>
                     <Badge variant="outline">
                       {category.status ? "Active" : "Disabled"}
@@ -81,11 +75,7 @@ export default function CustomDataTable({
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
+                        <Button aria-haspopup="true" size="icon" variant="ghost">
                           <MoreHorizontal className="h-4 w-4" />
                           <span className="sr-only">Toggle menu</span>
                         </Button>

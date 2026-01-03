@@ -95,7 +95,7 @@ const CommentForm = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {editingId ? (
-          <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+          <button className="opacity-0 transition-opacity group-hover:opacity-100">
             <Pen className="h-4 w-4" />
           </button>
         ) : (
@@ -107,12 +107,8 @@ const CommentForm = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {editingId ? "Edit Comment" : "Add New Comment"}
-          </DialogTitle>
-          <DialogDescription>
-            Please write your Comment here, with respect
-          </DialogDescription>
+          <DialogTitle>{editingId ? "Edit Comment" : "Add New Comment"}</DialogTitle>
+          <DialogDescription>Please write your Comment here, with respect</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(saveComment)}>

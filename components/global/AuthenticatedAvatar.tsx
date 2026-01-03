@@ -13,29 +13,20 @@ import { Session } from "next-auth";
 import Link from "next/link";
 import LogoutBtn from "@/components/global/LogoutBtn";
 
-export default function AuthenticatedAvatar({
-  session,
-}: {
-  session: Session | null;
-}) {
+export default function AuthenticatedAvatar({ session }: { session: Session | null }) {
   const role = session?.user.role;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer" asChild>
         <Avatar>
-          <AvatarImage
-            src={session?.user.image ?? ""}
-            alt={session?.user.name ?? ""}
-          />
+          <AvatarImage src={session?.user.image ?? ""} alt={session?.user.name ?? ""} />
           <AvatarFallback>{getInitials(session?.user?.name)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>
           <p>{session?.user?.name}</p>
-          <p className=" text-xs text-muted-foreground">
-            {session?.user?.email}
-          </p>
+          <p className="text-xs text-muted-foreground">{session?.user?.email}</p>
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />

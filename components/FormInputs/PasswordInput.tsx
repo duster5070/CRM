@@ -1,12 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CircleHelp, Eye, EyeOff, Mail } from "lucide-react";
 import Link from "next/link";
@@ -36,12 +31,9 @@ export default function PasswordInput({
   const [passType, setPassType] = useState(type);
   return (
     <div>
-      <div className="flex space-x-2 items-center">
-        <div className="flex items-center justify-between w-full">
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium leading-6 text-primary"
-          >
+      <div className="flex items-center space-x-2">
+        <div className="flex w-full items-center justify-between">
+          <label htmlFor="password" className="block text-sm font-medium leading-6 text-primary">
             {label}
           </label>
           {forgotPasswordLink && (
@@ -60,7 +52,7 @@ export default function PasswordInput({
             <Tooltip>
               <TooltipTrigger asChild>
                 <button>
-                  <CircleHelp className="w-4 h-4 text-slate-500" />
+                  <CircleHelp className="h-4 w-4 text-slate-500" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -71,10 +63,10 @@ export default function PasswordInput({
         )}
       </div>
       <div className="mt-2">
-        <div className="relative rounded-md ">
+        <div className="relative rounded-md">
           {icon && (
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <Icon className="text-slate-300 w-4 h-4" />
+              <Icon className="h-4 w-4 text-slate-300" />
             </div>
           )}
           <input
@@ -95,28 +87,24 @@ export default function PasswordInput({
               //   value === "" ? generatedPassword : value,
             })}
             className={cn(
-              "block w-full dark:bg-gray-800 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 text-sm",
-              (errors[name] && "focus:ring-red-500 pl-8") || (icon && "pl-8")
+              "block w-full rounded-md border-0 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 sm:text-sm sm:leading-6",
+              (errors[name] && "pl-8 focus:ring-red-500") || (icon && "pl-8"),
             )}
             placeholder={placeholder || label}
           />
           <button
             type="button"
-            onClick={() =>
-              setPassType((prev) => (prev === "password" ? "text" : "password"))
-            }
-            className="bg-white dark:bg-gray-800 py-2 px-3 rounded-tr-md rounded-br-md absolute inset-y-0 right-1 my-[2px] flex items-center"
+            onClick={() => setPassType((prev) => (prev === "password" ? "text" : "password"))}
+            className="absolute inset-y-0 right-1 my-[2px] flex items-center rounded-br-md rounded-tr-md bg-white px-3 py-2 dark:bg-gray-800"
           >
             {passType === "password" ? (
-              <Eye className="w-4 h-4 text-slate-600 dark:text-white" />
+              <Eye className="h-4 w-4 text-slate-600 dark:text-white" />
             ) : (
-              <EyeOff className="w-4 h-4 text-slate-600 dark:text-white" />
+              <EyeOff className="h-4 w-4 text-slate-600 dark:text-white" />
             )}
           </button>
         </div>
-        {errors[name] && (
-          <span className="text-xs text-red-600">{errors[name].message}</span>
-        )}
+        {errors[name] && <span className="text-xs text-red-600">{errors[name].message}</span>}
       </div>
     </div>
   );

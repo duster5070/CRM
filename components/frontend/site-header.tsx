@@ -42,7 +42,7 @@ export default function SiteHeader({ session }: { session: Session | null }) {
         {
           rootMargin: "-50% 0px -50% 0px",
           threshold: 0,
-        }
+        },
       );
       observer.observe(element);
       observers.push(observer);
@@ -52,10 +52,7 @@ export default function SiteHeader({ session }: { session: Session | null }) {
     };
   }, []);
 
-  const handleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
@@ -71,21 +68,19 @@ export default function SiteHeader({ session }: { session: Session | null }) {
   };
 
   return (
-    <nav className="sticky top-5 z-50 bg-glass backdrop-blur-md text-white rounded-full mx-4 md:mx-8 lg:mx-[18rem] px-4 sm:px-6 md:px-[2rem] border border-gray-300">
-      <div className="flex justify-between items-center  sm:py-3">
+    <nav className="sticky top-5 z-50 mx-4 rounded-full border border-gray-300 bg-glass px-4 text-white backdrop-blur-md sm:px-6 md:mx-8 md:px-[2rem] lg:mx-[18rem]">
+      <div className="flex items-center justify-between sm:py-3">
         <div className="flex items-center space-x-4">
           <Logo />
         </div>
-        <ul className="hidden lg:flex space-x-4 md:space-x-[51px] cursor-pointer text-lg lg:text-2xl font-semibold">
+        <ul className="hidden cursor-pointer space-x-4 text-lg font-semibold md:space-x-[51px] lg:flex lg:text-2xl">
           {navItems.map(({ id, label, href }) => (
             <li key={id}>
               <Link
                 href={href}
                 onClick={(e) => handleClick(e, href)}
                 className={
-                  activeSection === id
-                    ? "text-secondaryBlue underline font-bold"
-                    : "text-primary"
+                  activeSection === id ? "font-bold text-secondaryBlue underline" : "text-primary"
                 }
               >
                 {label}
@@ -93,130 +88,111 @@ export default function SiteHeader({ session }: { session: Session | null }) {
             </li>
           ))}
         </ul>
-        <div className="flex gap-5 items-center">
-
+        <div className="flex items-center gap-5">
           {/* Theme Toggle - Large Screens Only */}
           <button
-            className="hidden lg:flex p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 items-center justify-center"
+            className="hidden cursor-pointer items-center justify-center rounded-full p-2 text-primary transition-colors duration-200 hover:bg-blue10 lg:flex"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle theme"
           >
             <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </button>
-        {session ? (
-          <>
-            <Button
-              asChild
-              variant={"ghost"}
-              className="hidden lg:flex items-center space-x-2 py-2 sm:py-[32px] rounded-full"
-            >
-              <Link
-                href="/dashboard"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Avatar>
-                  <AvatarImage
-                    src={session?.user?.image ?? ""}
-                    alt={session?.user?.name ?? ""}
-                  />
-                  <AvatarFallback>
-                    {getInitials(session?.user?.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="ml-3 text-primary">Dashboard</span>
-              </Link>
-            </Button>
-            <div className="lg:hidden flex items-center gap-2">
-              {/* Theme Toggle - Medium and Small Screens */}
-              <button
-                className="p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 flex items-center justify-center relative"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                aria-label="Toggle theme"
-              >
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </button>
-              <button
-                className="p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 flex items-center justify-center"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                {isMobileMenuOpen ? (
-                  <X size={24} />
-                ) : (
-                  <Avatar>
-                    <AvatarImage
-                      src={session?.user?.image ?? ""}
-                      alt={session?.user?.name ?? ""}
-                    />
-                    <AvatarFallback>
-                      {getInitials(session?.user?.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="hidden lg:flex items-center space-x-4">
-              <Button
-                asChild
-                variant="default"
-                className="py-2 sm:py-[16px] px-4 sm:px-[16px] text-base sm:text-lg"
-              >
-                <Link href="/login">Log in</Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="text-primary py-2 sm:py-3 px-4 sm:px-6"
-              >
-                <Link href="/register">Signup</Link>
-              </Button>
-            </div>
-            <div className="lg:hidden flex items-center gap-2">
-              {/* Theme Toggle - Medium and Small Screens */}
-              <button
-                className="p-2 cursor-pointer text-primary rounded-full hover:bg-blue10 transition-colors duration-200 flex items-center justify-center relative"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                aria-label="Toggle theme"
-              >
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </button>
-              <button
-                className="p-2 text-primary rounded-full hover:bg-blue10 transition-colors duration-200 flex items-center justify-center"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </>
-        )}
-        </div>
-      </div>
-      {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-background border border-gray-300 rounded-b-3xl mt-2 p-4">
           {session ? (
-            <div className="mb-4 pb-4 border-b border-gray-300">
+            <>
               <Button
                 asChild
                 variant={"ghost"}
-                className="w-full flex items-center justify-start space-x-2 py-3"
+                className="hidden items-center space-x-2 rounded-full py-2 sm:py-[32px] lg:flex"
               >
-                <Link
-                  href="/dashboard"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                   <Avatar>
-                    <AvatarImage
-                      src={session?.user?.image ?? ""}
-                      alt={session?.user?.name ?? ""}
-                    />
-                    <AvatarFallback>
-                      {getInitials(session?.user?.name)}
-                    </AvatarFallback>
+                    <AvatarImage src={session?.user?.image ?? ""} alt={session?.user?.name ?? ""} />
+                    <AvatarFallback>{getInitials(session?.user?.name)}</AvatarFallback>
+                  </Avatar>
+                  <span className="ml-3 text-primary">Dashboard</span>
+                </Link>
+              </Button>
+              <div className="flex items-center gap-2 lg:hidden">
+                {/* Theme Toggle - Medium and Small Screens */}
+                <button
+                  className="relative flex cursor-pointer items-center justify-center rounded-full p-2 text-primary transition-colors duration-200 hover:bg-blue10"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  aria-label="Toggle theme"
+                >
+                  <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                </button>
+                <button
+                  className="flex cursor-pointer items-center justify-center rounded-full p-2 text-primary transition-colors duration-200 hover:bg-blue10"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                  {isMobileMenuOpen ? (
+                    <X size={24} />
+                  ) : (
+                    <Avatar>
+                      <AvatarImage
+                        src={session?.user?.image ?? ""}
+                        alt={session?.user?.name ?? ""}
+                      />
+                      <AvatarFallback>{getInitials(session?.user?.name)}</AvatarFallback>
+                    </Avatar>
+                  )}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="hidden items-center space-x-4 lg:flex">
+                <Button
+                  asChild
+                  variant="default"
+                  className="px-4 py-2 text-base sm:px-[16px] sm:py-[16px] sm:text-lg"
+                >
+                  <Link href="/login">Log in</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="px-4 py-2 text-primary sm:px-6 sm:py-3"
+                >
+                  <Link href="/register">Signup</Link>
+                </Button>
+              </div>
+              <div className="flex items-center gap-2 lg:hidden">
+                {/* Theme Toggle - Medium and Small Screens */}
+                <button
+                  className="relative flex cursor-pointer items-center justify-center rounded-full p-2 text-primary transition-colors duration-200 hover:bg-blue10"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  aria-label="Toggle theme"
+                >
+                  <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                </button>
+                <button
+                  className="flex items-center justify-center rounded-full p-2 text-primary transition-colors duration-200 hover:bg-blue10"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                  {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      {isMobileMenuOpen && (
+        <div className="absolute left-0 right-0 top-full mt-2 rounded-b-3xl border border-gray-300 bg-background p-4 lg:hidden">
+          {session ? (
+            <div className="mb-4 border-b border-gray-300 pb-4">
+              <Button
+                asChild
+                variant={"ghost"}
+                className="flex w-full items-center justify-start space-x-2 py-3"
+              >
+                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Avatar>
+                    <AvatarImage src={session?.user?.image ?? ""} alt={session?.user?.name ?? ""} />
+                    <AvatarFallback>{getInitials(session?.user?.name)}</AvatarFallback>
                   </Avatar>
                   <span className="ml-3 text-primary">Dashboard</span>
                 </Link>
@@ -232,7 +208,7 @@ export default function SiteHeader({ session }: { session: Session | null }) {
                     handleClick(e, href);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`block py-2 ${activeSection === id ? "text-secondaryBlue underline font-bold" : "text-primary"}`}
+                  className={`block py-2 ${activeSection === id ? "font-bold text-secondaryBlue underline" : "text-primary"}`}
                 >
                   {label}
                 </Link>
@@ -240,17 +216,14 @@ export default function SiteHeader({ session }: { session: Session | null }) {
             ))}
           </ul>
           {!session && (
-            <div className="flex flex-col space-y-2 mt-4">
+            <div className="mt-4 flex flex-col space-y-2">
               <Button asChild variant="default" className="w-full py-3 text-lg">
                 <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
                   Log in
                 </Link>
               </Button>
               <Button asChild variant="outline" className="w-full text-primary">
-                <Link
-                  href="/register"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
                   Signup
                 </Link>
               </Button>

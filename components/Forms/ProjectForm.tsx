@@ -1,13 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,17 +30,12 @@ export type SelectOptionProps = {
 
 type ProjectFormProps = {
   editingId?: string | undefined;
-  initialData?: Project | undefined | null ;
+  initialData?: Project | undefined | null;
   userId: string;
   clients: SelectOptionProps[];
 };
 
-export default function ProjectForm({
-  editingId,
-  initialData,
-  userId,
-  clients,
-}: ProjectFormProps) {
+export default function ProjectForm({ editingId, initialData, userId, clients }: ProjectFormProps) {
   const {
     register,
     handleSubmit,
@@ -56,8 +45,8 @@ export default function ProjectForm({
     defaultValues: {
       name: initialData?.name || "",
       description: initialData?.description || "",
-      startDate: convertIsoDateToStringDate(initialData?.startDate??"") || null,
-      endDate: convertIsoDateToStringDate(initialData?.endDate??"") || null,
+      startDate: convertIsoDateToStringDate(initialData?.startDate ?? "") || null,
+      endDate: convertIsoDateToStringDate(initialData?.endDate ?? "") || null,
       budget: initialData?.budget || 0,
       deadline: initialData?.deadline || 0,
       notes: initialData?.notes || "",
@@ -71,22 +60,19 @@ export default function ProjectForm({
   const [imageUrl, setImageUrl] = useState(initialImage);
 
   const initialClientId = initialData?.clientId;
-  const initialClient = clients.find(
-    (user) => user.value === initialClientId
-  );
+  const initialClient = clients.find((user) => user.value === initialClientId);
   const [selectedClient, setSelectedClient] = useState<any>(initialClient);
 
   async function saveProject(data: ProjectProps) {
     try {
       setLoading(true);
-      
-      
+
       data.slug = generateSlug(data.name);
       data.thumbnail = imageUrl;
       data.userId = userId;
       data.clientId = selectedClient.value;
       data.startDate = convertDateToIso(data.startDate);
-     
+
       data.endDate = convertDateToIso(data.endDate);
       data.budget = Number(data.budget);
       data.deadline = Number(data.deadline);
@@ -94,11 +80,7 @@ export default function ProjectForm({
       const endDate = new Date(data.endDate);
       const differenceInTime = endDate.getTime() - startDate.getTime();
       const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-      console.log(" days "+differenceInDays)
-
-
-
-     
+      console.log(" days " + differenceInDays);
 
       if (editingId) {
         await updateProjectById(editingId, data);
@@ -108,19 +90,18 @@ export default function ProjectForm({
         router.push("/dashboard/projects");
         setImageUrl("/placeholder.svg");
       } else {
-        const res =await createProject(data);
-      
+        const res = await createProject(data);
+
         if (res?.status === 409) {
           setLoading(false);
           toast.error(res.error);
-        }else if (res?.status === 200) {
-         
+        } else if (res?.status === 200) {
           setLoading(false);
           toast.success("Successfully Created!");
           reset();
           setImageUrl("/thumbnail.png");
           router.push("/dashboard/projects");
-        }else{
+        } else {
           setLoading(false);
           toast.error("Something went wrong");
         }
@@ -141,21 +122,16 @@ export default function ProjectForm({
         loading={loading}
       />
 
-      <div className="grid grid-cols-12 gap-6 py-8 ml-1">
-        <div className="lg:col-span-8 col-span-full space-y-3">
+      <div className="ml-1 grid grid-cols-12 gap-6 py-8">
+        <div className="col-span-full space-y-3 lg:col-span-8">
           <Card>
             <CardContent>
               <div className="grid gap-6">
                 <div className="grid gap-3 pt-4">
-                  <TextInput
-                    register={register}
-                    errors={errors}
-                    label="Project Name"
-                    name="name"
-                  />
+                  <TextInput register={register} errors={errors} label="Project Name" name="name" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <TextInput
                     register={register}
                     errors={errors}
@@ -172,10 +148,8 @@ export default function ProjectForm({
                   />
                 </div>
 
-             
-
                 <div className="grid gap-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <TextInput
                       register={register}
                       errors={errors}
@@ -217,7 +191,7 @@ export default function ProjectForm({
           </Card>
         </div>
 
-        <div className="lg:col-span-4 col-span-full">
+        <div className="col-span-full lg:col-span-4">
           <div className="grid auto-rows-max items-start gap-4">
             <ImageInput
               title="Project Thumbnail"

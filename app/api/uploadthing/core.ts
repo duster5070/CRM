@@ -10,31 +10,29 @@ export const ourFileRouter = {
     async ({ metadata, file }) => {
       console.log("file url", file.url);
       return { uploadedBy: "JB" };
-    }
+    },
   ),
   clientProfileImage: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(
     async ({ metadata, file }) => {
       console.log("file url", file.url);
       return { uploadedBy: "JB" };
-    }
+    },
   ),
   projectThumbnail: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(
     async ({ metadata, file }) => {
       console.log("file url", file.url);
       return { uploadedBy: "JB" };
-    }
+    },
   ),
-  bannerImage: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(
-    async ({ metadata, file }) => {
-      console.log("file url", file.url);
-      return { uploadedBy: "JB" };
-    }
-  ),
+  bannerImage: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(async ({ metadata, file }) => {
+    console.log("file url", file.url);
+    return { uploadedBy: "JB" };
+  }),
   profileImage: f({ image: { maxFileSize: "1MB" } }).onUploadComplete(
     async ({ metadata, file }) => {
       console.log("file url", file.url);
       return { uploadedBy: "JB" };
-    }
+    },
   ),
   fileUploads: f({
     image: { maxFileSize: "1MB", maxFileCount: 4 },
@@ -50,8 +48,10 @@ export const ourFileRouter = {
       maxFileCount: 4,
     }, // .xlsx
     "application/vnd.ms-powerpoint": { maxFileSize: "1MB", maxFileCount: 4 }, // .ppt
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-      { maxFileSize: "1MB", maxFileCount: 4 }, // .pptx
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
+      maxFileSize: "1MB",
+      maxFileCount: 4,
+    }, // .pptx
     "text/plain": { maxFileSize: "1MB", maxFileCount: 4 }, // .txt
 
     // Archive types
@@ -77,8 +77,10 @@ export const ourFileRouter = {
       maxFileCount: 4,
     }, // .xlsx
     "application/vnd.ms-powerpoint": { maxFileSize: "1MB", maxFileCount: 4 }, // .ppt
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-      { maxFileSize: "1MB", maxFileCount: 4 }, // .pptx
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
+      maxFileSize: "1MB",
+      maxFileCount: 4,
+    }, // .pptx
     "text/plain": { maxFileSize: "1MB", maxFileCount: 4 }, // .txt
 
     // Archive types

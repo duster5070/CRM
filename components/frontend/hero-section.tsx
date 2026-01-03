@@ -14,21 +14,15 @@ export default function HeroSection({ session }: { session: Session | null }) {
       id="home"
       className="py-20 text-center"
       style={{
-        background:'url("/Background pattern.svg")',
+        background: 'url("/Background pattern.svg")',
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       <div className="inline-flex items-center">
-        <ParticleAssemble
-          width={340}
-          height={48}
-          particleCount={200}
-          duration={0.6}
-          delay={20}
-        >
-          <span className="text-secondaryBlue border rounded-full bg-blue10 px-4 py-2 inline-flex items-center gap-2">
+        <ParticleAssemble width={340} height={48} particleCount={200} duration={0.6} delay={20}>
+          <span className="inline-flex items-center gap-2 rounded-full border bg-blue10 px-4 py-2 text-secondaryBlue">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -51,8 +45,8 @@ export default function HeroSection({ session }: { session: Session | null }) {
           </span>
         </ParticleAssemble>
       </div>
-      <div className="container mx-auto text-center w-full">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] mb-4 w-full max-w-4xl text-primary mx-auto relative">
+      <div className="container mx-auto w-full text-center">
+        <h1 className="relative mx-auto mb-4 w-full max-w-4xl text-4xl text-primary sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem]">
           Chaos to Clarity in One Click
           <motion.div
             initial={{ x: "100%", opacity: 0 }}
@@ -66,7 +60,7 @@ export default function HeroSection({ session }: { session: Session | null }) {
               height="112"
               viewBox="0 0 112 112"
               fill="none"
-              className="absolute right-[13rem] bottom-[-1.5rem]"
+              className="absolute bottom-[-1.5rem] right-[13rem]"
             >
               <g filter="url(#filter1_d_15_535)">
                 <path
@@ -116,22 +110,18 @@ export default function HeroSection({ session }: { session: Session | null }) {
             </svg>
           </motion.div>
         </h1>
-        <p className="text-primary mx-auto w-full max-w-md text-base sm:text-lg mt-8 mb-12">
-          Empower your team with tools to organize tasks, track progress, and
-          collaborate seamlessly--all in one intuitive platform
+        <p className="mx-auto mb-12 mt-8 w-full max-w-md text-base text-primary sm:text-lg">
+          Empower your team with tools to organize tasks, track progress, and collaborate
+          seamlessly--all in one intuitive platform
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            asChild
-            size="lg"
-            className="rounded-full h-12 px-6 text-base"
-          >
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button asChild size="lg" className="h-12 rounded-full px-6 text-base">
             <Link href={session ? "/dashboard" : "/register"}>
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <button className="bg-transparent border border-primary text-primary px-6 sm:px-10 py-3 rounded-full hover:bg-blue10 transition">
+          <button className="rounded-full border border-primary bg-transparent px-6 py-3 text-primary transition hover:bg-blue10 sm:px-10">
             Explore Features
           </button>
         </div>
@@ -143,7 +133,7 @@ export default function HeroSection({ session }: { session: Session | null }) {
           <img
             src="/screen-shot-1.svg"
             alt="screen shot"
-            className="mx-auto mt-16 w-full max-w-4xl h-auto"
+            className="mx-auto mt-16 h-auto w-full max-w-4xl"
           />
         </motion.div>
       </div>

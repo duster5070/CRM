@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -95,7 +95,7 @@ const ModuleForm = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {editingId ? (
-          <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+          <button className="opacity-0 transition-opacity group-hover:opacity-100">
             <Pen className="h-4 w-4 text-green-500" />
           </button>
         ) : (
@@ -107,9 +107,7 @@ const ModuleForm = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {editingId ? "Edit Module" : "Add New Module"}
-          </DialogTitle>
+          <DialogTitle>{editingId ? "Edit Module" : "Add New Module"}</DialogTitle>
           {/* <DialogDescription>
             Please write your Comment here, with respect
           </DialogDescription> */}
@@ -120,13 +118,7 @@ const ModuleForm = ({
             <div className="col-span-full space-y-3">
               {/* <Tiptap value={content} onChange={setContent} /> */}
               <div className="grid gap-3">
-                <TextInput
-                  register={register}
-                  errors={errors}
-                  label=""
-                  name="name"
-                  icon={Check}
-                />
+                <TextInput register={register} errors={errors} label="" name="name" icon={Check} />
               </div>
             </div>
           </div>
