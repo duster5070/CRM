@@ -39,14 +39,14 @@ export default function FloatingMenu() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="mb-4 bg-white rounded-lg shadow-lg overflow-hidden"
+            className="mb-4 overflow-hidden rounded-lg bg-white shadow-lg"
           >
             <ul className="py-2">
               {componentPages.map((page) => (
                 <li key={page.name}>
                   <a
                     href={page.url}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150 ease-in-out"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100"
                   >
                     {page.name}
                     {page.count && (
@@ -66,13 +66,10 @@ export default function FloatingMenu() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-primary text-primary-foreground rounded-full p-4 shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+        className="rounded-full bg-primary p-4 text-primary-foreground shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
         aria-label={isOpen ? "Close components menu" : "Open components menu"}
       >
-        <motion.div
-          animate={{ rotate: isOpen ? 90 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
+        <motion.div animate={{ rotate: isOpen ? 90 : 0 }} transition={{ duration: 0.3 }}>
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </motion.div>
       </motion.button>

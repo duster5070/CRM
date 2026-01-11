@@ -1,44 +1,31 @@
+"use client";
 
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Check, Trash } from "lucide-react";
+import toast from "react-hot-toast";
 
-"use client"
-
-import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { Check, Trash } from "lucide-react"
-import toast from "react-hot-toast"
-
-import TextInput from "../FormInputs/TextInput"
-import SubmitButton from "../FormInputs/SubmitButton"
-import { updateFileById, deleteFile } from "@/actions/filemanager"
+import TextInput from "../FormInputs/TextInput";
+import SubmitButton from "../FormInputs/SubmitButton";
+import { updateFileById, deleteFile } from "@/actions/filemanager";
 
 interface FormValues {
-  name: string
+  name: string;
 }
 
 interface FileFormProps {
-  userId: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  fileId: string
-  initialName: string
-  onDeleted?: () => void
+  userId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  fileId: string;
+  initialName: string;
+  onDeleted?: () => void;
 }
 
-const FileForm = ({
-  open,
-  onOpenChange,
-  fileId,
-  initialName,
-  onDeleted,
-}: FileFormProps) => {
-  const [loading, setLoading] = useState(false)
-  const [deleting, setDeleting] = useState(false)
+const FileForm = ({ open, onOpenChange, fileId, initialName, onDeleted }: FileFormProps) => {
+  const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const {
     register,
@@ -47,37 +34,37 @@ const FileForm = ({
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: { name: "" },
-  })
+  });
 
   // 🔑 keep form in sync when switching files
   useEffect(() => {
-    reset({ name: initialName })
-  }, [initialName, reset])
+    reset({ name: initialName });
+  }, [initialName, reset]);
 
   async function onSubmit(data: FormValues) {
     try {
-      setLoading(true)
-      await updateFileById(fileId, { name: data.name })
-      toast.success("File renamed")
-      onOpenChange(false)
+      setLoading(true);
+      await updateFileById(fileId, { name: data.name });
+      toast.success("File renamed");
+      onOpenChange(false);
     } catch {
-      toast.error("Failed to update file")
+      toast.error("Failed to update file");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleDelete() {
     try {
-      setDeleting(true)
-      await deleteFile(fileId)
-      toast.success("File deleted")
-      onDeleted?.()
-      onOpenChange(false)
+      setDeleting(true);
+      await deleteFile(fileId);
+      toast.success("File deleted");
+      onDeleted?.();
+      onOpenChange(false);
     } catch {
-      toast.error("Failed to delete file")
+      toast.error("Failed to delete file");
     } finally {
-      setDeleting(false)
+      setDeleting(false);
     }
   }
 
@@ -97,11 +84,7 @@ const FileForm = ({
             icon={Check}
           />
 
-          <SubmitButton
-            className="w-full"
-            title="Rename File"
-            loading={loading}
-          />
+          <SubmitButton className="w-full" title="Rename File" loading={loading} />
         </form>
 
         {/* Destructive section */}
@@ -117,7 +100,7 @@ const FileForm = ({
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default FileForm
+export default FileForm;

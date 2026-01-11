@@ -13,7 +13,7 @@ export default async function page() {
           <GuestProjects isOwner={true} projects={projects} />
         </div>
       ) : (
-        <div className="min-h-screen flex items-center justify-center text-xl">
+        <div className="flex min-h-screen items-center justify-center text-xl">
           <h2>You don't have any Members</h2>
         </div>
       )}

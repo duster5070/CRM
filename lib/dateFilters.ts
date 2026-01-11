@@ -29,14 +29,8 @@ export const filterByThisYear = (data: any[]): any[] => {
   return data.filter((item) => dayjs(item.createdAt).isAfter(startOfYear));
 };
 
-export const filterByDateRange = (
-  data: any[],
-  startDate: string,
-  endDate: string
-): any[] => {
+export const filterByDateRange = (data: any[], startDate: string, endDate: string): any[] => {
   const start = dayjs(startDate).startOf("day");
   const end = dayjs(endDate).endOf("day");
-  return data.filter((item) =>
-    dayjs(item.createdAt).isBetween(start, end, null, "[]")
-  );
+  return data.filter((item) => dayjs(item.createdAt).isBetween(start, end, null, "[]"));
 };

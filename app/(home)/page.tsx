@@ -9,7 +9,7 @@ import { authOptions } from "@/config/auth";
 export default async function Home() {
   const session = await getServerSession(authOptions);
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex min-h-screen w-full flex-col">
       <div className="flex-1">
         <section id="home" className="w-full">
           <HeroSection session={session} />

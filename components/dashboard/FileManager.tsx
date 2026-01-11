@@ -16,12 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 import FolderForm from "../Forms/FolderForm";
 import FileForm from "../Forms/FileForm";
@@ -30,10 +25,7 @@ import MultipleFileUploader from "../FormInputs/MultipleFileUploader";
 import { useState } from "react";
 import { deleteFolder } from "@/actions/filemanager";
 import toast from "react-hot-toast";
-import {
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@radix-ui/react-alert-dialog";
+import { AlertDialogAction, AlertDialogCancel } from "@radix-ui/react-alert-dialog";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 
 interface FileView {
@@ -68,10 +60,7 @@ export function FileManager({
 
   const userFoldersWithSize: UserFolderWithSize[] = React.useMemo(() => {
     return userFolders.map((folder) => {
-      const totalBytes = folder.files.reduce(
-        (acc, file) => acc + (Number(file.size) || 0),
-        0
-      );
+      const totalBytes = folder.files.reduce((acc, file) => acc + (Number(file.size) || 0), 0);
 
       return {
         ...folder,
@@ -80,10 +69,7 @@ export function FileManager({
     });
   }, [userFolders]);
 
-  const totalMBUsed = userFoldersWithSize.reduce(
-    (acc, folder) => acc + folder.sizeMB,
-    0
-  );
+  const totalMBUsed = userFoldersWithSize.reduce((acc, folder) => acc + folder.sizeMB, 0);
 
   const usedMB = Number(totalMBUsed.toFixed(2));
   const totalMB = 128 * 1024;
@@ -123,16 +109,12 @@ export function FileManager({
   };
 
   return (
-    <div className="flex h-screen dark:bg-[#1b1b1b] dark:text-white bg-white font-sans text-slate-900">
-      <aside className="w-56 border-r border-slate-100 flex flex-col">
-        <div className="p-4 flex items-center justify-between">
+    <div className="flex h-screen bg-white font-sans text-slate-900 dark:bg-gray-900 dark:text-white">
+      <aside className="flex w-56 flex-col border-r border-slate-100">
+        <div className="flex items-center justify-between p-4">
           <h2 className="text-lg font-bold tracking-tight">Folders</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setCreateOpen(true)}
-          >
-            <FolderPlus className="w-4 h-4" />
+          <Button variant="ghost" size="icon" onClick={() => setCreateOpen(true)}>
+            <FolderPlus className="h-4 w-4" />
           </Button>
         </div>
         <div className="flex-1 overflow-y-auto px-2 pb-4">
@@ -142,27 +124,25 @@ export function FileManager({
                 key={folder.id}
                 href={`/dashboard/file-manager?fId=${folder.id}`}
                 className={cn(
-                  "flex items-center gap-2.5 p-2.5 rounded-lg transition-colors group",
+                  "group flex items-center gap-2.5 rounded-lg p-2.5 transition-colors",
                   currentFolder?.id === folder.id
                     ? "bg-slate-50 text-black dark:text-black"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
                 )}
               >
                 <div
                   className={cn(
-                    "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
                     currentFolder?.id === folder.id
                       ? "bg-amber-100 dark:bg-amber-500"
-                      : "bg-amber-50 group-hover:bg-amber-100 dark:bg-amber-500"
+                      : "bg-amber-50 group-hover:bg-amber-100 dark:bg-amber-500",
                   )}
                 >
                   <span className="text-lg">📁</span>
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold text-sm truncate">
-                      {folder.name}
-                    </p>
+                    <p className="truncate text-sm font-semibold">{folder.name}</p>
 
                     <div className="flex items-center gap-1">
                       <Edit
@@ -170,14 +150,14 @@ export function FileManager({
                           e.preventDefault();
                           setEditingFolder(folder);
                         }}
-                        className="w-4 h-4 opacity-0 group-hover:opacity-100"
+                        className="h-4 w-4 opacity-0 group-hover:opacity-100"
                       />
                       <Delete
                         onClick={(e) => {
                           e.preventDefault();
                           setFolderToDelete(folder);
                         }}
-                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-red-500"
+                        className="h-4 w-4 text-red-500 opacity-0 transition-opacity group-hover:opacity-100"
                       />
                     </div>
                   </div>
@@ -188,24 +168,17 @@ export function FileManager({
               </Link>
             ))}
 
-            <AlertDialog.Root
-              open={!!folderToDelete}
-              onOpenChange={() => setFolderToDelete(null)}
-            >
+            <AlertDialog.Root open={!!folderToDelete} onOpenChange={() => setFolderToDelete(null)}>
               <AlertDialog.Portal>
                 <AlertDialog.Overlay className="fixed inset-0 bg-black/40" />
 
                 <AlertDialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg">
-                  <AlertDialog.Title className="text-lg font-bold">
-                    Delete Folder
-                  </AlertDialog.Title>
+                  <AlertDialog.Title className="text-lg font-bold">Delete Folder</AlertDialog.Title>
 
                   <AlertDialog.Description className="mt-2 text-sm text-slate-500">
                     Are you sure you want to delete{" "}
-                    <span className="font-semibold">
-                      {folderToDelete?.name}
-                    </span>
-                    ? This action cannot be undone.
+                    <span className="font-semibold">{folderToDelete?.name}</span>? This action
+                    cannot be undone.
                   </AlertDialog.Description>
 
                   <div className="mt-6 flex justify-end gap-3">
@@ -228,16 +201,16 @@ export function FileManager({
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0">
-        <header className="p-4 flex items-center justify-between border-b border-slate-50">
+      <main className="flex min-w-0 flex-1 flex-col">
+        <header className="flex items-center justify-between border-b border-slate-50 p-4">
           <div className="flex items-center gap-3">
             <Link href="/dashboard">
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-slate-400 w-8 h-8 dark:text-slate-100"
+                className="h-8 w-8 text-slate-400 dark:text-slate-100"
               >
-                <ArrowLeft className="w-4 h-4 " />
+                <ArrowLeft className="h-4 w-4" />
                 <span className="sr-only text-black dark:text-slate-100">Back</span>
               </Button>
             </Link>
@@ -248,7 +221,7 @@ export function FileManager({
             <button
               onClick={() => setOpen(true)}
               disabled={!currentFolder || !userId}
-              className="rounded-full bg-blue-600 px-4 py-2 text-sm text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="rounded-full bg-blue-600 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:bg-gray-300"
             >
               Upload Files
             </button>
@@ -265,38 +238,29 @@ export function FileManager({
         </header>
 
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="mx-auto max-w-4xl space-y-6">
             <h1 className="text-2xl font-bold">{currentFolder?.name}</h1>
 
-            <div className="bg-lime-50 rounded-2xl p-6 border border-lime-100/50 relative overflow-hidden">
-              <div className="flex items-center justify-between relative z-10">
+            <div className="relative overflow-hidden rounded-2xl border border-lime-100/50 bg-lime-50 p-6">
+              <div className="relative z-10 flex items-center justify-between">
                 <div className="space-y-1">
-                  <p className="text-slate-500 text-sm font-medium">
+                  <p className="text-sm font-medium text-slate-500">
                     Folders /{" "}
-                    <span className="text-slate-900 font-bold">
-                      {currentFolder?.name}
-                    </span>
+                    <span className="font-bold text-slate-900">{currentFolder?.name}</span>
                   </p>
                   <p className="text-xl font-bold">
-                    <span
-                      className={
-                        isHighUsage ? "text-red-600" : "text-emerald-600"
-                      }
-                    >
+                    <span className={isHighUsage ? "text-red-600" : "text-emerald-600"}>
                       {currentFolder?.sizeMB} MB
                     </span>{" "}
-                    of {totalMB / 1024} GB used
+                    <span className="dark:text-black">of {totalMB / 1024} GB used</span>
                   </p>
-                  <Button
-                    variant="link"
-                    className="text-blue-600 p-0 h-auto font-semibold text-sm"
-                  >
+                  <Button variant="link" className="h-auto p-0 text-sm font-semibold text-blue-600">
                     View Details
                   </Button>
                 </div>
 
-                <div className="relative w-20 h-20">
-                  <svg className="w-full h-full transform -rotate-90">
+                <div className="relative h-20 w-20">
+                  <svg className="h-full w-full -rotate-90 transform">
                     <circle
                       cx="40"
                       cy="40"
@@ -313,13 +277,11 @@ export function FileManager({
                       stroke="currentColor"
                       strokeWidth="6"
                       strokeDasharray={2 * Math.PI * 34}
-                      strokeDashoffset={
-                        2 * Math.PI * 34 * (1 - usagePercent / 100)
-                      }
+                      strokeDashoffset={2 * Math.PI * 34 * (1 - usagePercent / 100)}
                       fill="transparent"
                       className={cn(
                         "transition-all duration-500",
-                        isHighUsage ? "text-red-500" : "text-emerald-500"
+                        isHighUsage ? "text-red-500" : "text-emerald-500",
                       )}
                     />
                   </svg>
@@ -327,7 +289,7 @@ export function FileManager({
                     <span
                       className={cn(
                         "text-base font-bold",
-                        isHighUsage ? "text-red-600" : "text-emerald-600"
+                        isHighUsage ? "text-red-600" : "text-emerald-600",
                       )}
                     >
                       {usagePercent}%
@@ -341,27 +303,27 @@ export function FileManager({
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="h-8 rounded-lg border-slate-100 text-slate-600 bg-white shadow-sm text-xs"
+                  className="h-8 rounded-lg border-slate-100 bg-white text-xs text-slate-600 shadow-sm"
                 >
-                  All Type <ChevronDown className="w-3 h-3 ml-1.5" />
+                  All Type <ChevronDown className="ml-1.5 h-3 w-3" />
                 </Button>
                 <Button
                   variant="outline"
-                  className="h-8 rounded-lg border-slate-100 text-slate-600 bg-white shadow-sm text-xs"
+                  className="h-8 rounded-lg border-slate-100 bg-white text-xs text-slate-600 shadow-sm"
                 >
-                  Lastest <ChevronDown className="w-3 h-3 ml-1.5" />
+                  Lastest <ChevronDown className="ml-1.5 h-3 w-3" />
                 </Button>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-slate-400 hover:text-slate-900 w-8 h-8"
+                className="h-8 w-8 text-slate-400 hover:text-slate-900"
               >
-                <Grid className="w-5 h-5" />
+                <Grid className="h-5 w-5" />
               </Button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
               {currentFolder?.files.map((file) => (
                 <button
                   key={file.id}
@@ -377,23 +339,23 @@ export function FileManager({
                     })
                   }
                   className={cn(
-                    "group relative p-4 rounded-2xl transition-all duration-200 text-left border",
+                    "group relative rounded-2xl border p-4 text-left transition-all duration-200",
                     selectedFile?.id === file.id
-                      ? "bg-blue-50/50 border-blue-200 ring-1 ring-blue-200"
-                      : "bg-white border-slate-50 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100"
+                      ? "border-blue-200 bg-blue-50/50 ring-1 ring-blue-200"
+                      : "border-slate-50 bg-white hover:border-slate-200 hover:shadow-md hover:shadow-slate-100",
                   )}
                 >
-                  <div className="flex justify-between items-start mb-3">
+                  <div className="mb-3 flex items-start justify-between">
                     <div
                       className={cn(
-                        "w-4 h-4 rounded border flex items-center justify-center transition-colors",
+                        "flex h-4 w-4 items-center justify-center rounded border transition-colors",
                         selectedFile?.id === file.id
-                          ? "bg-blue-600 border-blue-600"
-                          : "border-slate-200"
+                          ? "border-blue-600 bg-blue-600"
+                          : "border-slate-200",
                       )}
                     >
                       {selectedFile?.id === file.id && (
-                        <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                        <div className="h-1.5 w-1.5 rounded-full bg-white" />
                       )}
                     </div>
                     <div className="flex items-center gap-1">
@@ -402,35 +364,35 @@ export function FileManager({
                           e.stopPropagation();
                           setEditingFile(file);
                         }}
-                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        className="h-4 w-4 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
                       />
                       <Delete
                         onClick={(e) => {
                           e.stopPropagation();
                           setEditingFile(file);
                         }}
-                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-red-500 cursor-pointer"
+                        className="h-4 w-4 cursor-pointer text-red-500 opacity-0 transition-opacity group-hover:opacity-100"
                       />
                     </div>
                   </div>
 
-                  <div className="flex justify-center mb-4">
+                  <div className="mb-4 flex justify-center">
                     <div
                       className={cn(
-                        "w-14 h-18 relative rounded-lg flex flex-col items-center justify-center",
+                        "h-18 relative flex w-14 flex-col items-center justify-center rounded-lg",
                         file.type === "PDF"
                           ? "bg-rose-50 text-rose-500"
-                          : "bg-emerald-50 text-emerald-500"
+                          : "bg-emerald-50 text-emerald-500",
                       )}
                     >
-                      <FileText className="w-7 h-7 mb-1" />
+                      <FileText className="mb-1 h-7 w-7" />
                       <span className="text-[10px] font-black uppercase tracking-widest">
                         {file.type.split(".")[1]}
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-xs font-bold text-slate-900 text-center mb-1 truncate">
+                  <p className="mb-1 truncate text-center text-xs font-bold text-slate-900">
                     {file.name}
                   </p>
                 </button>
@@ -441,47 +403,41 @@ export function FileManager({
       </main>
 
       <Sheet open={!!selectedFile} onOpenChange={() => setSelectedFile(null)}>
-        <SheetContent className="w-full sm:max-w-sm p-0 flex flex-col border-l border-slate-100">
-          <SheetHeader className="p-4 border-b border-slate-50 flex flex-row items-center justify-between">
+        <SheetContent className="flex w-full flex-col border-l border-slate-100 p-0 sm:max-w-sm">
+          <SheetHeader className="flex flex-row items-center justify-between border-b border-slate-50 p-4">
             <div className="flex items-center gap-2">
-              <SheetTitle className="text-base font-bold truncate">
-                {selectedFile?.name}
-              </SheetTitle>
+              <SheetTitle className="truncate text-base font-bold">{selectedFile?.name}</SheetTitle>
               <div className="flex gap-0.5">
                 <Edit
                   onClick={() => {
-                    const file = currentFolder?.files.find(
-                      (f) => f.id === selectedFile?.id
-                    );
+                    const file = currentFolder?.files.find((f) => f.id === selectedFile?.id);
                     if (file) setEditingFile(file);
                   }}
-                  className="w-4 h-4 text-slate-400 hover:text-slate-900 cursor-pointer m-2"
+                  className="m-2 h-4 w-4 cursor-pointer text-slate-400 hover:text-slate-900"
                 />
 
                 <Delete
                   onClick={() => {
-                    const file = currentFolder?.files.find(
-                      (f) => f.id === selectedFile?.id
-                    );
+                    const file = currentFolder?.files.find((f) => f.id === selectedFile?.id);
                     if (file) setEditingFile(file);
                   }}
-                  className="w-4 h-4 text-red-500 hover:text-red-600 cursor-pointer m-2"
+                  className="m-2 h-4 w-4 cursor-pointer text-red-500 hover:text-red-600"
                 />
               </div>
             </div>
           </SheetHeader>
 
           <div className="flex-1 overflow-y-auto">
-            <div className="p-6 flex flex-col items-center border-b border-slate-50">
+            <div className="flex flex-col items-center border-b border-slate-50 p-6">
               <div
                 className={cn(
-                  "w-24 h-32 rounded-xl flex flex-col items-center justify-center mb-6 shadow-sm",
+                  "mb-6 flex h-32 w-24 flex-col items-center justify-center rounded-xl shadow-sm",
                   selectedFile?.type === "PDF"
                     ? "bg-rose-50 text-rose-500"
-                    : "bg-emerald-50 text-emerald-500"
+                    : "bg-emerald-50 text-emerald-500",
                 )}
               >
-                <FileText className="w-12 h-12 mb-1" />
+                <FileText className="mb-1 h-12 w-12" />
                 <span className="text-base font-black uppercase tracking-tighter">
                   {selectedFile?.type}
                 </span>
@@ -490,25 +446,21 @@ export function FileManager({
               <div className="w-full space-y-4">
                 <h3 className="text-base font-bold">Information</h3>
                 <div className="grid grid-cols-2 gap-y-3 text-xs">
-                  <span className="text-slate-400 font-medium">Created</span>
-                  <span className="text-slate-900 font-bold text-right">
+                  <span className="font-medium text-slate-400">Created</span>
+                  <span className="text-right font-bold text-slate-900">
                     {selectedFile?.created}
                   </span>
 
-                  <span className="text-slate-400 font-medium">Size</span>
-                  <span className="text-slate-900 font-bold text-right">
-                    {selectedFile?.size}
-                  </span>
+                  <span className="font-medium text-slate-400">Size</span>
+                  <span className="text-right font-bold text-slate-900">{selectedFile?.size}</span>
 
-                  <span className="text-slate-400 font-medium">Format</span>
-                  <span className="text-slate-900 font-bold text-right">
+                  <span className="font-medium text-slate-400">Format</span>
+                  <span className="text-right font-bold text-slate-900">
                     {selectedFile?.format.split(".")[1]}
                   </span>
 
-                  <span className="text-slate-400 font-medium">
-                    Last Modified
-                  </span>
-                  <span className="text-slate-900 font-bold text-right">
+                  <span className="font-medium text-slate-400">Last Modified</span>
+                  <span className="text-right font-bold text-slate-900">
                     {selectedFile?.modified}
                   </span>
                 </div>
@@ -519,11 +471,7 @@ export function FileManager({
       </Sheet>
 
       {/* Create Folder */}
-      <FolderForm
-        userId={userId ?? ""}
-        open={createOpen}
-        onOpenChange={setCreateOpen}
-      />
+      <FolderForm userId={userId ?? ""} open={createOpen} onOpenChange={setCreateOpen} />
 
       {/* Edit Folder */}
       <FolderForm

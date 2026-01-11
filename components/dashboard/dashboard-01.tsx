@@ -4,13 +4,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -40,9 +34,7 @@ export function Dashboard01({
 
       <div className="flex items-center justify-center gap-4">
         {analytics.length === 0 ? (
-          <p className="px-2 text-sm text-muted-foreground">
-            No analytics found.
-          </p>
+          <p className="px-2 text-sm text-muted-foreground">No analytics found.</p>
         ) : (
           analytics.map((analytic) => (
             <OverviewCard key={analytic.title} {...analytic} /> //key to be changed
@@ -58,9 +50,7 @@ export function Dashboard01({
           <Card className="w-full">
             <CardHeader>
               <CardTitle>Recent Projects</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                These are your recent projects
-              </p>
+              <p className="text-sm text-muted-foreground">These are your recent projects</p>
             </CardHeader>
 
             <CardContent className="space-y-4">
@@ -70,15 +60,10 @@ export function Dashboard01({
               </div>
 
               {projects.length === 0 ? (
-                <p className="px-2 text-sm text-muted-foreground">
-                  No projects found.
-                </p>
+                <p className="px-2 text-sm text-muted-foreground">No projects found.</p>
               ) : (
                 projects.map((project) => (
-                  <div
-                    key={project.id}
-                    className="flex items-center justify-between px-2 py-2"
-                  >
+                  <div key={project.id} className="flex items-center justify-between px-2 py-2">
                     <div className="flex items-center gap-3">
                       <Image
                         src={project.thumbnail ?? ""}
@@ -97,9 +82,7 @@ export function Dashboard01({
                 ))
               )}
 
-              <p className="text-sm text-muted-foreground">
-                Showing {projects.length} projects
-              </p>
+              <p className="text-sm text-muted-foreground">Showing {projects.length} projects</p>
             </CardContent>
           </Card>
         )}
@@ -112,29 +95,18 @@ export function Dashboard01({
 
             <CardContent className="space-y-4">
               {clients.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  No clients found.
-                </p>
+                <p className="text-sm text-muted-foreground">No clients found.</p>
               ) : (
                 clients.map((client) => (
-                  <div
-                    key={client.id}
-                    className="flex items-center justify-between"
-                  >
+                  <div key={client.id} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9">
-                        <AvatarFallback>
-                          {getInitials(client.name)}
-                        </AvatarFallback>
+                        <AvatarFallback>{getInitials(client.name)}</AvatarFallback>
                       </Avatar>
 
                       <div>
-                        <p className="text-sm font-medium leading-none">
-                          {client.name}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {client.email}
-                        </p>
+                        <p className="text-sm font-medium leading-none">{client.name}</p>
+                        <p className="text-sm text-muted-foreground">{client.email}</p>
                       </div>
                     </div>
 

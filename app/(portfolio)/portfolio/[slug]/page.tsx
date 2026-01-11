@@ -1,8 +1,5 @@
 import { getPortfolioByUserId } from "@/actions/portfolio";
-import {
-  getUserPublicFeaturedProjects,
-  getUserPublicOtherProjects,
-} from "@/actions/projects";
+import { getUserPublicFeaturedProjects, getUserPublicOtherProjects } from "@/actions/projects";
 import Portfolio from "@/components/PortfolioPage";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -28,11 +25,7 @@ export default async function page({
   return (
     <div>
       {profile && profile.id && (
-        <Portfolio
-          profile={profile}
-          projects={featured}
-          otherProjects={otherProjects}
-        />
+        <Portfolio profile={profile} projects={featured} otherProjects={otherProjects} />
       )}
     </div>
   );

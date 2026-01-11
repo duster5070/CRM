@@ -34,18 +34,12 @@ type MenuButtonProps = {
   icon: LucideIcon;
 };
 
-const MenuButton = ({
-  onClick,
-  isActive,
-  disabled,
-  title,
-  icon: Icon,
-}: MenuButtonProps) => (
+const MenuButton = ({ onClick, isActive, disabled, title, icon: Icon }: MenuButtonProps) => (
   <button
     onClick={onClick}
     onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
     disabled={disabled}
-    className={`p-2 rounded-md ${
+    className={`rounded-md p-2 ${
       isActive
         ? "bg-slate-200 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
         : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
@@ -53,7 +47,7 @@ const MenuButton = ({
     type="button"
     title={title}
   >
-    <Icon className="w-4 h-4" />
+    <Icon className="h-4 w-4" />
   </button>
 );
 
@@ -63,7 +57,7 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
   }
 
   return (
-    <div className="flex flex-wrap gap-2 mb-2 border-b pb-2">
+    <div className="mb-2 flex flex-wrap gap-2 border-b pb-2">
       <MenuButton
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -85,7 +79,7 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
         title="Strike"
         icon={Strikethrough}
       />
-      <div className="w-px bg-slate-200 dark:bg-slate-700 mx-1 self-stretch" />
+      <div className="mx-1 w-px self-stretch bg-slate-200 dark:bg-slate-700" />
       <MenuButton
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         isActive={editor.isActive("heading", { level: 1 })}
@@ -104,7 +98,7 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
         title="Heading 3"
         icon={Heading3}
       />
-      <div className="w-px bg-slate-200 dark:bg-slate-700 mx-1 self-stretch" />
+      <div className="mx-1 w-px self-stretch bg-slate-200 dark:bg-slate-700" />
       <MenuButton
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         isActive={editor.isActive("bulletList")}
@@ -123,11 +117,9 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
         title="Blockquote"
         icon={Quote}
       />
-      <div className="w-px bg-slate-200 dark:bg-slate-700 mx-1 self-stretch" />
+      <div className="mx-1 w-px self-stretch bg-slate-200 dark:bg-slate-700" />
       <MenuButton
-        onClick={() =>
-          editor.chain().focus().unsetAllMarks().clearNodes().run()
-        }
+        onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
         title="Clear Formatting"
         icon={RemoveFormatting}
       />
@@ -178,7 +170,7 @@ const Tiptap = ({ value, onChange }: TiptapProps) => {
   if (!editor) return null;
 
   return (
-    <div className="border rounded-md p-2 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800">
+    <div className="rounded-md border border-slate-200 bg-white p-2 dark:border-slate-800 dark:bg-slate-950">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>

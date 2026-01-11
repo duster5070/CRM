@@ -1,13 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -32,10 +26,7 @@ type CategoryFormProps = {
   editingId?: string | undefined;
   initialData?: Category | undefined | null;
 };
-export default function CategoryForm({
-  editingId,
-  initialData,
-}: CategoryFormProps) {
+export default function CategoryForm({ editingId, initialData }: CategoryFormProps) {
   const {
     register,
     handleSubmit,
@@ -107,13 +98,11 @@ export default function CategoryForm({
       />
 
       <div className="grid grid-cols-12 gap-6 py-8">
-        <div className="lg:col-span-8 col-span-full space-y-3">
+        <div className="col-span-full space-y-3 lg:col-span-8">
           <Card>
             <CardHeader>
               <CardTitle>Category Title</CardTitle>
-              <CardDescription>
-                Lipsum dolor sit amet, consectetur adipiscing elit
-              </CardDescription>
+              <CardDescription>Lipsum dolor sit amet, consectetur adipiscing elit</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-6">
@@ -137,8 +126,8 @@ export default function CategoryForm({
             </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-4 col-span-full ">
-          <div className="grid auto-rows-max items-start gap-4 ">
+        <div className="col-span-full lg:col-span-4">
+          <div className="grid auto-rows-max items-start gap-4">
             <ImageInput
               title="Category Image"
               imageUrl={imageUrl}

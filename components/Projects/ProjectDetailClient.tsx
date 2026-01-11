@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
@@ -98,13 +92,8 @@ export default function ProjectDetailClient({
       return null;
     }
   };
-  const paidAmount = projectData.payments.reduce(
-    (total, payment) => total + payment.amount,
-    0
-  );
-  const remainingAmount = projectData.budget
-    ? projectData.budget - paidAmount
-    : 0;
+  const paidAmount = projectData.payments.reduce((total, payment) => total + payment.amount, 0);
+  const remainingAmount = projectData.budget ? projectData.budget - paidAmount : 0;
   //==========================================
   function calculateDaysDifference(endDate: Date | string): number {
     const end = new Date(endDate);
@@ -146,9 +135,7 @@ export default function ProjectDetailClient({
       const remainingDays = absDays % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${
-          years !== 1 ? "s" : ""
-        } and ${remainingDays} day${
+        return `${years} year${years !== 1 ? "s" : ""} and ${remainingDays} day${
           remainingDays !== 1 ? "s" : ""
         } past deadline`;
       } else if (years > 0) {
@@ -171,7 +158,7 @@ export default function ProjectDetailClient({
           setDaysDifference(calculateDaysDifference(projectData.endDate));
         }
       },
-      24 * 60 * 60 * 1000
+      24 * 60 * 60 * 1000,
     );
     return () => clearInterval(intervalId); //////////////////////////////////////////////////////////////////////////////////////
   }, [projectData.endDate]);
@@ -192,7 +179,7 @@ export default function ProjectDetailClient({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-slate-950 dark:via-black dark:to-slate-950 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8 dark:from-slate-950 dark:via-black dark:to-slate-950">
       {/*back to projects button*/}
       <div className="flex items-center justify-between">
         {role === "USER" ? (
@@ -208,11 +195,11 @@ export default function ProjectDetailClient({
             </Link>
           </Button>
         ) : (
-          <div className="bg-slate-800 dark:bg-slate-800/80 dark:border dark:border-slate-700 rounded-md text-white dark:text-slate-100 py-2 px-4 my-2">
+          <div className="my-2 rounded-md bg-slate-800 px-4 py-2 text-white dark:border dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-100">
             <LogoutBtn />
           </div>
         )}
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
+        <div className="hidden space-x-2 lg:flex lg:flex-1 lg:justify-end">
           <ModeToggle />
           <AuthenticatedAvatar session={session} />
         </div>
@@ -227,26 +214,16 @@ export default function ProjectDetailClient({
       />
 
       {/*main content*/}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/*left column*/}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="space-y-8 lg:col-span-2">
           {/*project description*/}
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="dark:text-slate-100">
-                Project Description
-              </CardTitle>
-              <Button
-                onClick={() => setIsEditing(!isEditing)}
-                variant="ghost"
-                size="icon"
-              >
-                {isEditing ? (
-                  <X className="h-4 w-4" />
-                ) : (
-                  <Edit className="h-4 w-4" />
-                )}
+              <CardTitle className="dark:text-slate-100">Project Description</CardTitle>
+              <Button onClick={() => setIsEditing(!isEditing)} variant="ghost" size="icon">
+                {isEditing ? <X className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
               </Button>
             </CardHeader>
             <CardContent>
@@ -294,14 +271,14 @@ export default function ProjectDetailClient({
                 <CardContent>
                   <ScrollArea className="h-[300px] pr-4">
                     {projectData.modules.length > 0 ? (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                         {projectData.modules.map((module) => (
                           <Card
                             key={module.id}
-                            className="hover:shadow-md dark:hover:shadow-xl dark:hover:shadow-indigo-500/10 transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-slate-800/90 dark:to-slate-700/90 dark:border-slate-600/50 dark:bg-slate-800 group p-3"
+                            className="group cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 p-3 transition-shadow hover:shadow-md dark:border-slate-600/50 dark:bg-slate-800 dark:from-slate-800/90 dark:to-slate-700/90 dark:hover:shadow-xl dark:hover:shadow-indigo-500/10"
                           >
                             <CardHeader className="p-3">
-                              <CardTitle className="text-sm flex items-center justify-between group pl-5 dark:text-slate-100">
+                              <CardTitle className="group flex items-center justify-between pl-5 text-sm dark:text-slate-100">
                                 <span>{module.name}</span>
 
                                 <div className="flex items-center gap-2">
@@ -314,7 +291,7 @@ export default function ProjectDetailClient({
                                   />
                                   <AlertDialog>
                                     <AlertDialogTrigger asChild>
-                                      <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <button className="opacity-0 transition-opacity group-hover:opacity-100">
                                         <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                                       </button>
                                     </AlertDialogTrigger>
@@ -322,24 +299,22 @@ export default function ProjectDetailClient({
                                       <AlertDialogHeader>
                                         <AlertDialogTitle>
                                           <div className="flex text-red-600 dark:text-red-400">
-                                            <TriangleAlert className="h-5 w-5 mr-2" />
+                                            <TriangleAlert className="mr-2 h-5 w-5" />
                                             Are you absolutely sure?
                                           </div>
                                         </AlertDialogTitle>
                                         <AlertDialogDescription>
-                                          This action cannot be undone. This
-                                          will permanently delete your Module.
+                                          This action cannot be undone. This will permanently delete
+                                          your Module.
                                         </AlertDialogDescription>
                                       </AlertDialogHeader>
                                       <AlertDialogFooter>
-                                        <AlertDialogCancel className="text-white hover:text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                        <AlertDialogCancel className="bg-gray-600 text-white hover:bg-gray-700 hover:text-white dark:bg-gray-700 dark:hover:bg-gray-600">
                                           Cancel
                                         </AlertDialogCancel>
                                         <AlertDialogAction asChild>
                                           <Button
-                                            onClick={() =>
-                                              handleDeleteModule(module.id)
-                                            }
+                                            onClick={() => handleDeleteModule(module.id)}
                                             className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600"
                                           >
                                             Delete
@@ -349,10 +324,10 @@ export default function ProjectDetailClient({
                                     </AlertDialogContent>
                                   </AlertDialog>
                                   <Link
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="opacity-0 transition-opacity group-hover:opacity-100"
                                     href={`/project/modules/${module.id}?projectId=${module.projectId}`}
                                   >
-                                    <Eye className="w-4 h-4" />
+                                    <Eye className="h-4 w-4" />
                                   </Link>
                                 </div>
                               </CardTitle>
@@ -361,13 +336,9 @@ export default function ProjectDetailClient({
                         ))}
                       </div>
                     ) : (
-                      <div className="flex justify-center items-center h-full">
+                      <div className="flex h-full items-center justify-center">
                         <div className="space-y-4">
-                          <Image
-                            src={emptyFolder}
-                            alt="No Modules"
-                            className="w-36 h-auto"
-                          />
+                          <Image src={emptyFolder} alt="No Modules" className="h-auto w-36" />
                           <ModuleForm
                             projectId={projectData.id}
                             userId={user.id}
@@ -391,15 +362,11 @@ export default function ProjectDetailClient({
                     variant="ghost"
                     size="icon"
                   >
-                    {isEditingNotes ? (
-                      <X className="h-4 w-4" />
-                    ) : (
-                      <Edit className="h-4 w-4" />
-                    )}
+                    {isEditingNotes ? <X className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
                   </Button>
                 </CardHeader>
                 <CardContent>
-                  <div className="prose lg:prose-xl dark:prose-invert">
+                  <div className="prose dark:prose-invert lg:prose-xl">
                     {projectData.notes && projectData.notes.trim() !== "" ? (
                       <NotesForm
                         key={isEditingNotes ? "editing" : "viewing"}
@@ -408,11 +375,7 @@ export default function ProjectDetailClient({
                         initialNotes={parseNotes(projectData.notes)}
                       />
                     ) : isEditingNotes ? (
-                      <NotesForm
-                        isEditable={true}
-                        editingId={projectData.id}
-                        initialNotes={null}
-                      />
+                      <NotesForm isEditable={true} editingId={projectData.id} initialNotes={null} />
                     ) : (
                       <p className="dark:text-slate-100">No notes available.</p>
                     )}
@@ -445,18 +408,14 @@ export default function ProjectDetailClient({
                     {projectData.comments.map((comment) => (
                       <div
                         key={comment.id}
-                        className="flex items-start space-x-4 group cursor-pointer"
+                        className="group flex cursor-pointer items-start space-x-4"
                       >
                         <Avatar>
-                          <AvatarFallback>
-                            {getInitials(comment.userName)}
-                          </AvatarFallback>
+                          <AvatarFallback>{getInitials(comment.userName)}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex space-x-3">
-                            <p className="font-semibold dark:text-slate-100">
-                              {comment.userName}
-                            </p>
+                            <p className="font-semibold dark:text-slate-100">{comment.userName}</p>
                             <CommentForm
                               projectId={projectData.id}
                               userId={user.id}
@@ -466,18 +425,14 @@ export default function ProjectDetailClient({
                               initialContent={comment.content}
                             />
                           </div>
-                          <div className="prose dark:prose-invert">
-                            {parse(comment.content)}
-                          </div>
+                          <div className="prose dark:prose-invert">{parse(comment.content)}</div>
                         </div>
                       </div>
                     ))}
                   </CardContent>
                 ) : (
                   <CardFooter>
-                    <p className="dark:text-slate-100">
-                      No comments available.
-                    </p>
+                    <p className="dark:text-slate-100">No comments available.</p>
                   </CardFooter>
                 )}
               </Card>
@@ -485,7 +440,7 @@ export default function ProjectDetailClient({
             <TabsContent value="payments">
               {" "}
               {/*Invoices and Payments*/}
-              <div className="max-w-3xl mx-auto">
+              <div className="mx-auto max-w-3xl">
                 <Card>
                   <CardHeader>
                     <CardTitle className="dark:text-slate-100">
@@ -515,25 +470,18 @@ export default function ProjectDetailClient({
                       <TabsContent value="invoices" className="space-y-4">
                         {projectData.payments.length > 0 ? (
                           projectData.payments.map((invoice) => (
-                            <div
-                              key={invoice.id}
-                              className="flex justify-between items-center"
-                            >
+                            <div key={invoice.id} className="flex items-center justify-between">
                               <div>
                                 <p className="font-semibold dark:text-slate-100">
                                   #{invoice.invoiceNumber}
                                 </p>
 
                                 <p className="text-sm text-gray-500 dark:text-gray-300">
-                                  Due:{" "}
-                                  {new Date(invoice.date).toLocaleDateString()}
+                                  Due: {new Date(invoice.date).toLocaleDateString()}
                                 </p>
                               </div>
                               <div>
-                                <h2 className="dark:text-slate-100">
-                                  {" "}
-                                  {invoice.title}
-                                </h2>
+                                <h2 className="dark:text-slate-100"> {invoice.title}</h2>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Badge variant="secondary">
@@ -543,7 +491,7 @@ export default function ProjectDetailClient({
                                   <Link
                                     href={`/project/invoice/${invoice.id}?project=${projectData.slug}`}
                                   >
-                                    <Eye className="h-4 w-4 mr-2" />
+                                    <Eye className="mr-2 h-4 w-4" />
                                     view
                                   </Link>
                                 </Button>
@@ -559,21 +507,16 @@ export default function ProjectDetailClient({
                       <TabsContent value="payments" className="space-y-4">
                         {projectData.payments.length > 0 ? (
                           projectData.payments.map((payment) => (
-                            <div
-                              key={payment.id}
-                              className="flex justify-between items-center"
-                            >
-                              <span>
-                                {new Date(payment.date).toLocaleDateString()}
-                              </span>
+                            <div key={payment.id} className="flex items-center justify-between">
+                              <span>{new Date(payment.date).toLocaleDateString()}</span>
 
                               <Badge variant="outline" className="">
                                 {payment.title}
                               </Badge>
-                              <div className="flex items-center ">
+                              <div className="flex items-center">
                                 <Badge
                                   variant="outline"
-                                  className="bg-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700"
+                                  className="bg-green-100 dark:border-green-700 dark:bg-green-900/30 dark:text-green-300"
                                 >
                                   ${payment.amount.toLocaleString()}
                                 </Badge>
@@ -591,10 +534,7 @@ export default function ProjectDetailClient({
                   </CardContent>
                   <CardFooter>
                     {projectData.budget && (
-                      <BudgetProgressBar
-                        budget={projectData.budget}
-                        paidAmount={paidAmount}
-                      />
+                      <BudgetProgressBar budget={projectData.budget} paidAmount={paidAmount} />
                     )}
                   </CardFooter>
                 </Card>{" "}
@@ -608,43 +548,34 @@ export default function ProjectDetailClient({
           {/*Project Info Card*/}
           <Card>
             <CardHeader>
-              <CardTitle className="dark:text-slate-100">
-                Project Info
-              </CardTitle>
+              <CardTitle className="dark:text-slate-100">Project Info</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b dark:border-slate-600">
+              <div className="flex items-center justify-between border-b pb-3 dark:border-slate-600">
                 <div className="flex items-center">
                   <DollarSign className="mr-2 h-4 w-4 text-green-500 dark:text-green-400" />
-                  <span className="font-semibold dark:text-slate-200">
-                    Budget:
-                  </span>
+                  <span className="font-semibold dark:text-slate-200">Budget:</span>
                   <span className="ml-2 dark:text-slate-200">
                     ${projectData.budget?.toLocaleString() || "N/A"}
                   </span>
                 </div>
                 <div className="flex items-center">
                   <DollarSign className="mr-2 h-4 w-4 text-green-500 dark:text-green-400" />
-                  <span className="font-semibold dark:text-slate-200">
-                    Total Paid:
-                  </span>
+                  <span className="font-semibold dark:text-slate-200">Total Paid:</span>
                   <span className="ml-2 dark:text-slate-200">
                     ${paidAmount?.toLocaleString() || "N/A"}
                   </span>
                 </div>
               </div>
-              <div className="space-y-2 border-b dark:border-slate-600 pb-3">
+              <div className="space-y-2 border-b pb-3 dark:border-slate-600">
                 <div className="flex items-center">
                   <CalendarDays className="mr-2 h-4 w-4 text-blue-500 dark:text-blue-400" />
-                  <span className="font-semibold dark:text-slate-200">
-                    Timeline:
-                  </span>
+                  <span className="font-semibold dark:text-slate-200">Timeline:</span>
                 </div>
                 <div className="ml-6 space-y-1">
                   <div className="flex items-center justify-between">
                     <div className="text-sm dark:text-slate-200">
-                      Start:{" "}
-                      {new Date(projectData.startDate).toLocaleDateString()}
+                      Start: {new Date(projectData.startDate).toLocaleDateString()}
                     </div>
                     <div className="text-sm dark:text-slate-200">
                       End:{" "}
@@ -673,11 +604,9 @@ export default function ProjectDetailClient({
               </div>
               {role === "USER" && (
                 <div>
-                  <div className="flex items-center mb-2">
+                  <div className="mb-2 flex items-center">
                     <Users className="mr-2 h-4 w-4 text-purple-500 dark:text-purple-400" />
-                    <span className="font-semibold dark:text-slate-200">
-                      Members:
-                    </span>
+                    <span className="font-semibold dark:text-slate-200">Members:</span>
                   </div>
                   <div className="flex -space-x-2">
                     {projectData.members.length > 0 ? (
@@ -694,11 +623,7 @@ export default function ProjectDetailClient({
                     ) : (
                       <>
                         <div>
-                          <Button
-                            onClick={() => setOpen(true)}
-                            variant="outline"
-                            size="sm"
-                          >
+                          <Button onClick={() => setOpen(true)} variant="outline" size="sm">
                             <Plus className="mr-2 h-4 w-4" />
                             Invite Member
                           </Button>
@@ -708,9 +633,7 @@ export default function ProjectDetailClient({
                           projectData={projectData}
                           isOpen={open}
                           onClose={() => setOpen(false)}
-                          members={existingUsers.filter(
-                            (member) => member.id !== user.id
-                          )}
+                          members={existingUsers.filter((member) => member.id !== user.id)}
                         />
                       </>
                     )}
@@ -736,18 +659,14 @@ export default function ProjectDetailClient({
                         <AvatarImage src={projectData.client.image} />
                       ) : (
                         <AvatarFallback>
-                          {projectData.client.name
-                            .substring(0, 2)
-                            .toUpperCase()}
+                          {projectData.client.name.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       )}
                     </Avatar>
                   ) : (
                     <Avatar className="h-12 w-12">
                       {user.id ? (
-                        <AvatarImage
-                          src={projectData.user.image ?? "/placeholder.svg"}
-                        />
+                        <AvatarImage src={projectData.user.image ?? "/placeholder.svg"} />
                       ) : (
                         <AvatarFallback>
                           {projectData.user.name.substring(0, 2).toUpperCase()}
@@ -757,18 +676,14 @@ export default function ProjectDetailClient({
                   )}
                   {role === "USER" ? (
                     <div>
-                      <p className="font-semibold dark:text-slate-100">
-                        {projectData.client.name}
-                      </p>
+                      <p className="font-semibold dark:text-slate-100">{projectData.client.name}</p>
                       <p className="text-sm text-gray-500 dark:text-gray-300">
                         {projectData.client.companyName || "Individual Client"}
                       </p>
                     </div>
                   ) : (
                     <div>
-                      <p className="font-semibold dark:text-slate-100">
-                        {projectData.user.name}
-                      </p>
+                      <p className="font-semibold dark:text-slate-100">{projectData.user.name}</p>
                       <p className="text-sm text-gray-500 dark:text-gray-300">
                         {projectData.user.companyName || "Individual User"}
                       </p>
@@ -784,12 +699,10 @@ export default function ProjectDetailClient({
                     {projectData.client.firstName} {projectData.client.lastName}
                   </p>
                   <p className="dark:text-slate-200">
-                    <span className="font-semibold">Email:</span>{" "}
-                    {projectData.client.email}
+                    <span className="font-semibold">Email:</span> {projectData.client.email}
                   </p>
                   <p className="dark:text-slate-200">
-                    <span className="font-semibold">Phone:</span>{" "}
-                    {projectData.client.phone}
+                    <span className="font-semibold">Phone:</span> {projectData.client.phone}
                   </p>
                 </div>
               ) : (
@@ -799,12 +712,10 @@ export default function ProjectDetailClient({
                     {projectData.user.firstName} {projectData.user.lastName}
                   </p>
                   <p className="dark:text-slate-200">
-                    <span className="font-semibold">Email:</span>{" "}
-                    {projectData.user.email}
+                    <span className="font-semibold">Email:</span> {projectData.user.email}
                   </p>
                   <p className="dark:text-slate-200">
-                    <span className="font-semibold">Phone:</span>{" "}
-                    {projectData.user.phone}
+                    <span className="font-semibold">Phone:</span> {projectData.user.phone}
                   </p>
                 </div>
               )}

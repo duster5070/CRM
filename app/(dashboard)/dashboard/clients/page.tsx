@@ -7,7 +7,7 @@ import { getAuthUser } from "@/config/useAuth";
 import { getUserClients } from "@/actions/clients";
 export default async function page() {
   const user = await getAuthUser();
-  console.log("my user is"+user)
+  console.log("my user is" + user);
   const clients: User[] = user?.id ? await getUserClients(user.id) : [];
   return (
     <div className="p-8">

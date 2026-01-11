@@ -91,7 +91,7 @@ export function AvatarMenuButton({ session }: { session: Session }) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <div className="flex items-center space-x-3 pb-3 border-b">
+          <div className="flex items-center space-x-3 border-b pb-3">
             <Avatar>
               <AvatarImage src={user?.image ?? ""} alt={user.name ?? ""} />
               <AvatarFallback>{initials}</AvatarFallback>
@@ -103,31 +103,27 @@ export function AvatarMenuButton({ session }: { session: Session }) {
               <p>{user.email}</p>
             </div>
           </div>
-          <div className="flex space-x-6 items-center py-6 border-b">
+          <div className="flex items-center space-x-6 border-b py-6">
             <Button asChild variant={"outline"}>
               <Link href="/dashboard/account">
-                <User className="h-4 w-4 mr-2" />
+                <User className="mr-2 h-4 w-4" />
                 <span>Manage Account</span>
               </Link>
             </Button>
             <Button onClick={handleLogout} variant={"outline"}>
-              <LogOut className="h-4 w-4 mr-2" />
+              <LogOut className="mr-2 h-4 w-4" />
               <span>Logout</span>
             </Button>
           </div>
         </SheetHeader>
         {/* CONTENT HWRE */}
         <div className="">
-          <div className="grid grid-cols-3 gap-4 py-6 border-b">
+          <div className="grid grid-cols-3 gap-4 border-b py-6">
             {menuLinks.map((item, i) => {
               const Icon = item.icon;
               return (
-                <Link
-                  key={i}
-                  href={item.href}
-                  className="flex flex-col items-center"
-                >
-                  <Icon className="w-8 h-8 mr-2" />
+                <Link key={i} href={item.href} className="flex flex-col items-center">
+                  <Icon className="mr-2 h-8 w-8" />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -141,15 +137,9 @@ export function AvatarMenuButton({ session }: { session: Session }) {
               {assistanceLinks.map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <Button
-                    className=""
-                    key={i}
-                    size={"sm"}
-                    asChild
-                    variant={"ghost"}
-                  >
+                  <Button className="" key={i} size={"sm"} asChild variant={"ghost"}>
                     <Link href={item.href}>
-                      <Icon className="h-4 w-4 mr-2" />
+                      <Icon className="mr-2 h-4 w-4" />
                       <span>{item.name}</span>
                     </Link>
                   </Button>

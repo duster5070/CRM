@@ -4,15 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ProjectWithUser } from "@/types/types";
 
-const Card = ({
-  img,
-  name,
-  slug,
-}: {
-  img: string;
-  name: string;
-  slug: string;
-}) => {
+const Card = ({ img, name, slug }: { img: string; name: string; slug: string }) => {
   return (
     <Link
       href={`/public/project/${slug}`}
@@ -21,7 +13,7 @@ const Card = ({
         // light styles
         "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
         // dark styles
-        "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
+        "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
       )}
     >
       <Image src={img} alt="" width={1080} height={1080} className="w-full" />
@@ -30,15 +22,11 @@ const Card = ({
   );
 };
 
-export function OtherPortfolioProjects({
-  otherProjects,
-}: {
-  otherProjects: ProjectWithUser[];
-}) {
+export function OtherPortfolioProjects({ otherProjects }: { otherProjects: ProjectWithUser[] }) {
   return (
     <div className="relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
+      <div className="mx-auto max-w-2xl">
+        <h1 className="scroll-m-20 text-balance text-center text-4xl font-extrabold tracking-tight">
           My other projects
         </h1>
         <p className="pb-4 leading-7 [&:not(:first-child)]:mt-6">
@@ -56,8 +44,8 @@ export function OtherPortfolioProjects({
         ))}
       </Marquee>
 
-      <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r"></div>
-      <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l"></div>
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div>
     </div>
   );
 }

@@ -64,52 +64,47 @@
 //   return <div className="">{pastDays > 10 ? date : time}</div>;
 // }
 
-
-
-import { Row } from "@tanstack/react-table"
-import React from "react"
+import { Row } from "@tanstack/react-table";
+import React from "react";
 
 function getPastDays(isoString: string): number {
-  const createdDate = new Date(isoString)
-  const currentDate = new Date()
+  const createdDate = new Date(isoString);
+  const currentDate = new Date();
 
-  createdDate.setHours(0, 0, 0, 0)
-  currentDate.setHours(0, 0, 0, 0)
+  createdDate.setHours(0, 0, 0, 0);
+  currentDate.setHours(0, 0, 0, 0);
 
-  const diffTime = currentDate.getTime() - createdDate.getTime()
-  return Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  const diffTime = currentDate.getTime() - createdDate.getTime();
+  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
 }
 
 function formatDaysAgo(days: number): string {
-  if (days < 0) return " future"
-  if (days === 0) return "Today"
-  if (days === 1) return "1 day ago"
-  return `${days} days ago`
+  if (days < 0) return " future";
+  if (days === 0) return "Today";
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
 }
 
 type DateColumnProps<T> = {
-  row: Row<T>
-  accessorKey: keyof T & string
-}
+  row: Row<T>;
+  accessorKey: keyof T & string;
+};
 
-export default function DateColumn<T>({
-  row,
-  accessorKey,
-}: DateColumnProps<T>) {
-  const createdAt = row.getValue<string>(accessorKey)
-  if (!createdAt) return null
+export default function DateColumn<T>({ row, accessorKey }: DateColumnProps<T>) {
+  const createdAt = row.getValue<string>(accessorKey);
+  if (!createdAt) return null;
 
-  const pastDays = getPastDays(createdAt)
+  const pastDays = getPastDays(createdAt);
 
   const actualDate = new Date(createdAt).toLocaleDateString("en-US", {
     month: "numeric",
     day: "numeric",
     year: "numeric",
-  })
+  });
 
   return (
     <div>
       {formatDaysAgo(pastDays)} ({actualDate})
     </div>
-  )
+  );
 }

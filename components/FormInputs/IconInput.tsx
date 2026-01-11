@@ -16,9 +16,9 @@ export default function IconInput({ value, onChange }: IconInputProps) {
   const icons = useMemo(
     () =>
       (Object.keys(FaIcons) as IconName[]).filter((name) =>
-        name.toLowerCase().includes(query.toLowerCase())
+        name.toLowerCase().includes(query.toLowerCase()),
       ),
-    [query]
+    [query],
   );
 
   const SelectedIcon: IconType | null = value ? FaIcons[value] : null;

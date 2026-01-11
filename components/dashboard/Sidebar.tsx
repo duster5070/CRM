@@ -71,9 +71,7 @@ const SIDEBAR: Group[] = [
       },
       {
         title: "Guest Projects",
-        items: [
-          { title: "Guest Project List", href: "/dashboard/guest-projects" },
-        ],
+        items: [{ title: "Guest Project List", href: "/dashboard/guest-projects" }],
       },
       // { title: "Modules", items: [{ title: "Module List", href: "/modules" }, { title: "Add New Module", href: "/modules/new" }] },
       // { title: "Tasks", items: [{ title: "Task List", href: "/tasks" }, { title: "Add New Task", href: "/tasks/new" }] },
@@ -124,9 +122,7 @@ const SIDEBAR: Group[] = [
       },
       {
         title: "Subscribers",
-        items: [
-          { title: " Subscribers", href: "/dashboard/subscribers",},
-        ],
+        items: [{ title: " Subscribers", href: "/dashboard/subscribers" }],
       },
       {
         title: "Bulk Emails",
@@ -177,13 +173,13 @@ function NestedLink({ item }: { item: LinkItem }) {
       href={item.href}
       className={cn(
         "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-primary",
-        isActive ? "bg-muted text-primary font-medium" : "text-muted-foreground"
+        isActive ? "bg-muted font-medium text-primary" : "text-muted-foreground",
       )}
     >
       {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
       <span className="truncate">{item.title}</span>
       {item.badge ? (
-        <Badge className="ml-auto h-5 w-5 shrink-0 grid place-items-center text-xs rounded-full">
+        <Badge className="ml-auto grid h-5 w-5 shrink-0 place-items-center rounded-full text-xs">
           {item.badge}
         </Badge>
       ) : null}
@@ -194,28 +190,26 @@ function NestedLink({ item }: { item: LinkItem }) {
 export default function Sidebar() {
   const pathname = usePathname();
   // maintain open sections in state; default open where current pathname exists
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>(
-    () => {
-      const initial: Record<string, boolean> = {};
-      for (const s of SIDEBAR) {
-        // open section if any nested href matches pathname (simple check)
-        const found = s.items.some((it) => {
-          if ("href" in it) return it.href === pathname;
-          return it.items?.some((li) => li.href === pathname);
-        });
-        initial[s.title] = found || false;
-      }
-      return initial;
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    for (const s of SIDEBAR) {
+      // open section if any nested href matches pathname (simple check)
+      const found = s.items.some((it) => {
+        if ("href" in it) return it.href === pathname;
+        return it.items?.some((li) => li.href === pathname);
+      });
+      initial[s.title] = found || false;
     }
-  );
+    return initial;
+  });
 
   const toggleSection = (title: string) =>
     setOpenSections((prev) => ({ ...prev, [title]: !prev[title] }));
 
   return (
-    <aside className="hidden md:block w-71 border-r bg-muted/40 h-screen sticky top-0 overflow-auto ">
-      <div className="flex flex-col h-full">
-        <div className="flex items-center gap-2 px-4 py-4 border-b">
+    <aside className="w-71 sticky top-0 hidden h-screen overflow-auto border-r bg-muted/40 md:block">
+      <div className="flex h-full flex-col">
+        <div className="flex items-center gap-2 border-b px-4 py-4">
           <Logo />
           <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
             <LogOut className="h-4 w-4" />
@@ -223,7 +217,7 @@ export default function Sidebar() {
           </Button>
         </div>
 
-        <nav className="px-2 py-4 space-y-3">
+        <nav className="space-y-3 px-2 py-4">
           {SIDEBAR.map((section) => {
             const SectionIcon = section.icon;
             const isSectionOpen = !!openSections[section.title];
@@ -233,7 +227,7 @@ export default function Sidebar() {
                 <button
                   onClick={() => toggleSection(section.title)}
                   aria-expanded={isSectionOpen}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-muted hover:text-primary"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-muted hover:text-primary"
                 >
                   {SectionIcon ? (
                     <SectionIcon className="h-4 w-4" />
@@ -242,19 +236,11 @@ export default function Sidebar() {
                   )}
                   <span className="grow text-left">{section.title}</span>
                   <ChevronDown
-                    className={cn(
-                      "h-4 w-4 transition-transform",
-                      isSectionOpen && "rotate-180"
-                    )}
+                    className={cn("h-4 w-4 transition-transform", isSectionOpen && "rotate-180")}
                   />
                 </button>
 
-                <div
-                  className={cn(
-                    "mt-2 space-y-1 pl-6",
-                    !isSectionOpen && "hidden"
-                  )}
-                >
+                <div className={cn("mt-2 space-y-1 pl-6", !isSectionOpen && "hidden")}>
                   {section.items.map((it, idx) => {
                     if ("href" in it) {
                       // single direct link
@@ -263,7 +249,7 @@ export default function Sidebar() {
                       // sub-group with its own title + items
                       return (
                         <div key={it.title} className="mb-1">
-                          <div className="text-xs font-semibold px-3 py-1 text-muted-foreground">
+                          <div className="px-3 py-1 text-xs font-semibold text-muted-foreground">
                             {it.title}
                           </div>
                           <div className="space-y-1">
@@ -292,9 +278,9 @@ export default function Sidebar() {
         </nav>
 
         <div className="mt-auto p-4">
-          <div className="rounded-lg border p-3 bg-card">
+          <div className="rounded-lg border bg-card p-3">
             <h4 className="text-sm font-semibold">Upgrade to Pro</h4>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="mt-1 text-xs text-muted-foreground">
               Unlock all features and get unlimited access to our support team.
             </p>
             <Button size="sm" className="mt-3 w-full">

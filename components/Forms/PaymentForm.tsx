@@ -7,10 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { generateInvoiceNumber } from "@/lib/genrateinvoiveNum";
 import { PaymentProps } from "@/types/types";
 import { useState } from "react";
@@ -50,7 +47,7 @@ const PaymentForm = ({
     data.projectId = projectId;
     data.userId = userId;
     data.clientId = clientId;
-    const subTotal = Number(data.amount)
+    const subTotal = Number(data.amount);
     data.tax = Number(data.tax);
     data.amount = subTotal + data.tax;
     data.date = new Date(data.date).toISOString();
@@ -64,7 +61,6 @@ const PaymentForm = ({
       router.push("/dashboard/categories");
     } catch (error) {
       console.log(error);
-    
     } finally {
       setLoading(false);
     }
@@ -72,9 +68,9 @@ const PaymentForm = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-
-      <DialogTrigger className="group-hover:opacity-100 hover:bg-sidebar-accent border rounded-md px-4 py-2 text-sm">+ Add new Payment</DialogTrigger>
-      
+      <DialogTrigger className="rounded-md border px-4 py-2 text-sm hover:bg-sidebar-accent group-hover:opacity-100">
+        + Add new Payment
+      </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
@@ -85,11 +81,11 @@ const PaymentForm = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(saveCategory)}>
-          <div className="grid grid-cols-12 gap-6 py-">
+          <div className="py- grid grid-cols-12 gap-6">
             <div className="col-span-full space-y-3">
               <Card>
                 <CardContent>
-                  <div className="grid gap-6 mt-3">
+                  <div className="mt-3 grid gap-6">
                     <TextInput
                       register={register}
                       errors={errors}

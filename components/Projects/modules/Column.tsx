@@ -8,7 +8,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { TaskStatus } from "@prisma/client";
 import React from "react";
 import DraggableItem from "./DraggableItem";
- 
+
 export default function Column({
   tasks,
   status,
@@ -24,15 +24,15 @@ export default function Column({
     id: status,
   });
   return (
-    <div className="rounded-tl-lg rounded-tr-lg  border overflow-hidden">
+    <div className="overflow-hidden rounded-tl-lg rounded-tr-lg border bg-background text-black">
       <div
         className={cn(
-          "flex flex-row items-center justify-between space-y-0  px-3 ",
+          "flex flex-row items-center justify-between space-y-0 px-3",
           status === "TODO"
-            ? "bg-orange-50"
+            ? "bg-orange-50 dark:bg-orange-300"
             : status === "INPROGRESS"
-            ? "bg-blue-50"
-            : "bg-green-50"
+              ? "bg-blue-50 dark:bg-blue-300"
+              : "bg-green-50 dark:bg-green-300",
         )}
       >
         <h2 className="text-sm font-bold">

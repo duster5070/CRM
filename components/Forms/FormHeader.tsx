@@ -14,13 +14,7 @@ type FormHeaderProps = {
   href: string;
   parent?: string;
 };
-export default function FormHeader({
-  title,
-  editingId,
-  loading,
-  href,
-  parent,
-}: FormHeaderProps) {
+export default function FormHeader({ title, editingId, loading, href, parent }: FormHeaderProps) {
   const router = useRouter();
 
   function goBack() {
@@ -29,13 +23,7 @@ export default function FormHeader({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <Button
-          onClick={goBack}
-          variant="outline"
-          size="icon"
-          className="h-7 w-7"
-          type="button"
-        >
+        <Button onClick={goBack} variant="outline" size="icon" className="h-7 w-7" type="button">
           <ChevronLeft className="h-4 w-4" />
           <span className="sr-only">Back</span>
         </Button>

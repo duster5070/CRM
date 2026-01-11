@@ -66,7 +66,7 @@ export default function ChangePasswordForm({ editingId }: ClientFormProps) {
       throw new Error("Unexpected response");
     } catch (error) {
       console.error("Change password error:", error);
-      toast.error("Something went wrong. Try again."+error);
+      toast.error("Something went wrong. Try again." + error);
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export default function ChangePasswordForm({ editingId }: ClientFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-12 gap-6 py-8">
-        <div className="lg:col-span-8 col-span-full space-y-3">
+        <div className="col-span-full space-y-3 lg:col-span-8">
           <Card>
             <CardContent>
               <div className="grid gap-6 pt-4">
@@ -97,9 +97,7 @@ export default function ChangePasswordForm({ editingId }: ClientFormProps) {
                   placeholder="••••••••"
                 />
 
-                {passErr && (
-                  <p className="text-red-500 text-xs">{passErr}</p>
-                )}
+                {passErr && <p className="text-xs text-red-500">{passErr}</p>}
 
                 <FormFooter
                   href="/change-password"

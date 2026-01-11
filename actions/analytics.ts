@@ -42,7 +42,6 @@ export async function getDashboardOverview(userId: string) {
           href: "/dashboard/clients",
           icon: Handshake,
         },
-      
       ];
 
       return analytics;

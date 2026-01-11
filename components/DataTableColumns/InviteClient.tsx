@@ -40,12 +40,7 @@ export default function InviteClient({ row }: { row: any }) {
     console.log("invite sent");
   }
   return (
-    <Button
-      disabled={loading}
-      variant={"outline"}
-      onClick={inviteClient}
-      className=""
-    >
+    <Button disabled={loading} variant={"outline"} onClick={inviteClient} className="">
       {loading ? "Sending..." : "Send Invite"}
     </Button>
   );

@@ -69,10 +69,7 @@ export async function deleteSubscriber(id: string) {
       },
     });
 
-    console.log(
-      "SERVER: Subscriber successfully deleted from DB:",
-      deletedSubscriber.email
-    );
+    console.log("SERVER: Subscriber successfully deleted from DB:", deletedSubscriber.email);
 
     revalidatePath("/dashboard/subscribers");
 

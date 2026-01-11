@@ -1,13 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -43,10 +37,7 @@ import {
 } from "lucide-react";
 import PasswordInput from "../FormInputs/PasswordInput";
 import { createUser, updateUserById } from "@/actions/users";
-import {
-  createPortfolioProfile,
-  updatePortfolioById,
-} from "@/actions/portfolio";
+import { createPortfolioProfile, updatePortfolioById } from "@/actions/portfolio";
 import { Session } from "next-auth";
 
 export type SelectOptionProps = {
@@ -57,14 +48,9 @@ type ClientFormProps = {
   editingId?: string | undefined;
   initialData?: PortfolioProfile | undefined | null;
   session: Session | null;
-  count: number
+  count: number;
 };
-export default function PortfolioForm({
-  editingId,
-  initialData,
-  session,
-  count,
-}: ClientFormProps) {
+export default function PortfolioForm({ editingId, initialData, session, count }: ClientFormProps) {
   const user = session?.user;
   const {
     register,
@@ -88,8 +74,7 @@ export default function PortfolioForm({
   });
   const [loading, setLoading] = useState(false);
   const initialImage =
-    initialData?.profileImage ||
-    "https://utfs.io/f/59b606d1-9148-4f50-ae1c-e9d02322e834-2558r.png";
+    initialData?.profileImage || "https://utfs.io/f/59b606d1-9148-4f50-ae1c-e9d02322e834-2558r.png";
   const [imageUrl, setImageUrl] = useState(initialImage);
   const [emailErr, setEmailErr] = useState<string | null>(null);
 
@@ -123,11 +108,11 @@ export default function PortfolioForm({
   return (
     <form className="" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-12 gap-6 py-8">
-        <div className="lg:col-span-8 col-span-full space-y-3">
+        <div className="col-span-full space-y-3 lg:col-span-8">
           <Card>
             <CardContent>
               <div className="grid gap-6 pt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <TextInput
                     register={register}
                     errors={errors}
@@ -145,7 +130,7 @@ export default function PortfolioForm({
                     placeholder="Cairo"
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <TextInput
                     register={register}
                     errors={errors}
@@ -163,7 +148,7 @@ export default function PortfolioForm({
                     type="number"
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <TextInput
                     register={register}
                     errors={errors}
@@ -181,7 +166,7 @@ export default function PortfolioForm({
                     placeholder=""
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <TextInput
                     register={register}
                     errors={errors}
@@ -199,7 +184,7 @@ export default function PortfolioForm({
                     placeholder=""
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <TextInput
                     register={register}
                     errors={errors}
@@ -229,8 +214,8 @@ export default function PortfolioForm({
             </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-4 col-span-full ">
-          <div className="grid auto-rows-max items-start gap-4 ">
+        <div className="col-span-full lg:col-span-4">
+          <div className="grid auto-rows-max items-start gap-4">
             <ImageInput
               title="Profile Image"
               imageUrl={imageUrl}

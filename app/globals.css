@@ -21,7 +21,7 @@
     --destructive: 0 84.2% 60.2%; /*red*/
     --destructive-foreground: 210 40% 98%; /*white blue*/
     --border: 214.3 31.8% 91.4%; /*white gray*/
-    --input: 214.3 31.8% 91.4%;/*white gray*/
+    --input: 214.3 31.8% 91.4%; /*white gray*/
     --ring: 222.2 84% 4.9%; /*Dark navi*/
     --radius: 0.5rem;
     --chart-1: 12 76% 61%; /*orange red*/
@@ -35,7 +35,7 @@
     --sidebar-primary-foreground: 0 0% 98%; /*almost white*/
     --sidebar-accent: 240 4.8% 95.9%; /*very light gray blue*/
     --sidebar-accent-foreground: 240 5.9% 10%; /*very dark gray blue*/
-    --sidebar-border: 220 13% 91%;  /*light gray blue*/
+    --sidebar-border: 220 13% 91%; /*light gray blue*/
     --sidebar-ring: 217.2 91.2% 59.8%; /*light blue*/
     --glass: hsla(0, 0%, 96%, 0.3);
     --secondary-blue: 206, 99%, 31%;
@@ -89,7 +89,7 @@
   }
 
   body {
-    @apply bg-background text-foreground overflow-x-hidden;
+    @apply overflow-x-hidden bg-background text-foreground;
   }
 }
 

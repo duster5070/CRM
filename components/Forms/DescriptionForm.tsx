@@ -49,12 +49,7 @@ export default function DescriptionForm({
   return (
     <form className="" onSubmit={handleSubmit(updateDescription)}>
       <div className="grid gap-3">
-        <TextArea
-          register={register}
-          errors={errors}
-          label=""
-          name="description"
-        />
+        <TextArea register={register} errors={errors} label="" name="description" />
         <SubmitButton size={"sm"} title="Update" loading={loading} />
       </div>
     </form>

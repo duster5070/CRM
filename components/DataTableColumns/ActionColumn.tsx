@@ -34,12 +34,7 @@ type ActionColumnProps = {
   id: string | undefined;
   // revPath: string;
 };
-export default function ActionColumn({
-  row,
-  model,
-  editEndpoint,
-  id = "",
-}: ActionColumnProps) {
+export default function ActionColumn({ row, model, editEndpoint, id = "" }: ActionColumnProps) {
   const isActive = row.isActive;
   async function handleDelete() {
     try {
@@ -86,9 +81,9 @@ export default function ActionColumn({
             <Button
               variant={"ghost"}
               size={"sm"}
-              className="text-red-600 hover:text-red-700 transition-all duration-500 cursor-pointer "
+              className="cursor-pointer text-red-600 transition-all duration-500 hover:text-red-700"
             >
-              <Trash className="w-4 h-4  mr-2 flex-shrink-0" />
+              <Trash className="mr-2 h-4 w-4 flex-shrink-0" />
               <span>Delete</span>
             </Button>
           </AlertDialogTrigger>
@@ -96,8 +91,7 @@ export default function ActionColumn({
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete this{" "}
-                {model}.
+                This action cannot be undone. This will permanently delete this {model}.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -116,8 +110,8 @@ export default function ActionColumn({
           <span>Delete</span>
         </DropdownMenuItem> */}
         <DropdownMenuItem>
-          <Link href={editEndpoint} className="flex item gap-2">
-            <Pencil className="w-4 h-4 " />
+          <Link href={editEndpoint} className="item flex gap-2">
+            <Pencil className="h-4 w-4" />
             <span>Edit</span>
           </Link>
         </DropdownMenuItem>

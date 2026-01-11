@@ -1,12 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
-import {
-  CategoryProps,
-  ProjectData,
-  ProjectProps,
-  ProjectWithPayments,
-} from "@/types/types";
+import { CategoryProps, ProjectData, ProjectProps, ProjectWithPayments } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
 export async function createProject(data: ProjectProps) {
@@ -70,9 +65,7 @@ export async function getRecentUserProjects(userId: string | undefined) {
     }
   }
 }
-export async function getUserPublicFeaturedProjects(
-  userId: string | undefined
-) {
+export async function getUserPublicFeaturedProjects(userId: string | undefined) {
   if (userId) {
     try {
       const projects = await db.project.findMany({
@@ -250,9 +243,7 @@ export async function getProjectById(id: string) {
   }
 }
 
-export async function getProjectDetailsBySlug(
-  slug: string
-): Promise<ProjectData | null> {
+export async function getProjectDetailsBySlug(slug: string): Promise<ProjectData | null> {
   console.log(`[getProjectDetailsBySlug] Fetching project with slug: ${slug}`);
   try {
     // clientId
@@ -271,13 +262,11 @@ export async function getProjectDetailsBySlug(
     });
 
     if (!project) {
-      console.log(
-        `[getProjectDetailsBySlug] Project not found for slug: ${slug}`
-      );
+      console.log(`[getProjectDetailsBySlug] Project not found for slug: ${slug}`);
       return null;
     }
     console.log(
-      `[getProjectDetailsBySlug] Project found: ${project.name}, ClientID: ${project.clientId}`
+      `[getProjectDetailsBySlug] Project found: ${project.name}, ClientID: ${project.clientId}`,
     );
 
     const client = await db.user.findFirst({
@@ -302,9 +291,7 @@ export async function getProjectDetailsBySlug(
       },
     });
     if (!client) {
-      console.log(
-        `[getProjectDetailsBySlug] Client not found for ID: ${project.clientId}`
-      );
+      console.log(`[getProjectDetailsBySlug] Client not found for ID: ${project.clientId}`);
       // throw new Error('client not found') // Don't throw, just log. The page likely needs client data though.
       // If client is mandatory, we might want to return null or partial data.
       // For now, let's see if this is the failure point.

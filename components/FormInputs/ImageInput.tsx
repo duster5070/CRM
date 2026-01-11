@@ -9,12 +9,7 @@ type ImageInputProps = {
   setImageUrl: any;
   endpoint: any;
 };
-export default function ImageInput({
-  title,
-  imageUrl,
-  setImageUrl,
-  endpoint,
-}: ImageInputProps) {
+export default function ImageInput({ title, imageUrl, setImageUrl, endpoint }: ImageInputProps) {
   return (
     <Card className="overflow-hidden">
       <CardHeader>

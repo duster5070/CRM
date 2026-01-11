@@ -4,12 +4,12 @@ import Link from "next/link";
 
 export default function FooterV1() {
   return (
-    <footer className="relative bg-gradient-to-br from-green-400 to-blue-500 text-white overflow-hidden">
+    <footer className="relative overflow-hidden bg-gradient-to-br from-green-400 to-blue-500 text-white">
       <div className="absolute inset-0 bg-[url('/placeholder.svg?height=200&width=200')] bg-repeat opacity-10"></div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="text-lg font-semibold mb-4">About Us</h3>
+            <h3 className="mb-4 text-lg font-semibold">About Us</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/about" className="hover:underline">
@@ -34,7 +34,7 @@ export default function FooterV1() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">For Patients</h3>
+            <h3 className="mb-4 text-lg font-semibold">For Patients</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/find-doctor" className="hover:underline">
@@ -59,7 +59,7 @@ export default function FooterV1() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">For Doctors</h3>
+            <h3 className="mb-4 text-lg font-semibold">For Doctors</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/join-network" className="hover:underline">
@@ -84,35 +84,35 @@ export default function FooterV1() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
-            <div className="flex space-x-4 mb-4">
-              <a href="#" className="hover:text-blue-200 transition-colors">
-                <Facebook className="w-6 h-6" />
+            <h3 className="mb-4 text-lg font-semibold">Connect With Us</h3>
+            <div className="mb-4 flex space-x-4">
+              <a href="#" className="transition-colors hover:text-blue-200">
+                <Facebook className="h-6 w-6" />
                 <span className="sr-only">Facebook</span>
               </a>
-              <a href="#" className="hover:text-blue-200 transition-colors">
-                <Twitter className="w-6 h-6" />
+              <a href="#" className="transition-colors hover:text-blue-200">
+                <Twitter className="h-6 w-6" />
                 <span className="sr-only">Twitter</span>
               </a>
-              <a href="#" className="hover:text-blue-200 transition-colors">
-                <Instagram className="w-6 h-6" />
+              <a href="#" className="transition-colors hover:text-blue-200">
+                <Instagram className="h-6 w-6" />
                 <span className="sr-only">Instagram</span>
               </a>
-              <a href="#" className="hover:text-blue-200 transition-colors">
-                <Linkedin className="w-6 h-6" />
+              <a href="#" className="transition-colors hover:text-blue-200">
+                <Linkedin className="h-6 w-6" />
                 <span className="sr-only">LinkedIn</span>
               </a>
             </div>
             <Button
               variant="secondary"
-              className="w-full bg-white text-blue-500 hover:bg-blue-100 transition-colors"
+              className="w-full bg-white text-blue-500 transition-colors hover:bg-blue-100"
             >
               <Link href="/join/doctors">Become a Doctor</Link>
             </Button>
           </div>
         </div>
-        <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm mb-4 md:mb-0">
+        <div className="flex flex-col items-center justify-between border-t border-white/20 pt-8 md:flex-row">
+          <p className="mb-4 text-sm md:mb-0">
             &copy; {new Date().getFullYear()} AskDoc. All rights reserved.
           </p>
           <div className="flex space-x-4 text-sm">
@@ -128,8 +128,8 @@ export default function FooterV1() {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-white/10 rounded-full -mb-32 -mr-32 blur-3xl"></div>
-      <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -mt-32 -ml-32 blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 -mb-32 -mr-32 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
+      <div className="absolute left-0 top-0 -ml-32 -mt-32 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
     </footer>
   );
 }

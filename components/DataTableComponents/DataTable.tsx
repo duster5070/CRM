@@ -41,23 +41,21 @@ import { ListFilter } from "lucide-react";
 import DateFilters from "./DateFilters";
 import DateRangeFilter from "./DateRangeFilter";
 import { DataTablePagination } from "./DataTablePagination";
-import  ProjectSummary  from "../DataTableColumns/ProjectSummary";
+import ProjectSummary from "../DataTableColumns/ProjectSummary";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  model?: string ;
+  model?: string;
 }
 export default function DataTable<TData, TValue>({
   columns,
   data,
-  model
+  model,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [searchResults, setSearchResults] = useState(data);
   const [filteredData, setFilteredData] = useState(data);
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -84,47 +82,29 @@ export default function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
- const finalData = isSearch ? searchResults : filteredData;
+  const finalData = isSearch ? searchResults : filteredData;
   return (
     <div className="space-y-4">
-    {model === "project" && <ProjectSummary data={finalData} />}
-      <div className="flex justify-between items-center gap-8">
-        
-       
-        <div className="flex-1 w-full">
-          <SearchBar
-            data={data}
-            onSearch={setSearchResults}
-            setIsSearch={setIsSearch}
-          />
+      {model === "project" && <ProjectSummary data={finalData} />}
+      <div className="flex items-center justify-between gap-8">
+        <div className="w-full flex-1">
+          <SearchBar data={data} onSearch={setSearchResults} setIsSearch={setIsSearch} />
         </div>
-       
-        <div className="flex items-center gap-2 ">
-          <DateRangeFilter
-            data={data}
-            onFilter={setFilteredData}
-            setIsSearch={setIsSearch}
-          />
-          <DateFilters
-            data={data}
-            onFilter={setFilteredData}
-            setIsSearch={setIsSearch}
-          />
+
+        <div className="flex items-center gap-2">
+          <DateRangeFilter data={data} onFilter={setFilteredData} setIsSearch={setIsSearch} />
+          <DateFilters data={data} onFilter={setFilteredData} setIsSearch={setIsSearch} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="h-8 gap-1">
                 <ListFilter className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Filter
-                </span>
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Filter by</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem checked>
-                Active
-              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem checked>Active</DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
             </DropdownMenuContent>
@@ -143,10 +123,7 @@ export default function DataTable<TData, TValue>({
                     <TableHead key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -156,26 +133,17 @@ export default function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -184,7 +152,6 @@ export default function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
-      
     </div>
   );
 }

@@ -17,23 +17,22 @@ async function page() {
   const slug = generateSlug(user?.name ?? "slug");
   const count = (await getUserProjectsCount(user?.id)) ?? 0;
   const initialData = await getPortfolioByUserId(user?.id ?? "");
-  const baseUrl = process.env.NEXT_PUBLEC_BASE_URL
-  const link = `${baseUrl}/portfolio/${slug}?id={user?.id}`
+  const baseUrl = process.env.NEXT_PUBLEC_BASE_URL;
+  const link = `${baseUrl}/portfolio/${slug}?id={user?.id}`;
   return (
     <div className="p-8">
-      <div className="flex border b items-center justify-between p-3">
+      <div className="b flex items-center justify-between border p-3">
         <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
           Customize your Protfolio
         </h2>
         <div className="flex gap-4">
           <Button asChild>
             <Link target="_blank" href={`/portfolio/${slug}?id=${user?.id}`}>
-            <Eye className="mr-2 w-4 h-4"/>
+              <Eye className="mr-2 h-4 w-4" />
               Preview
             </Link>
           </Button>
-          <ShareLink link={link}/>
-          
+          <ShareLink link={link} />
         </div>
       </div>
       <div className="py-6">

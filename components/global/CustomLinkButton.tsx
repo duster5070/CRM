@@ -11,7 +11,7 @@ export function CustomLinkButton({ href, title }: CustomLinkButton) {
     <div>
       <Button
         borderRadius="1.75rem"
-        className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800 px-6"
+        className="border-neutral-200 bg-white px-6 text-black dark:border-slate-800 dark:bg-slate-900 dark:text-white"
       >
         <Link href={href}>{title}</Link>
       </Button>

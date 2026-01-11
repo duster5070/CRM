@@ -67,24 +67,23 @@ export default function HowItWorks() {
     };
   }, [isDragging, handleDragEnd]);
   return (
-    <section id="howItWorks" className="py-20 bg-background">
-      <div className="container mx-auto text-center mb-4 sm:mb-8 md:mb-12 lg:mb-16">
-        <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[105px] text-primary text-center px-4 font-bold">
+    <section id="howItWorks" className="bg-background py-20">
+      <div className="container mx-auto mb-4 text-center sm:mb-8 md:mb-12 lg:mb-16">
+        <h2 className="px-4 text-center text-4xl font-bold text-primary sm:text-6xl md:text-8xl lg:text-[105px]">
           How It Works
         </h2>
-        <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-[60px] text-primary">
-          Get Started in <span className="text-secondaryBlue">3</span>{" "}
-          Simple Steps
+        <h3 className="text-3xl text-primary sm:text-4xl md:text-5xl lg:text-[60px]">
+          Get Started in <span className="text-secondaryBlue">3</span> Simple Steps
         </h3>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 py-2">
+        <div className="flex flex-col items-center justify-center gap-2 py-2 sm:flex-row sm:gap-4">
           <p className="text-lg text-gray-500">No credit card required</p>
-          <CreditCard className="w-10 h-10 text-gray-500" />
+          <CreditCard className="h-10 w-10 text-gray-500" />
           <p className="text-lg text-gray-500">Setup in 5 minutes</p>
         </div>
       </div>
 
-      <div className="relative flex items-center justify-center min-h-[400px] sm:min-h-[500px] md:min-h-[600px] lg:min-h-[700px]">
-        <div className="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:w-[490px] h-auto lg:h-[636px]">
+      <div className="relative flex min-h-[400px] items-center justify-center sm:min-h-[500px] md:min-h-[600px] lg:min-h-[700px]">
+        <div className="relative h-auto w-full max-w-sm sm:max-w-md md:max-w-lg lg:h-[636px] lg:w-[490px]">
           {steps.map((step, index) => (
             <StackedCard
               key={step.id}

@@ -1,15 +1,15 @@
-import { Row } from "@tanstack/react-table"
-import { Project } from "@prisma/client"
-import { useEffect, useState } from "react"
-import { CalendarDays } from "lucide-react"
+import { Row } from "@tanstack/react-table";
+import { Project } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { CalendarDays } from "lucide-react";
 
 type ProjectDeadlineProps = {
-  row: Row<Project>
-}
+  row: Row<Project>;
+};
 
 export const ProjectDeadline = ({ row }: ProjectDeadlineProps) => {
-    const projectData = row.original;
-      function calculateDaysDifference(endDate: Date | string): number {
+  const projectData = row.original;
+  function calculateDaysDifference(endDate: Date | string): number {
     const end = new Date(endDate);
     const now = new Date();
     const diffTime = end.getTime() - now.getTime();
@@ -26,8 +26,9 @@ export const ProjectDeadline = ({ row }: ProjectDeadlineProps) => {
       const remainingDays = days % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${years !== 1 ? "s" : ""
-          } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""} `;
+        return `${years} year${
+          years !== 1 ? "s" : ""
+        } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""} `;
       } else if (years > 0) {
         return `${years} year${years !== 1 ? "s" : ""} `;
       } else {
@@ -41,9 +42,9 @@ export const ProjectDeadline = ({ row }: ProjectDeadlineProps) => {
       const remainingDays = absDays % 365;
 
       if (years > 0 && remainingDays > 0) {
-        return `${years} year${years !== 1 ? "s" : ""
-          } and ${remainingDays} day${remainingDays !== 1 ? "s" : ""
-          } `;
+        return `${years} year${years !== 1 ? "s" : ""} and ${remainingDays} day${
+          remainingDays !== 1 ? "s" : ""
+        } `;
       } else if (years > 0) {
         return `${years} year${years !== 1 ? "s" : ""} `;
       } else {
@@ -58,34 +59,32 @@ export const ProjectDeadline = ({ row }: ProjectDeadlineProps) => {
     if (projectData.endDate) {
       setDaysDifference(calculateDaysDifference(projectData.endDate));
     }
-    const intervalId = setInterval(() => {
-      if (projectData.endDate) {
-        setDaysDifference(calculateDaysDifference(projectData.endDate));
-      }
-    }, 24 * 60 * 60 * 1000);
+    const intervalId = setInterval(
+      () => {
+        if (projectData.endDate) {
+          setDaysDifference(calculateDaysDifference(projectData.endDate));
+        }
+      },
+      24 * 60 * 60 * 1000,
+    );
     return () => clearInterval(intervalId); //////////////////////////////////////////////////////////////////////////////////////
   }, [projectData.endDate]);
 
+  const deadline = row.getValue<number>("deadline");
 
-
-  const deadline = row.getValue<number>("deadline")
-
-  return (   
-              
-                  <div
-                    className={`text-sm font-medium ${daysDifference !== null && daysDifference < 0
-                      ? "text-red-600" // Past deadline - RED
-                      : daysDifference === 0
-                        ? "text-orange-600" // Today - ORANGE
-                        : "text-green-600" // Future - GREEN
-                      }`}
-                  >
-                   
-                    {projectData.endDate && daysDifference !== null
-                      ? formatDaysDifference(daysDifference)
-                      : "Ongoing"}
-                  </div>
-                
-                
-             )
-}
+  return (
+    <div
+      className={`text-sm font-medium ${
+        daysDifference !== null && daysDifference < 0
+          ? "text-red-600" // Past deadline - RED
+          : daysDifference === 0
+            ? "text-orange-600" // Today - ORANGE
+            : "text-green-600" // Future - GREEN
+      }`}
+    >
+      {projectData.endDate && daysDifference !== null
+        ? formatDaysDifference(daysDifference)
+        : "Ongoing"}
+    </div>
+  );
+};

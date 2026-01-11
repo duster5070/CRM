@@ -200,26 +200,29 @@ export const ClientInvititation: React.FC<Readonly<InvitationProps>> = ({
             </div>
           )}
 
-            {loginLink && (
-              <div style={{ marginTop: '20px' }}>
-                <a href={loginLink} style={{
-                  display: 'inline-block',
-                  width: '100%',
-                  padding: '12px 24px',
-                  backgroundColor: '#111827',
-                  color: '#ffffff',
-                  textDecoration: 'none',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  textAlign: 'center',
-                  transition: 'background-color 0.2s',
-                  boxSizing: 'border-box'
-                }}>
-                  Login
-                </a>
-              </div>
-            )}
+          {loginLink && (
+            <div style={{ marginTop: "20px" }}>
+              <a
+                href={loginLink}
+                style={{
+                  display: "inline-block",
+                  width: "100%",
+                  padding: "12px 24px",
+                  backgroundColor: "#111827",
+                  color: "#ffffff",
+                  textDecoration: "none",
+                  borderRadius: "6px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  textAlign: "center",
+                  transition: "background-color 0.2s",
+                  boxSizing: "border-box",
+                }}
+              >
+                Login
+              </a>
+            </div>
+          )}
         </div>
       )}
 

@@ -23,16 +23,16 @@ export async function getProjectModules(projectId: string | undefined) {
     try {
       const modules = await db.module.findMany({
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
         },
         where: {
-          projectId
+          projectId,
         },
         include: {
-          tasks: true
+          tasks: true,
         },
       });
-      return modules
+      return modules;
     } catch (error) {
       console.log(error);
       return null;

@@ -46,9 +46,7 @@ export default function ProjectBanner({
     "bg-gradient-to-r from-[#c60721] to-[#000000]",
   ];
   const [gradient, setGradient] = useState(bg || gradients[11]);
-  const [imageUrl, setImageUrl] = useState(
-    bannerImage || "/bg4.jpg?height=256&width=1024"
-  );
+  const [imageUrl, setImageUrl] = useState(bannerImage || "/bg4.jpg?height=256&width=1024");
   const [loading, setLoading] = useState(false);
 
   const handleGradientChange = async (gradient: string) => {
@@ -125,21 +123,16 @@ export default function ProjectBanner({
     }
   }
   return (
-    <div
-      className={`relative h-64 rounded-xl ${gradient} mb-8 overflow-hidden group`}
-    >
+    <div className={`relative h-64 rounded-xl ${gradient} group mb-8 overflow-hidden`}>
       <img
         src={imageUrl}
         alt="Project Banner"
-        className="w-full h-full object-cover mix-blend-overlay"
+        className="h-full w-full object-cover mix-blend-overlay"
       />
 
-      <div className="absolute inset-0 flex justify-center items-center">
+      <div className="absolute inset-0 flex items-center justify-center">
         {editing && isPrivate ? (
-          <form
-            className="max-w-[600px]"
-            onSubmit={handleSubmit(updateProjectTitle)}
-          >
+          <form className="max-w-[600px]" onSubmit={handleSubmit(updateProjectTitle)}>
             <div className="flex w-full items-center gap-3">
               <TextInput
                 register={register}
@@ -159,7 +152,7 @@ export default function ProjectBanner({
             onClick={() => setEditing(true)}
             variant="link"
             size="icon"
-            className="group-hover:opacity-100 opacity-0 ml-4 transition-opacity"
+            className="opacity-0 transition-opacity group-hover:opacity-100"
           >
             <Pen className="h-4 w-4 text-white" />
           </Button>
@@ -171,7 +164,7 @@ export default function ProjectBanner({
             <Button
               variant="secondary"
               size="icon"
-              className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100"
             >
               <Edit className="h-4 w-4" />
             </Button>
@@ -193,13 +186,13 @@ export default function ProjectBanner({
                       handleGradientChange(gradient);
                     }}
                     key={index}
-                    className={`w-20 h-16 rounded-2xl shadow-lg ${gradient}`}
+                    className={`h-16 w-20 rounded-2xl shadow-lg ${gradient}`}
                   ></Button>
                 ))}
               </div>
             </TabsContent>
             <TabsContent value="upload">
-              <div className="grid auto-rows-max items-start gap-4 ">
+              <div className="grid auto-rows-max items-start gap-4">
                 <ImageInput
                   title="Banner Image"
                   imageUrl={imageUrl}
@@ -222,11 +215,7 @@ export default function ProjectBanner({
                     icon={Link}
                     placeholder="Enter your image link"
                   />
-                  <SubmitButton
-                    size={"sm"}
-                    title="Update Banner Image"
-                    loading={loading}
-                  />
+                  <SubmitButton size={"sm"} title="Update Banner Image" loading={loading} />
                 </div>
               </form>
             </TabsContent>

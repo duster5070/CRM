@@ -23,14 +23,14 @@ const TaskForm = ({
   moduleId,
   initialTitle,
   initialStatus,
-  isDefault=false,
+  isDefault = false,
   editingId,
 }: {
   moduleId: string;
   initialTitle?: string;
   initialStatus: TaskStatus;
   editingId?: string;
-  isDefault?:boolean
+  isDefault?: boolean;
 }) => {
   const {
     register,
@@ -75,51 +75,51 @@ const TaskForm = ({
   return (
     <div className="py-1">
       <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              {editingId ? (
-                <Button variant={"ghost"} className="flex items-center w-full">
-                  <Edit className="h-4 w-4" />
-                  Edit
-                </Button>
-              ) : (
-                
-                <Button variant={isDefault ? "default" : "ghost"} className="">
-                  <Plus className="mr-2 h-4 w-4" />
-                {isDefault && <span>Add New Task</span>}
-                </Button>
-              
-              )}
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{editingId ? "Edit Task" : "Add New Task"}</DialogTitle>
-              </DialogHeader>
+        <DialogTrigger asChild>
+          {editingId ? (
+            <Button variant={"ghost"} className="flex w-full items-center">
+              <Edit className="h-4 w-4" />
+              Edit
+            </Button>
+          ) : (
+            <Button
+              variant={isDefault ? "default" : "ghost"}
+              className="h-8 w-8 rounded-md bg-background text-primary"
+            >
+              <Plus className="h-4 w-4" />
+              {isDefault && <span>Add New Task</span>}
+            </Button>
+          )}
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingId ? "Edit Task" : "Add New Task"}</DialogTitle>
+          </DialogHeader>
 
-              <form onSubmit={handleSubmit(saveModule)}>
-                <div className="grid grid-cols-12 gap-6 py-8">
-                  <div className="col-span-full space-y-3">
-                    <div className="grid gap-3">
-                      <TextInput
-                        register={register}
-                        errors={errors}
-                        label=""
-                        name="title"
-                        icon={Check}
-                      />
-                    </div>
-                  </div>
+          <form onSubmit={handleSubmit(saveModule)}>
+            <div className="grid grid-cols-12 gap-6 py-8">
+              <div className="col-span-full space-y-3">
+                <div className="grid gap-3">
+                  <TextInput
+                    register={register}
+                    errors={errors}
+                    label=""
+                    name="title"
+                    icon={Check}
+                  />
                 </div>
+              </div>
+            </div>
 
-                <SubmitButton
-                  className="w-full"
-                  title={editingId ? "Update Task" : "Add Task"}
-                  loading={loading}
-                />
-              </form>
-            </DialogContent>
+            <SubmitButton
+              className="w-full"
+              title={editingId ? "Update Task" : "Add Task"}
+              loading={loading}
+            />
+          </form>
+        </DialogContent>
       </Dialog>
     </div>
-    
   );
 };
 

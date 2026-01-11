@@ -18,11 +18,7 @@ export type SubscriberProps = {
   email: string;
   userId: string;
 };
-export default function SubscribeForm({
-  userId,
-}: {
-  userId: string | undefined;
-}) {
+export default function SubscribeForm({ userId }: { userId: string | undefined }) {
   const {
     register,
     handleSubmit,
@@ -59,7 +55,7 @@ export default function SubscribeForm({
           placeholder="johndoe@gmail.com"
         />
         <SubmitButton
-          className="rounded-r-lg bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 font-semibold"
+          className="rounded-r-lg bg-yellow-500 px-6 py-2 font-semibold text-white hover:bg-yellow-600"
           size={"sm"}
           title="Subscribe"
           buttonIcon={Mail}

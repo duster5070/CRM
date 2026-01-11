@@ -1,5 +1,4 @@
-
-"use server"
+"use server";
 
 import { InvoiceDetails } from "@/types/types";
 
@@ -7,9 +6,7 @@ import { Resend } from "resend";
 
 import { getNormalDate } from "@/lib/getNormalDate";
 import { InvoiceLink } from "@/components/Email-Templates/invoice";
-import ClientInvititation, {
-  InvitationProps,
-} from "@/components/Email-Templates/ClientInvitation";
+import ClientInvititation, { InvitationProps } from "@/components/Email-Templates/ClientInvitation";
 import { ExistingUser } from "./users";
 import MemberInvitation from "@/components/Email-Templates/MemberInvitation";
 import { db } from "@/prisma/db";
@@ -160,12 +157,12 @@ export async function sendComposedEmail(data: ComposedEmailData) {
     // If broadcast is enabled, send to all recipients individually
     if (data.broadcast && data.to.length > 1) {
       const batch = data.to.map((recipient) => ({
-        from: data.from ||"Project X <onboarding@resend.dev>",
+        from: data.from || "Project X <onboarding@resend.dev>",
         to: recipient,
         cc: data.cc,
         bcc: data.bcc,
         subject: data.subject,
-        html: data.htmlMessage || `<p>${data.message.replace(/\n/g, '<br>')}</p>`,
+        html: data.htmlMessage || `<p>${data.message.replace(/\n/g, "<br>")}</p>`,
       }));
 
       const { data: batchData, error } = await resend.batch.send(batch);
@@ -180,12 +177,12 @@ export async function sendComposedEmail(data: ComposedEmailData) {
     } else {
       // Send single email to all recipients
       const response = await resend.emails.send({
-        from: data.from ||"Project X <onboarding@resend.dev>",
-        to: data.to,  
+        from: data.from || "Project X <onboarding@resend.dev>",
+        to: data.to,
         cc: data.cc,
         bcc: data.bcc,
         subject: data.subject,
-        html: data.htmlMessage || `<p>${data.message.replace(/\n/g, '<br>')}</p>`,
+        html: data.htmlMessage || `<p>${data.message.replace(/\n/g, "<br>")}</p>`,
       });
 
       console.log("Email sent successfully:", response);

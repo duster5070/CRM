@@ -9,7 +9,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Check, CheckCheck, ChevronLeft, Delete, Edit, MoreVertical, Plus, Trash2 } from "lucide-react";
+import {
+  Check,
+  CheckCheck,
+  ChevronLeft,
+  Delete,
+  Edit,
+  MoreVertical,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -30,67 +39,68 @@ export default async function Page({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const {id} = await params
+  const { id } = await params;
   const { projectId } = await searchParams;
-   const session = await getServerSession(authOptions)
-  const user = session?.user
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
   const modules = (await getProjectModules(projectId as string)) || [];
   const activeModule = modules.find((module, i) => module.id === id);
   if (!activeModule || modules?.length < 0) {
     return notFound();
   }
- 
+
   let percentageCompletion = 0;
   let allTasks = activeModule.tasks.length ?? 0;
-  const completedTasks =activeModule.tasks.length > 0 ? activeModule.tasks.filter((task,i)=>task.status=="COMPLETED").length:0
-  if(allTasks==0 || completedTasks==0){
-    percentageCompletion=0;
+  const completedTasks =
+    activeModule.tasks.length > 0
+      ? activeModule.tasks.filter((task, i) => task.status == "COMPLETED").length
+      : 0;
+  if (allTasks == 0 || completedTasks == 0) {
+    percentageCompletion = 0;
   } else {
-    percentageCompletion = (completedTasks/allTasks)*100
+    percentageCompletion = (completedTasks / allTasks) * 100;
   }
   return (
-    <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-8">
-      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow min-h-96">
-         <div className="flex items-center p-4 justify-between">
-                <BackBtn title="Back to Project"/>
-                <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
-                  <ModeToggle />
-                  <AuthenticatedAvatar session={session} />
-                </div>
-              </div>
+    <div className="bg-gradient-to-b from-gray-900 to-gray-500 p-8">
+      <div className="mx-auto min-h-96 max-w-7xl rounded-xl bg-white from-gray-600 to-gray-900 shadow dark:bg-gradient-to-br">
+        <div className="flex items-center justify-between p-4">
+          <BackBtn title="Back to Project" />
+          <div className="hidden space-x-2 lg:flex lg:flex-1 lg:justify-end">
+            <ModeToggle />
+            <AuthenticatedAvatar session={session} />
+          </div>
+        </div>
         <div className="grid grid-cols-12">
-          <div className="col-span-full lg:col-span-3 px-8 py-4">
+          <div className="col-span-full px-8 py-4 lg:col-span-3">
             <h2 className="py-2 text-xl font-bold">Project Modules</h2>
             <ScrollArea className="h-[calc(100vh-8rem)] pr-4">
               {modules.map((module) => (
                 <Link
                   href={`/project/modules/${module.id}?projectId=${module.projectId}`}
                   key={module.id}
-                  className={`p-2 mb-2 cursor-pointer rounded-lg flex items-center ${
+                  className={`mb-2 flex cursor-pointer items-center rounded-lg p-2 ${
                     activeModule?.id === module.id
-                      ? "bg-blue-100"
-                      : "hover:bg-gray-100"
+                      ? "bg-blue-100 dark:bg-gray-600"
+                      : "hover:bg-gray-100 dark:hover:bg-gray-900"
                   }`}
                 >
-                    { activeModule?.id === module.id?
-                    (<CheckCheck className="w-4 h-4 mr-2 text-blue-500"/>):
-                    (<Check className="w-4 h-4 mr-2 text-muted-foreground"/>)}
-                    
+                  {activeModule?.id === module.id ? (
+                    <CheckCheck className="mr-2 h-4 w-4 text-blue-500" />
+                  ) : (
+                    <Check className="mr-2 h-4 w-4 text-muted-foreground" />
+                  )}
+
                   <span>{module.name}</span>
                 </Link>
               ))}
             </ScrollArea>
-            <ModuleForm
-              projectId={projectId as string}
-              userId={user.id}
-              userName={user.name}
-            />
+            <ModuleForm projectId={projectId as string} userId={user.id} userName={user.name} />
           </div>
-          <div className="col-span-full lg:col-span-9 bg-gray-100 px-8 py-4">
+          <div className="col-span-full rounded-lg bg-gray-100 from-gray-700 to-gray-900 px-8 py-4 dark:bg-gray-900 dark:bg-gradient-to-br lg:col-span-9">
             <div className="flex-1 p-8">
               {activeModule && (
                 <>
-                  <TaskBoard activeModule={activeModule}/>
+                  <TaskBoard activeModule={activeModule} />
                 </>
               )}
             </div>

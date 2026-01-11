@@ -48,7 +48,7 @@ const people = [
 
 export function AnimatedAvatars() {
   return (
-    <div className="flex flex-row items-center justify-center w-full">
+    <div className="flex w-full flex-row items-center justify-center">
       <AnimatedTooltip items={people} />
     </div>
   );

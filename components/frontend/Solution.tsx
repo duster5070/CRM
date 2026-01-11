@@ -66,9 +66,7 @@ export default function Solution() {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
       const sectionSize = 1 / tabs.length;
       const clampedProgress = Math.max(0, Math.min(1, latest));
-      let sectionIndex = Math.floor(
-        (clampedProgress + sectionSize / 2) / sectionSize
-      );
+      let sectionIndex = Math.floor((clampedProgress + sectionSize / 2) / sectionSize);
       sectionIndex = Math.max(0, Math.min(sectionIndex, tabs.length - 1));
       const newActiveId = tabs[sectionIndex].id;
       setActiveSection((prev) => (prev !== newActiveId ? newActiveId : prev));
@@ -90,10 +88,7 @@ export default function Solution() {
     };
   }, []);
 
-  const handleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const element = document.getElementById(href);
     if (!element || !container.current) {
@@ -114,8 +109,7 @@ export default function Solution() {
 
     const containerRect = container.current.getBoundingClientRect();
     const containerTop = containerRect.top + window.pageYOffset;
-    const targetY =
-      containerTop + tabIndex * window.innerHeight - window.innerHeight * 0.2;
+    const targetY = containerTop + tabIndex * window.innerHeight - window.innerHeight * 0.2;
 
     console.log("Scrolling to", { href, tabIndex, targetY, containerTop });
 
@@ -134,10 +128,10 @@ export default function Solution() {
 
   return (
     <section id="features" className="py-20">
-      <div className="container mx-auto text-center flex flex-col items-center">
-        <h2 className="text-4xl sm:text-5xl md:text-6xl mb-8">one solution</h2>
+      <div className="container mx-auto flex flex-col items-center text-center">
+        <h2 className="mb-8 text-4xl sm:text-5xl md:text-6xl">one solution</h2>
         <LogoBig />
-        <p className="text-2xl sm:text-3xl md:text-4xl pt-7 mb-16">
+        <p className="mb-16 pt-7 text-2xl sm:text-3xl md:text-4xl">
           The All-in-One Client & Project Platform
         </p>
       </div>
@@ -145,28 +139,32 @@ export default function Solution() {
       {/* Container to limit sticky behavior */}
       <div className="relative">
         {/* Tab Navigation - Sticky at top */}
-        <div className="pt-6 pb-0 sm:pb-[15rem] lg:pb-[48.5rem] mb-[50px] sticky sm:top-[5rem] lg:top-[7rem] z-20">
+        <div className="sticky z-20 pb-0 pt-6 md:top-[5.5rem] md:mb-[125px] md:pb-[22rem] lg:top-[4.5rem] lg:mb-[50px] lg:pb-[48.5rem]">
+          {" "}
+          {/* top done large and mid*/}
           <div className="flex flex-wrap justify-center gap-3">
-            {tabs.map((tab, index) => (
+            {tabs.map((tab) => (
               <Link
                 key={tab.id}
                 href={`#${tab.id}`}
                 onClick={(e) => handleClick(e, tab.id)}
-                className={`px-6 py-3 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${
+                className={`rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 md:text-base ${
                   activeSection === tab.id
                     ? "bg-secondaryBlue text-white shadow-lg"
-                    : "bg-transparent text-primary border border-primary hover:bg-blue10"
+                    : "border border-primary bg-transparent text-primary hover:bg-blue10"
                 }`}
               >
                 {tab.name}
               </Link>
             ))}
           </div>
-          <div className="h-[100vh] absolute"></div>
         </div>
 
         {/* Stacked Screenshots */}
-        <div className="relative lg:mt-[-40%] sm:mt-[-1%] mt-[-10%]" ref={container}>
+        <div
+          className="relative hidden md:mt-[-48%] md:flex md:flex-col md:justify-start md:gap-[17rem] lg:mt-[-44%]"
+          ref={container}
+        >
           {tabs.map((tab, index) => {
             const targetScale = 1 - (tabs.length - index) * 0.05;
             return (
@@ -174,7 +172,7 @@ export default function Solution() {
                 key={index}
                 i={index}
                 {...tab}
-                range={[index * 0.16666666667, 1]}
+                range={[index * (1 / tabs.length), 1]}
                 target={targetScale}
                 progress={scrollYProgress}
               />

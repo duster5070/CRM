@@ -1,35 +1,27 @@
 import { db } from "@/prisma/db";
 import { User, UserRole } from "@prisma/client";
 
-
-export async function getUserClients(
-  ownerId: string
-): Promise<User[]> {
+export async function getUserClients(ownerId: string): Promise<User[]> {
   return db.user.findMany({
     where: {
-      role: "CLIENT",   
-      userId: ownerId,       
+      role: "CLIENT",
+      userId: ownerId,
     },
     orderBy: {
       createdAt: "desc",
     },
   });
-
 }
 
-export async function getRecentUserClients(
-  ownerId: string
-): Promise<User[]> {
+export async function getRecentUserClients(ownerId: string): Promise<User[]> {
   return db.user.findMany({
     where: {
-      role: "CLIENT",   
-      userId: ownerId,       
+      role: "CLIENT",
+      userId: ownerId,
     },
     orderBy: {
       createdAt: "desc",
-    },take:4
+    },
+    take: 4,
   });
-
 }
-
-

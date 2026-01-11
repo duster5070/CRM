@@ -46,14 +46,14 @@ function DomainRow({ label, value, isVercel, onSave }: DomainRowProps) {
   };
 
   return (
-    <div className="group flex items-center justify-between py-3 border-b last:border-0 border-border/50">
-      <div className="flex flex-col gap-1 flex-1 mr-4">
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+    <div className="group flex items-center justify-between border-b border-border/50 py-3 last:border-0">
+      <div className="mr-4 flex flex-1 flex-col gap-1">
+        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {label}
         </span>
 
         {isEditing ? (
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <Input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -87,12 +87,10 @@ function DomainRow({ label, value, isVercel, onSave }: DomainRowProps) {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold truncate">
-              {value || "—"}
-            </span>
+            <span className="truncate text-sm font-semibold">{value || "—"}</span>
 
             {isVercel && (
-              <span className="px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase">
+              <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold uppercase text-primary">
                 Vercel
               </span>
             )}
@@ -106,7 +104,7 @@ function DomainRow({ label, value, isVercel, onSave }: DomainRowProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
             onClick={() => setIsEditing(true)}
           >
             <Pencil className="h-3.5 w-3.5" />
@@ -128,9 +126,7 @@ function DomainRow({ label, value, isVercel, onSave }: DomainRowProps) {
 
 export function DomainCard({ projectData }: { projectData: ProjectData }) {
   const [freeDomain, setFreeDomain] = useState(projectData?.freeDomain ?? "");
-  const [customDomain, setCustomDomain] = useState(
-    projectData?.customDomain ?? ""
-  );
+  const [customDomain, setCustomDomain] = useState(projectData?.customDomain ?? "");
 
   // keep local state in sync if projectData updates
   useEffect(() => {
@@ -142,7 +138,7 @@ export function DomainCard({ projectData }: { projectData: ProjectData }) {
     <Card className="w-full shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-primary/5">
+          <div className="rounded-lg bg-primary/5 p-2">
             <Globe className="h-5 w-5 text-primary" />
           </div>
           <CardTitle className="text-lg font-bold">Project Domains</CardTitle>

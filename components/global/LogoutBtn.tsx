@@ -13,5 +13,5 @@ export default function LogoutBtn() {
       console.log(error);
     }
   }
-  return <button onClick={handleLogout}>Logout</button> ;
+  return <button onClick={handleLogout}>Logout</button>;
 }

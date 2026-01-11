@@ -12,45 +12,41 @@ import {
 import TaskForm from "@/components/Forms/TaskForm";
 import { DeleteTask } from "@/components/Forms/DeleteTask";
 import { Task } from "@/types/types";
- 
+
 interface DraggableProps {
   id: string;
   task: Task;
   isDragging: boolean;
 }
- 
-export default memo(function DraggableItem({
-  id,
-  task,
-  isDragging,
-}: DraggableProps) {
+
+export default memo(function DraggableItem({ id, task, isDragging }: DraggableProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
   });
- 
+
   const style: CSSProperties | undefined = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
       }
     : undefined;
- 
+
   return (
     <div
-      ref={setNodeRef} 
+      ref={setNodeRef}
       style={style}
-      className={`my-2 p-3 bg-white rounded-md shadow transition-all duration-200 cursor-move ${
+      className={`my-2 cursor-move rounded-md bg-white p-3 shadow transition-all duration-200 ${
         isDragging ? "opacity-0" : ""
       }`}
     >
-      <div 
-        {...listeners} 
+      <div
+        {...listeners}
         {...attributes}
-        className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
+        className="cursor-grab rounded p-1 hover:bg-gray-100 active:cursor-grabbing"
       >
         <GripVertical className="h-4 w-4 text-gray-400" />
       </div>
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium line-clamp-1">{task.title}</span>
+      <div className="flex items-center justify-between">
+        <span className="line-clamp-1 text-sm font-medium">{task.title}</span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">

@@ -28,9 +28,7 @@ export default function CustomCarousel() {
   }, []);
 
   const prevSlide = () => {
-    setCurrentSlide(
-      (prev) => (prev - 1 + carouselItems.length) % carouselItems.length
-    );
+    setCurrentSlide((prev) => (prev - 1 + carouselItems.length) % carouselItems.length);
   };
 
   useEffect(() => {
@@ -39,34 +37,34 @@ export default function CustomCarousel() {
   }, [nextSlide]);
 
   return (
-    <div className="relative w-full h-full bg-purple-900 overflow-hidden">
+    <div className="relative h-full w-full overflow-hidden bg-purple-900">
       <div className="absolute inset-0">
         {carouselItems.map((item, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
-              }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
           >
             <img
               src={item.image}
               alt={`Slide ${index + 1}`}
-              className="object-cover w-full h-full"
+              className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-purple-900/50" />
           </div>
         ))}
       </div>
       <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-end p-6 text-white">
-        <h2 className="text-3xl font-bold mb-2">
-          {carouselItems[currentSlide].title}
-        </h2>
-        <p className="text-xl mb-8">{carouselItems[currentSlide].subtitle}</p>
-        <div className="flex space-x-2 mb-4">
+        <h2 className="mb-2 text-3xl font-bold">{carouselItems[currentSlide].title}</h2>
+        <p className="mb-8 text-xl">{carouselItems[currentSlide].subtitle}</p>
+        <div className="mb-4 flex space-x-2">
           {carouselItems.map((_, index) => (
             <button
               key={index}
-              className={`w-2 h-2 rounded-full transition-all ${index === currentSlide ? "bg-white w-4" : "bg-white/50"
-                }`}
+              className={`h-2 w-2 rounded-full transition-all ${
+                index === currentSlide ? "w-4 bg-white" : "bg-white/50"
+              }`}
               onClick={() => setCurrentSlide(index)}
             />
           ))}
@@ -74,17 +72,17 @@ export default function CustomCarousel() {
       </div>
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/75 hover:text-white transition-colors "
+        className="absolute left-4 top-1/2 -translate-y-1/2 transform text-white/75 transition-colors hover:text-white"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="w-8 h-8" />
+        <ChevronLeft className="h-8 w-8" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/75 hover:text-white transition-colors"
+        className="absolute right-4 top-1/2 -translate-y-1/2 transform text-white/75 transition-colors hover:text-white"
         aria-label="Next slide"
       >
-        <ChevronRight className="w-8 h-8" />
+        <ChevronRight className="h-8 w-8" />
       </button>
     </div>
   );

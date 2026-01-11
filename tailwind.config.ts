@@ -1,8 +1,6 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 const colors = require("tailwindcss/colors");
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
+const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenColorPalette");
 import { withUt } from "uploadthing/tw";
 
 export default withUt({
@@ -129,7 +127,7 @@ export default withUt({
 function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
   );
 
   addBase({
@@ -143,7 +141,7 @@ function addVariablesForSpacing({ addBase, theme }: any) {
     Object.entries(spacing).map(([key, val]) => {
       const safeKey = String(key).replace(/\./g, "-").replace(/\//g, "-");
       return [`--spacing-${safeKey}`, val];
-    })
+    }),
   );
 
   addBase({

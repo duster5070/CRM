@@ -4,18 +4,12 @@ import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
 import React, { ReactNode } from "react";
 
-export default async function HomeLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default async function HomeLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions);
   return (
-    <div className="bg-background antialiased min-h-screen w-full">
+    <div className="min-h-screen w-full bg-background antialiased">
       <SiteHeader session={session} />
-      <main className="w-full">
-        {children}
-      </main>
+      <main className="w-full">{children}</main>
       <Footer />
     </div>
   );
