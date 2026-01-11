@@ -5,23 +5,21 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   Users,
-  Package2,
+ 
   FolderTree,
   FileText,
-  ClipboardList,
-  FilePlus,
-  UserPlus,
-  Layers,
-  List,
-  PlusCircle,
+  
+ 
+ 
+ 
+
+ 
   DollarSign,
-  CreditCard,
+ 
   User,
-  Shield,
+
   Mail,
-  MailOpen,
-  Send,
-  Megaphone,
+
   Image,
   Settings,
   LogOut,
@@ -121,7 +119,7 @@ const SIDEBAR: Group[] = [
         title: "Emails",
         items: [
           { title: " Emails", href: "/dashboard/emails" },
-          { title: "Sent Emails", href: "/emails/sent" },
+          // { title: "Sent Emails", href: "/emails/sent" },
         ],
       },
       {
