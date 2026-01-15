@@ -7,6 +7,8 @@ export interface MCPMessage {
 export interface MCPChatRequest {
   message: string;
   history?: MCPMessage[];
+  projectSlug?: string;  // Current project context from URL
+  userId?: string;        // User ID for fetching user projects
 }
 
 export interface MCPChatResponse {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,10 +13,15 @@ import { cn } from "@/lib/utils";
 
 export function ChatbotDialog() {
   const { data: session, status } = useSession();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<MCPMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Extract project slug from pathname (e.g., /project/my-project -> my-project)
+  const projectSlug = pathname?.match(/\/project\/([^\/]+)/)?.[1];
+  const userId = session?.user?.id || undefined;
 
   // Fetch available tools and show as initial message
   // IMPORTANT: This useEffect must be called before any conditional returns
@@ -46,13 +52,13 @@ export function ChatbotDialog() {
       }
     };
 
-    // Only fetch tools if messages are empty (first load)
+   
     if (messages.length === 0) {
       fetchTools();
     }
   }, [messages, session]);
 
-  // Early returns AFTER all hooks have been called
+  
   if (status === "loading") {
     return null; 
   }
@@ -83,6 +89,8 @@ export function ChatbotDialog() {
         body: JSON.stringify({
           message: input,
           history: messages,
+          projectSlug,
+          userId,
         }),
       });
 

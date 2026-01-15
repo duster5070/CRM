@@ -3,6 +3,7 @@ import { mcpClient } from "@/lib/mcp-client.service";
 import OpenAI from "openai";
 import { MCPChatRequest } from "@/types/mcp.types";
 import { getServerSession } from "next-auth";
+import { getUserProjects } from "@/actions/projects";
 
 /**
  * POST /api/mcp-client
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession();
     
     const body: MCPChatRequest = await req.json();
-    const { message, history = [] } = body;
+    const { message, history = [], projectSlug, userId } = body;
 
     if (!message) {
       return NextResponse.json(
@@ -75,11 +76,42 @@ export async function POST(req: NextRequest) {
       },
     }));
 
+    // Fetch project details and user projects for context
+    let projectContext = "";
+    
+    if (projectSlug) {
+      // Fetch full project details to get the project ID and other info
+      try {
+        const projectDetails = await (await import("@/actions/projects")).getProjectDetailsBySlug(projectSlug);
+        
+        if (projectDetails) {
+          projectContext = `\n\nCONTEXT: The user is currently viewing project "${projectDetails.name}" (ID: ${projectDetails.id}, slug: ${projectSlug}, status: ${projectDetails.status}). When answering questions, assume they are asking about this specific project unless they specify otherwise. You can use the project ID "${projectDetails.id}" when calling MCP tools like get_project_summary or get_project_risk.`;
+        } else {
+          projectContext = `\n\nCONTEXT: The user is currently viewing a project page with slug "${projectSlug}", but project details could not be loaded.`;
+        }
+      } catch (error) {
+        console.error("Error fetching project details:", error);
+      }
+    } else if (userId && userId.trim()) {
+      // Fetch all user projects for selection (only if userId is valid)
+      try {
+        const userProjects = await getUserProjects(userId);
+        if (userProjects && userProjects.length > 0) {
+          const projectsList = userProjects
+            .map(p => `- **${p.name}** (ID: ${p.id}, slug: ${p.slug}, status: ${p.status})`)
+            .join("\n");
+          projectContext = `\n\nAVAILABLE PROJECTS: The user has the following projects:\n${projectsList}\n\nIf the user asks about projects or wants to summarize a project, you can refer to these projects by name or slug. When using MCP tools, use the project ID.`;
+        }
+      } catch (error) {
+        console.error("Error fetching user projects:", error);
+      }
+    }
+
     // Build conversation messages
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       {
         role: "system",
-        content: "You are a helpful CRM assistant. Use the available tools to help users with their projects, tasks, emails, and invoices. Be concise and professional."
+        content: `You are a helpful CRM assistant. Use the available tools to help users with their projects, tasks, emails, and invoices. Be concise and professional.${projectContext}`
       },
       ...history.map((msg) => ({
         role: msg.role as "user" | "assistant",
