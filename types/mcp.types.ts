@@ -7,13 +7,14 @@ export interface MCPMessage {
 export interface MCPChatRequest {
   message: string;
   history?: MCPMessage[];
-  projectSlug?: string;  // Current project context from URL
-  userId?: string;        // User ID for fetching user projects
+  projectSlug?: string;  
+  userId?: string;      
 }
 
 export interface MCPChatResponse {
   message: string;
   error?: string;
+  toolCalls?: MCPToolCall[];
 }
 
 export interface MCPToolCall {
@@ -28,7 +29,7 @@ export interface MCPToolResult {
   }>;
 }
 
-// Client configuration
+
 export interface MCPClientConfig {
   serverCommand: string;
   serverArgs?: string[];
