@@ -14,8 +14,8 @@ export async function getDashboardOverview(userId: string) {
       });
       const clients = await db.user.count({
         where: {
-          // userId: userId,
-          // role:UserRole.CLIENT
+          userId: userId,
+          role:UserRole.CLIENT
         },
       });
 

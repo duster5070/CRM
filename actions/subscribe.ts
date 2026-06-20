@@ -48,6 +48,11 @@ export async function createSubscription(data: SubscriberProps) {
   }
 }
 export async function getUserSubscribers(userId: string) {
+  // Ensure userId is a valid 24-character hex MongoDB ObjectId
+  if (!userId || userId.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userId)) {
+    return [];
+  }
+
   try {
     const data = await db.subscriber.findMany({
       where: { userId },
@@ -55,6 +60,7 @@ export async function getUserSubscribers(userId: string) {
     return data; // FIX: Return consistent object
   } catch (error) {
     console.log(error);
+    return [];
   }
 }
 export async function deleteSubscriber(id: string) {
